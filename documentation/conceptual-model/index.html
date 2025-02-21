@@ -1,0 +1,111 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible"
+          content="ie=edge">
+    <title>
+        Conceptual Model + ERD
+    </title>
+    <link rel="stylesheet"
+          href="index.css">
+</head>
+<body>
+    <h1>Conceptual Model</h1>
+    <h2>Entities & Attributes</h2>
+    <!-- Profile Entity -->
+    <section id="profile">
+        <h3>Profile</h3>
+        <ul>
+            <li><strong>profileId:</strong> <span id="profileId">uuid</span></li>
+            <li><strong>profileActivationToken:</strong> <span id="profileActivationToken">text</span></li>
+            <li><strong>profileCreateAt:</strong> <span id="profileCreateAt">timestamp</span></li>
+            <li><strong>profileEmail:</strong> <span id="profileEmail">text</span></li>
+            <li><strong>profileHash:</strong> <span id="profileHash">text</span></li>
+            <li><strong>profileUsername:</strong> <span id="profileUsername">text</span></li>
+        </ul>
+    </section>
+    <!-- Anime Entity -->
+    <section id="anime">
+        <h3>Anime</h3>
+        <ul>
+            <li><strong>animeId:</strong> <span id="animeId">uuid</span></li>
+            <li><strong>animeTitle:</strong> <span id="animeTitle">text</span></li>
+            <li><strong>animeTitleAlt:</strong> <span id="animeTitleAlt">text</span></li>
+            <li><strong>animeDescription:</strong> <span id="animeDescription">text</span></li>
+            <li><strong>animeGenres:</strong> <span id="animeGenres">text</span></li>
+            <li><strong>animeAiredStart:</strong> <span id="animeAiredStart">date</span></li>
+            <li><strong>animeAiredEnd:</strong> <span id="animeAiredEnd">date</span></li>
+            <li><strong>animeBroadcast:</strong> <span id="animeBroadcast">text</span></li>
+            <li><strong>animeProducer:</strong> <span id="animeProducer">text</span></li>
+            <li><strong>animeDuration:</strong> <span id="animeDuration">decimal</span></li>
+            <li><strong>animeEpisodes:</strong> <span id="animeEpisodes">smallint</span></li>
+            <li><strong>animeRating:</strong> <span id="animeRating">decimal</span></li>
+            <li><strong>animeStatus:</strong> <span id="animeStatus">text</span></li>
+            <li><strong>animeInstagramUrl:</strong> <span id="animeInstagramUrl">text</span></li>
+            <li><strong>animeOfficialWebsiteUrl:</strong> <span id="animeOfficialWebsiteUrl">text</span></li>
+            <li><strong>animeTwitterUrl:</strong> <span id="animeTwitterUrl">text</span></li>
+            <li><strong>animeType:</strong> <span id="animeType">text</span></li>
+        </ul>
+    </section>
+    <!-- Review Entity -->
+    <section id="review">
+        <h3>Review</h3>
+        <ul>
+            <li><strong>reviewId:</strong> <span id="reviewId">uuid</span></li>
+            <li><strong>reviewAnimeId:</strong> <span id="reviewAnimeId">foreign key to Anime</span></li>
+            <li><strong>reviewProfileId:</strong> <span id="reviewProfileId">foreign key to Profile</span></li>
+            <li><strong>reviewAnimeRating:</strong> <span id="reviewAnimeRating">smallint</span></li>
+            <li><strong>reviewBody:</strong> <span id="reviewBody">text (Content of the post)</span></li>
+            <li><strong>reviewCreatedAt:</strong> <span id="reviewCreatedAt">timestamp</span></li>
+            <li><strong>reviewSpoiler:</strong> <span id="reviewSpoiler">boolean</span></li>
+            <li><strong>reviewStatus:</strong> <span id="reviewStatus">text ('drafted' or 'posted')</span></li>
+        </ul>
+    </section>
+    <!-- Genre Entity -->
+    <section id="genre">
+        <h3>Genre</h3>
+        <ul>
+            <li><strong>genreId:</strong> <span id="genreId">uuid</span></li>
+            <li><strong>genreName:</strong> <span id="genreName">text</span></li>
+        </ul>
+    </section>
+    <!-- AnimeGenres Entity -->
+    <section id="animeGenresSection">
+        <h3>AnimeGenres</h3>
+        <ul>
+            <li><strong>animeGenresAnimeId:</strong> <span id="animeGenresAnimeId">foreign key to Anime</span></li>
+            <li><strong>animeGenresGenresId:</strong> <span id="animeGenresGenresId">foreign key to Genre</span></li>
+        </ul>
+    </section>
+    <!-- WatchList Entity -->
+    <section id="watchList">
+        <h3>WatchList</h3>
+        <ul>
+            <li><strong>watchListAnimeId:</strong> <span id="watchListAnimeId">foreign key to Anime</span></li>
+            <li><strong>watchListProfileId:</strong> <span id="watchListProfileId">foreign key to Profile</span></li>
+            <li><strong>watchListFavorite:</strong> <span id="watchListFavorite">smallint</span></li>
+            <li><strong>watchListHidden:</strong> <span id="watchListHidden">smallint</span></li>
+            <li><strong>watchListLater:</strong> <span id="watchListLater">smallint</span></li>
+        </ul>
+    </section>
+    <!-- Relations -->
+    <section id="relations">
+        <h3>Relations</h3>
+        <ul>
+            <li><strong>Profile to Review:</strong> One Profile can write many Reviews (1 to many)</li>
+            <li><strong>Profile to WatchList:</strong> One Profile can have many WatchList entries (1 to many)</li>
+            <li><strong>Anime to Review:</strong> One Anime can have many Reviews (1 to many)</li>
+            <li><strong>WatchList to Anime:</strong> One WatchList can have many Anime entries (1 to many)</li>
+            <li><strong>Anime to Genre:</strong> One Anime can have many Genres through AnimeGenres (many to many)</li>
+            <li><strong>Genre to Anime:</strong> One Genre can be associated with many Animes through AnimeGenres (many
+                to many)
+            </li>
+        </ul>
+    </section>
+    <h2>ERD</h2>
+    <img src="ERD.png"
+         alt="Conceptual Model">
+</body>
+</html>
