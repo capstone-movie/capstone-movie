@@ -13,7 +13,7 @@ type RootLayoutProps = {
 export default function RootLayout(props : RootLayoutProps) {
     const { children } = props
     return (
-        <html  lang="en" suppressHydrationWarning>
+        <html className={'bg-black'} lang="en" suppressHydrationWarning>
         <body>{children}</body>
         </html>
     )
