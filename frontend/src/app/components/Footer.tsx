@@ -2,7 +2,7 @@ import React from 'react';
 
 export function Footer() {
     return (
-        <footer className="bg-gray-800 text-white py-8 fixed bottom-0 w-full">
+        <footer className="bg-gray-800 text-white py-8 bottom-0 w-full">
             <div className="max-w-7xl mx-auto flex flex-col items-center">
                 <div className="mb-4 text-center">
                     <h2 className="text-2xl font-bold">Newsletter</h2>
