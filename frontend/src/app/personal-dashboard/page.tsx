@@ -15,30 +15,36 @@ const animePlaceholders = [
     { id: 5, title: "Anime Title #5" },
 ];
 
-const Dashboard = () => {
+const personalDashboard = () => {
     return (
-        <div className="bg-gray-100 min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-gray-20">
+
             {/* Header */}
-            <header className="bg-gray-700 text-white text-center py-8 text-xl font-bold">
+            <header className="bg-gray-700 text-white text-center py-6 text-xl">
                 Nav Bar / Header
             </header>
-            {/* Personal Dashboard */}
+
+            {/* Main Dashboard Content */}
             <main className="flex-grow container mx-auto p-6">
                 <h1 className="text-4xl font-bold text-center text-gray-700 mb-6">
                     Personal Dashboard
                 </h1>
-                {/* Content */}
+
+                {/* Sections */}
                 {sections.map((section, index) => (
-                    <div key={index} className="relative mb-8 bg-gray-300 p-6 shadow-lg min-h-[350px] flex flex-col">
+                    <div key={index} className="relative mb-8 bg-gray-300 p-6 min-h-[350px] flex flex-col">
                         {/* Red Placeholder */}
-                        <div className="absolute top-2 right-2 w-8 h-8 bg-red-400"></div>
+                        <div className="absolute top-2 right-2 w-6 h-6 bg-red-400"></div>
+
                         {/* Section Header */}
                         <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
+
                         {/* Anime Placeholders */}
-                        <div className="flex flex-wrap justify-center gap-16 p-4 bg-gray-400">
-                            {animePlaceholders.map((anime, index) => (
-                                <div key={anime.id} className="bg-white p-3 shadow-md w-[150px]">
-                                    <div className="h-40 bg-gray-200 flex items-center justify-center">
+                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-6 sm:gap-16 lg:gap-24 p-6 bg-gray-400 overflow-x-auto">
+                            {animePlaceholders.map((anime) => (
+                                <div key={anime.id} className={`bg-white p-3 w-[140px]
+                                    ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>
+                                    <div className="h-36 bg-gray-200 flex items-center justify-center">
                                         <span className="text-lg font-bold">#{anime.id}</span>
                                     </div>
                                     <p className="text-center mt-2 font-medium">{anime.title}</p>
@@ -48,11 +54,12 @@ const Dashboard = () => {
                     </div>
                 ))}
             </main>
+
             {/* Footer */}
-            <footer className="bg-gray-700 text-white text-center py-8">
+            <footer className="bg-gray-700 text-white text-center py-6">
                 Footer
             </footer>
         </div>
-    );
-};
-export default Dashboard;
+    )
+}
+export default personalDashboard
