@@ -1,8 +1,9 @@
 import {useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 import {ListHeader} from "@/app/(index)/list-header";
+import Link from "next/link";
 
-type AnimeResponse = {
+type Response = {
     data: {
         mal_id: number;
         url: string;
@@ -126,45 +127,58 @@ type AnimeResponse = {
     };
 };
 
-type HorizontalListProps = {
+type Props = {
     url: string
     title: string
 }
 
-export function HorizontalListTrailer(prop: HorizontalListProps) {
+export function HorizontalListTrailer(prop: Props) {
 
-    const [animeResponse, setAnimeResponse] = useState<AnimeResponse>()
+    const [data, setData] = useState<Response | null>(null);
 
-    const initialEffects = () => {
-        fetch(prop.url)
-            .then(response => response.json())
-            .then(json => setAnimeResponse(json))
-    }
-    useEffect(initialEffects, [setAnimeResponse])
+    useEffect(() => {
+        const fetchData = async () => {
+            const url = prop.url;
+            while (true) {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const newData: Response = await response.json();
+                    newData.data = newData.data.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i)
+                    setData(newData);
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        };
+        fetchData().then(() => {
+        });
+    }, []);
 
     const [showVideoURL, setShowVideoURL] = useState('')
-
-    if (animeResponse) {
-        animeResponse.data = animeResponse.data.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i)
-    }
 
     return (
         <>
             <div className={'bg-black h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 overflow-y-hidden'}>
+                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
                     {
-                        animeResponse &&
-                        animeResponse.data.map((anime, index) => (
+                        data &&
+                        data.data.map((anime, index) => (
                             anime.trailer.embed_url &&
-                            <div className={'bg-green-200 h-[30vh] aspect-square'}
+                            <div className={'bg-green-200 h-[30vh] aspect-video'}
                                  key={index}>
-                                <img
-                                    src={anime.images.webp.large_image_url}
-                                    alt={anime.title}
+                                <img src={`https://img.youtube.com/vi/${anime.trailer.url?.slice(-11)}/0.jpg`}
                                     className={'w-full h-full object-cover'}
                                 />
                                 <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
+
+                                    <Link href={{ pathname: "/anime", query: { id: anime.mal_id } }}>
+                                        <button className={'bg-black rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
+                                            <p className={'text-white text-2xl font-bold'}>
+                                                ?
+                                            </p>
+                                        </button>
+                                    </Link>
                                     <button onClick={() => {
                                         setShowVideoURL(anime.trailer.embed_url)
                                     }}
@@ -175,7 +189,7 @@ export function HorizontalListTrailer(prop: HorizontalListProps) {
                                     </button>
                                     <div className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
                                         <h3 className={"text-2xl font-bold text-white text-center"}>
-                                            {anime.title}
+                                            {anime.title_english}
                                         </h3>
                                     </div>
                                 </div>

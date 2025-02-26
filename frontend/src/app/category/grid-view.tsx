@@ -1,6 +1,5 @@
 import {useEffect, useState} from "react";
-import {ListItem} from "@/app/(index)/list-item";
-import {ListHeader} from "@/app/(index)/list-header";
+import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 
 type Response = {
     data: {
@@ -131,7 +130,7 @@ type Props = {
     title: string
 }
 
-export function HorizontalList(prop: Props) {
+export function GridView(prop: Props) {
 
     const [data, setData] = useState<Response | null>(null);
 
@@ -143,6 +142,7 @@ export function HorizontalList(prop: Props) {
                 if (response.ok) {
                     const newData: Response = await response.json();
                     newData.data = newData.data.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i)
+                    newData.data = newData.data.filter((v) => !v.genres.some((genre) => genre.name === 'Hentai'));
                     setData(newData);
                     break;
                 }
@@ -152,24 +152,49 @@ export function HorizontalList(prop: Props) {
         fetchData().then(() => {});
     }, []);
 
+    const [showVideoURL, setShowVideoURL] = useState('')
+
     return (
         <>
-            <div className={'bg-black h-fit'}>
-                <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll no-scrollbar gap-4 overflow-y-hidden'}>
+            <p className={'text-white text-3xl'}>
+                {prop.title}
+            </p>
+            <div className={'bg-black h-fit gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}>
                     {
                         data &&
                         data.data.map((anime, index) => (
-                            <div className={'h-[30vh] aspect-[2/3]'}
-                                 key={index}>
-                                <ListItem title={anime.title_english}
-                                          url={anime.images.webp.large_image_url}
-                                          mal_id={anime.mal_id}/>
+                            anime.trailer.embed_url &&
+                            <div key={index}>
+                                <img
+                                    src={anime.images.webp.large_image_url}
+                                    alt={anime.title}
+                                    className={'w-full h-full object-cover'}
+                                />
+                                <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
+                                    <button onClick={() => {
+                                        setShowVideoURL(anime.trailer.embed_url)
+                                    }}
+                                            className={'bg-black/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
+                                        <p className={"text-white text-2xl"}>
+                                            Play
+                                        </p>
+                                    </button>
+                                    <div className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
+                                        <h3 className={"text-2xl font-bold text-white text-center"}>
+                                            {anime.title}
+                                        </h3>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     }
-                </div>
             </div>
+            {
+                showVideoURL !== '' &&
+                <EmbeddedVideo url={showVideoURL}
+                               title={'test'}
+                               exit={setShowVideoURL}/>
+            }
         </>
     )
 }
