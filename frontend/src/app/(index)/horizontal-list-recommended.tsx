@@ -2,7 +2,7 @@ import {useEffect, useState} from "react";
 import {ListItem} from "@/app/(index)/list-item";
 import {ListHeader} from "@/app/(index)/list-header";
 
-type AnimeResponse = {
+type Response = {
     data: {
         mal_id: string;
         entry: {
@@ -34,36 +34,46 @@ type AnimeResponse = {
     };
 };
 
-type HorizontalListProps = {
+type Props = {
     url: string
     title: string
 }
 
-export function HorizontalListRecommended(prop: HorizontalListProps) {
+export function HorizontalListRecommended(prop: Props) {
 
-    const [animeResponse, setAnimeResponse] = useState<AnimeResponse>()
+    const [data, setData] = useState<Response | null>(null);
 
-    const initialEffects = () => {
-        fetch(prop.url)
-            .then(response => response.json())
-            .then(json => setAnimeResponse(json))
-    }
-    useEffect(initialEffects, [setAnimeResponse])
+    useEffect(() => {
+        const fetchData = async () => {
+            const url = prop.url;
+            while (true) {
+                const response = await fetch(url);
+                if (response.ok) {
+                    const newData: Response = await response.json();
+                    newData.data = newData.data.filter((v, i, a) => a.findIndex(t => (t.entry[0].title === v.entry[0].title)) === i)
+                    setData(newData);
+                    break;
+                }
+                await new Promise(resolve => setTimeout(resolve, 500));
+            }
+        };
+        fetchData().then(() => {});
+    }, []);
 
     return (
         <>
             <div className={'bg-black h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 overflow-y-hidden'}>
+                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
                     {
-                        animeResponse &&
-                        animeResponse.data &&
-                        animeResponse.data.map((anime, index) => (
+                        data &&
+                        data.data.map((anime, index) => (
                             <div className={'h-[30vh] aspect-[2/3]'}
                                  key={index}>
                                 <ListItem
                                     url={anime.entry[0].images.webp.large_image_url}
-                                    title={anime.entry[0].title}/>
+                                    title={anime.entry[0].title}
+                                    mal_id={anime.entry[0].mal_id}/>
                             </div>
                         ))
                     }

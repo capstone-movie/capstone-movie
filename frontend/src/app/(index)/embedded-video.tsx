@@ -7,7 +7,6 @@ type EmbeddedVideoProps = {
 }
 
 export function EmbeddedVideo(props: EmbeddedVideoProps) {
-    console.log(props.url)
     return (
         <>
             <div onClick={()=>{props.exit('')}} className={'bg-black/50 h-full w-full fixed top-0 left-0 z-10 justify-center items-center flex flex-col p-10'}>
