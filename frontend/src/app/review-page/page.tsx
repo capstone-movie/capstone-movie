@@ -43,17 +43,11 @@ const ReviewPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={containsSpoilers}
-                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="w-5 h-5 ml-2"
-                                />
-
-
+                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="w-5 h-5 ml-2"/>
                             </div>
                         </form>
-
                     </main>
-
                 </div>
-
             </div>
         </>
     )
