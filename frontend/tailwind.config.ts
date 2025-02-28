@@ -7,7 +7,15 @@ const config: Config = {
     "./src/**/*.{js,ts,jsx,tsx,mdx}",
 
   ],
-  theme: {},
+  theme: {
+    extend: {
+      colors: {
+        'bgcolor': '#13283F', // You can define a single color as well
+        'fhcolor': '#1D3D61',
+        'popcolor': '#B5C8DE'
+      },
+    },
+  },
   plugins: [
     require('@tailwindcss/typography'),
     require('@tailwindcss/forms'),

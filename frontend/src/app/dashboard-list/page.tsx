@@ -12,8 +12,8 @@ const animePlaceholders = [
 const dashboardList = () => {
     return (
         <>
-            <div className="flex justify-center items-center min-h-screen p-6">
-                <div className="relative bg-gray-300 p-4 max-w-screen-lg w-full">
+            <div className="flex justify-center items-center min-h-screen p-6 text-white">
+                <div className="relative bg-fhcolor p-4 max-w-screen-lg w-full">
                     {/* Red Placeholder */}
                     <div className="absolute top-2 right-2 w-6 h-6 bg-red-400"></div>
 
@@ -21,7 +21,7 @@ const dashboardList = () => {
                     <h2 className="text-2xl font-bold text-center mb-4">Dashboard</h2>
 
                     {/* Anime Placeholders */}
-                    <div className="flex flex-wrap justify-center gap-8 p-4 bg-gray-400">
+                    <div className="flex flex-wrap justify-center gap-8 p-4 bg-bgcolor">
                         {animePlaceholders.map((anime) => (
                             <div key={anime.id} className={`bg-white p-3 shadow-md w-[140px] 
                             ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>

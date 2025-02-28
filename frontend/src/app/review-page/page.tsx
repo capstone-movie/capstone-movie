@@ -12,14 +12,11 @@ const ReviewPage = () => {
     };
     return (
         <>
-            <div className="bg-gray-100 min-h-screen flex flex-col items-center">
-                {/* Header */}
-                <header className="bg-gray-700 text-white text-center py-8 text-xl font-bold w-full">
-                    Nav Bar / Header
-                </header>
+            <div className="bg-bgcolor min-h-screen flex flex-col items-center text-white">
+
                 {/* Review Form */}
                 <div className="w-full flex justify-start">
-                    <main className="bg-white p-6 w-[700px]">
+                    <main className="bg-bgcolor p-6 w-[700px]">
                         <h1 className="text-4xl font-bold mb-6">Write a Review</h1>
 
                         <form onSubmit={handleSubmit}>
@@ -29,13 +26,13 @@ const ReviewPage = () => {
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="block w-full border border-gray-400 p-4 mb-4"
+                            className="block w-full border border-gray-400 mb-4 text-black"
                             placeholder=""
                             required
                             />
                             {/* Review Content */}
                             <label className="block text-lg font-semibold mb-2">Review Content</label>
-                            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="block w-full border border-gray-400 p-2 mb-4 h-80"required>
+                            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="text-black block w-full border border-gray-400 p-2 mb-4 h-80"required>
                             </textarea>
                             {/* Spoiler Checkbox */}
                             <div className="flex items-center mb-4">
@@ -43,11 +40,11 @@ const ReviewPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={containsSpoilers}
-                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="w-5 h-5 ml-2"
+                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="text-black w-5 h-5 ml-2"
                                 />
                             </div>
                             {/* Tips Section */}
-                            <div className="border border-gray-400 p-4 bg-gray-50 mb-4">
+                            <div className="border p-4 mb-4 text-white bg-fhcolor rounded-md">
                                 <h2 className="font-bold">Tips for New Writers!</h2>
                                 <ul className="text-sm list-disc pl-4 mt-2">
                                     <li>Your first 105 words will be visible above the read more: Make them interesting!</li>
@@ -65,9 +62,7 @@ const ReviewPage = () => {
                     </main>
                 </div>
                 {/* Footer */}
-                <footer className="bg-gray-700 text-white text-center py-6 w-full">
-                    Footer
-                </footer>
+
             </div>
         </>
     )

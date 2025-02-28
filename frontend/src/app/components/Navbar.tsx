@@ -9,22 +9,22 @@ export function Navbar() {
     };
 
     return (
-        <nav className="w-full bg-gray-400 text-white">
+        <nav className="w-full bg-fhcolor text-white">
             {/* Row 1: Name & Sign In */}
-            <div className="flex justify-between items-center px-6 py-3 border-b border-gray-200">
+            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
                 <h1 className="text-2xl font-bold">AniRection</h1>
-                <div className="space-x-4">
-                    <button className="px-4 py-2">
+                <div className="">
+                    <button className="px-2 py-2">
                         Sign In
                     </button>
-                    <button className="px-4 py-2">
+                    <button className="px-2 py-2">
                         Sign Up
                     </button>
                 </div>
             </div>
 
             {/* Row 2: Links & Search */}
-            <div className="flex justify-between items-center px-6 py-2">
+            <div className="flex justify-between items-center px-4 py-2">
                 <div className="md:flex space-x-6 hidden md:block">
                     <a href="#" className="hover:text-gray-300">Top Airing</a>
                     <a href="#" className="hover:text-gray-300">Most Popular</a>

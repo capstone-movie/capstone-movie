@@ -212,11 +212,11 @@ export default function () {
                     alt={data.data.title_english}
                 />
                 <div className={'flex flex-col w-full min-w-96 px-10'}>
-                    <p className={'text-white font-bold text-4xl'}>{data.data.title_english}</p>
-                    <div className={'flex gap-2'}>
-                        <p className={'text-white'}>{`Score: ${data.data.score} / 10`}</p>
-                        <p className={'text-white'}>{`Rank #${data.data.rank}`}</p>
-                        <button className={'bg-white text-black'}>Add To List</button>
+                    <p className={'text-white font-bold text-3xl'}>{data.data.title_english}</p>
+                    <div className={'flex gap-4 py-2'}>
+                        <p className={'text-white text-xl font-semibold'}>{`Score: ${data.data.score}`}</p>
+                        <p className={'text-white text-xl font-semibold'}>{`Rank #${data.data.rank}`}</p>
+                        <button className={'bg-white text-black px-2 rounded-md'}>Add To List</button>
                     </div>
                     <p className={'text-white overflow-y-auto'}>{data.data.synopsis.replaceAll('[Written by MAL Rewrite]', '')}</p>
                 </div>
@@ -240,7 +240,7 @@ export default function () {
                 </div>
             </div>
             <div className={' w-full h-fit flex text-white'}>
-                <div className={'w-[220] h-full shrink-0 py-2'}>
+                <div className={'w-[220] h-full shrink-0 py-5'}>
                     <p>Alternative Titles</p>
                     {
                         data.data.title_synonyms.map((title, index) => (
@@ -265,7 +265,7 @@ export default function () {
                     <p>{`Rank: #${data.data.rank}`}</p>
                     <p>{`Popularity: #${data.data.popularity}`}</p>
                 </div>
-                <div className={'flex-grow pl-10'}>
+                <div className={'flex-grow pt-5  pl-10 '}>
                     <p className={'text-white text-4xl pb-4 w-fit font-bold'}>
                         Characters
                     </p>

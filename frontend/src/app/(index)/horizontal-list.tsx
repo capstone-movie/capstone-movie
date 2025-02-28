@@ -154,9 +154,9 @@ export function HorizontalList(prop: Props) {
 
     return (
         <>
-            <div className={'bg-black h-fit'}>
+            <div className={'bg-bgcolor h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll no-scrollbar gap-4 overflow-y-hidden'}>
+                <div className={'bg-bgcolor h-fit flex overflow-x-scroll no-scrollbar gap-4 overflow-y-hidden'}>
                     {
                         data &&
                         data.data.map((anime, index) => (

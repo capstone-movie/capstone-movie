@@ -158,9 +158,9 @@ export function HorizontalListTrailer(prop: Props) {
 
     return (
         <>
-            <div className={'bg-black h-fit'}>
+            <div className={'bg-bgcolor h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
+                <div className={'bg-bgcolor h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
                     {
                         data &&
                         data.data.map((anime, index) => (
@@ -173,7 +173,7 @@ export function HorizontalListTrailer(prop: Props) {
                                 <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
 
                                     <Link href={{ pathname: "/anime", query: { id: anime.mal_id } }}>
-                                        <button className={'bg-black rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
+                                        <button className={'bg-bgcolor rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
                                             <p className={'text-white text-2xl font-bold'}>
                                                 ?
                                             </p>
@@ -182,12 +182,12 @@ export function HorizontalListTrailer(prop: Props) {
                                     <button onClick={() => {
                                         setShowVideoURL(anime.trailer.embed_url)
                                     }}
-                                            className={'bg-black/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
+                                            className={'bg-bgcolor/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
                                         <p className={"text-white text-2xl"}>
                                             Play
                                         </p>
                                     </button>
-                                    <div className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
+                                    <div className={'bg-bgcolor/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
                                         <h3 className={"text-2xl font-bold text-white text-center"}>
                                             {anime.title_english}
                                         </h3>

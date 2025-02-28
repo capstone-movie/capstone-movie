@@ -27,8 +27,8 @@ const SignupPopup = () => {
 
     return (
         <>
-            <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="bg-white p-8 w-96 text-center shadow-lg">
+            <div className="fixed inset-0 flex items-center justify-center text-white">
+                <div className="bg-bgcolor p-8 w-96 text-center shadow-lg rounded-md">
                     {showCheckEmail ? (
                         <>
                             <h2 className="text-xl font-bold">Welcome to AniRec</h2>

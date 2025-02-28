@@ -156,10 +156,10 @@ export function GridView(prop: Props) {
 
     return (
         <>
-            <p className={'text-white text-3xl'}>
+            <p className={'text-white text-3xl p-4'}>
                 {prop.title}
             </p>
-            <div className={'bg-black h-fit gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}>
+            <div className={' bg-bgcolor h-fit gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}>
                     {
                         data &&
                         data.data.map((anime, index) => (

@@ -62,9 +62,9 @@ export function HorizontalListRecommended(prop: Props) {
 
     return (
         <>
-            <div className={'bg-black h-fit'}>
+            <div className={'bg-bgcolor h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-black h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
+                <div className={'bg-bgcolor h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
                     {
                         data &&
                         data.data.map((anime, index) => (
