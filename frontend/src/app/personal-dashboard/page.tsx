@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const sections = [
@@ -33,8 +34,11 @@ const personalDashboard = () => {
                 {/* Sections */}
                 {sections.map((section, index) => (
                     <div key={index} className="relative mb-8 bg-gray-300 p-6 min-h-[350px] flex flex-col">
-                        {/* Red Placeholder */}
-                        <div className="absolute top-2 right-2 w-6 h-6 bg-red-400"></div>
+                        {/* Red Placeholder Button */}
+                        <button
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md hover:bg-red-500 active:bg-red-600"
+                            onClick={() => alert("Button Clicked!")}>
+                        </button>
 
                         {/* Section Header */}
                         <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
