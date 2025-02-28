@@ -17,10 +17,9 @@ const animePlaceholders = [
 
 const personalDashboard = () => {
     return (
-        <div className="min-h-screen flex flex-col bg-gray-20 text-white">
-
+        <div className="min-h-screen flex flex-col bg-gray-20">
             {/* Main Dashboard Content */}
-            <main className="flex-row container mx-auto p-6">
+            <main className="flex-grow container mx-auto p-6 text-white">
                 <h1 className="text-4xl font-bold text-center  mb-6">
                     Personal Dashboard
                 </h1>
@@ -49,7 +48,6 @@ const personalDashboard = () => {
                     </div>
                 ))}
             </main>
-
         </div>
     )
 }

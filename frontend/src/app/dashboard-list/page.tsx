@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const animePlaceholders = [
@@ -14,8 +15,11 @@ const dashboardList = () => {
         <>
             <div className="flex justify-center items-center min-h-screen p-6 text-white">
                 <div className="relative bg-fhcolor p-4 max-w-screen-lg w-full">
-                    {/* Red Placeholder */}
-                    <div className="absolute top-2 right-2 w-6 h-6 bg-red-400"></div>
+                    {/* Red Placeholder Button */}
+                    <button
+                        className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md hover:bg-red-500 active:bg-red-600"
+                        onClick={() => alert("Button Clicked!")}>
+                    </button>
 
                     {/* Section Header */}
                     <h2 className="text-2xl font-bold text-center mb-4">Dashboard</h2>
