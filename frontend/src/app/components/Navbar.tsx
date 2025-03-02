@@ -1,68 +1,75 @@
-'use client'
-import React, { useState } from "react";
+'use client';
+import React, { useState } from 'react';
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [isSearchOpen, setIsSearchOpen] = useState(false);
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
+    const toggleSearch = () => {
+        setIsSearchOpen(!isSearchOpen);
+    };
+
     return (
-        <nav className="w-full bg-fhcolor text-white">
-            {/* Row 1: Name & Sign In */}
-            <div className="flex justify-between items-center px-4 py-3 border-b border-gray-200">
-                <h1 className="text-2xl font-bold">AniRection</h1>
-                <div className="">
-                    <button className="px-2 py-2">
-                        Sign In
-                    </button>
-                    <button className="px-2 py-2">
-                        Sign Up
-                    </button>
-                </div>
+        <nav className="w-full bg-fhcolor text-white flex justify-between items-center p-4 relative">
+            {/* Hamburger Menu */}
+            <button onClick={toggleMenu} className="block text-white">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+            </button>
+
+            {/* Title */}
+            <h1 className="text-2xl font-bold">AniRection</h1>
+
+            {/* Links */}
+            <div className="md:flex space-x-6 hidden ml-4">
+                <a href="#" className="hover:text-gray-300">Top</a>
+                <a href="#" className="hover:text-gray-300">Popular</a>
+                <a href="#" className="hover:text-gray-300">Recents</a>
             </div>
 
-            {/* Row 2: Links & Search */}
-            <div className="flex justify-between items-center px-4 py-2">
-                <div className="md:flex space-x-6 hidden md:block">
-                    <a href="#" className="hover:text-gray-300">Top Airing</a>
-                    <a href="#" className="hover:text-gray-300">Most Popular</a>
-                    <a href="#" className="hover:text-gray-300">Beginner Friendly</a>
-                    <a href="#" className="hover:text-gray-300">Recently Released</a>
-                </div>
-                <div>
-                    <input
-                        type="text"
-                        placeholder="Search..."
-                        className="px-3 py-1 rounded-lg text-black"
-                    />
-                </div>
-                <button onClick={toggleMenu} className="md:hidden block text-white">
-                    <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                        xmlns="http://www.w3.org/2000/svg"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M4 6h16M4 12h16M4 18h16"
-                        ></path>
-                    </svg>
-                </button>
+            {/* Spacer */}
+            <div className="flex-1"></div>
+
+            {/* Search Bar */}
+            <div className="relative hidden md:block">
+                <input type="text" placeholder="Search..." className="px-3 py-1 rounded-lg text-black" />
+            </div>
+
+            {/* Search Icon for Mobile */}
+            <button onClick={toggleSearch} className="md:hidden block text-white">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-4.35-4.35M17 10a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </button>
+
+            {/* Sign In/Sign Up Buttons */}
+            <div className="space-x-2">
+                <button className="px-2 py-2">Sign In/Sign Up</button>
             </div>
 
             {/* Mobile Menu */}
             {isOpen && (
-                <div className="md:hidden px-6 py-2 space-y-2">
+                <div className="absolute inset-x-0 top-16 bg-fhcolor text-white px-6 py-2 space-y-2">
                     <a href="#" className="block hover:text-gray-300">Top Airing</a>
                     <a href="#" className="block hover:text-gray-300">Most Popular</a>
                     <a href="#" className="block hover:text-gray-300">Beginner Friendly</a>
                     <a href="#" className="block hover:text-gray-300">Recently Released</a>
+                    <a href="#" className="block hover:text-gray-300">Link 1</a>
+                    <a href="#" className="block hover:text-gray-300">Link 2</a>
+                    <a href="#" className="block hover:text-gray-300">Link 3</a>
+                    <a href="#" className="block hover:text-gray-300">Link 4</a>
+                </div>
+            )}
+
+            {/* Mobile Search Bar */}
+            {isSearchOpen && (
+                <div className="md:hidden absolute inset-x-0 top-full bg-fhcolor text-white px-6 py-2">
+                    <input type="text" placeholder="Search..." className="w-full px-3 py-1 rounded-lg text-black" />
                 </div>
             )}
         </nav>
