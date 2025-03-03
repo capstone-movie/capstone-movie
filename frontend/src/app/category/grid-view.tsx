@@ -156,21 +156,21 @@ export function GridView(prop: Props) {
 
     return (
         <>
-            <p className={'text-white text-3xl p-4'}>
+            <p className={'text-white text-3xl w-fit mx-auto p-4'}>
                 {prop.title}
             </p>
-            <div className={' bg-bgcolor h-fit gap-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6'}>
+            <div className={' bg-bgcolor flex flex-wrap justify-center'}>
                     {
                         data &&
                         data.data.map((anime, index) => (
                             anime.trailer.embed_url &&
-                            <div key={index}>
+                            <div key={index} className={'h-[450px] w-[300px]'}>
                                 <img
                                     src={anime.images.webp.large_image_url}
                                     alt={anime.title}
-                                    className={'w-full h-full object-cover'}
+                                    className={'size-full object-cover'}
                                 />
-                                <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
+                                <div className={' size-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
                                     <button onClick={() => {
                                         setShowVideoURL(anime.trailer.embed_url)
                                     }}
@@ -181,7 +181,7 @@ export function GridView(prop: Props) {
                                     </button>
                                     <div className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
                                         <h3 className={"text-2xl font-bold text-white text-center"}>
-                                            {anime.title}
+                                            {anime.title_english ? anime.title_english : anime.title}
                                         </h3>
                                     </div>
                                 </div>

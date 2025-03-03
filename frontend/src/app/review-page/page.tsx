@@ -56,7 +56,7 @@ const ReviewPage = () => {
                                 </ul>
                             </div>
                             {/* Submit Button */}
-                            <button type="submit" className= "border px-4 py-2 font-semibold rounded hover ">
+                            <button type="submit" className= "border px-4 py-2 font-semibold rounded-sm hover ">
                                 Submit Review
                             </button>
                         </form>
