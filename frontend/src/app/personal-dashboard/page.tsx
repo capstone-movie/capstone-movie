@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 
 const sections = [
@@ -26,19 +27,21 @@ const personalDashboard = () => {
 
                 {/* Sections */}
                 {sections.map((section, index) => (
-                    <div key={index} className="relative mb-8 bg-fhcolor p-6 min-h-[350px] flex flex-col">
-                        {/* Red Placeholder */}
-                        <div className="absolute top-2 right-2 w-6 h-6 bg-red-400"></div>
-
+                    <div key={index} className="relative mb-8 bg-fhcolor p-6 min-h-[350px] flex flex-col rounded shadow-lg">
+                        {/* Red Placeholder Button */}
+                        <button
+                            className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center rounded shadow-lg hover:bg-red-500 active:bg-red-600"
+                            onClick={() => alert("Button Clicked!")}>
+                        </button>
                         {/* Section Header */}
                         <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
 
                         {/* Anime Placeholders */}
-                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-6 sm:gap-16 lg:gap-24 p-6 bg-bgcolor overflow-x-auto">
+                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-6 sm:gap-16 lg:gap-24 p-6 bg-bgcolor overflow-x-auto rounded shadow-lg">
                             {animePlaceholders.map((anime) => (
-                                <div key={anime.id} className={`bg-white p-3 w-[140px]
+                                <div key={anime.id} className={`bg-white p-3 w-[140px] rounded shadow-lg
                                     ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>
-                                    <div className="h-36 bg-gray-200 flex items-center justify-center">
+                                    <div className="h-36 bg-gray-200 flex items-center justify-center rounded shadow-lg">
                                         <span className="text-lg font-bold">#{anime.id}</span>
                                     </div>
                                     <p className="text-center mt-2 font-medium">{anime.title}</p>

@@ -13,11 +13,14 @@ const animePlaceholders = [
 const dashboardList = () => {
     return (
         <>
+            {/* Blurred background */}
+            <div className="w-full h-full fixed top-0 left-0 pointer-events-none bg-black/50 backdrop-blur"/>
+
             <div className="flex justify-center items-center min-h-screen p-6 text-white">
-                <div className="relative bg-fhcolor p-4 max-w-screen-lg w-full">
+                <div className="relative bg-fhcolor p-4 max-w-screen-lg w-full rounded shadow-lg">
                     {/* Red Placeholder Button */}
                     <button
-                        className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md hover:bg-red-500 active:bg-red-600"
+                        className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md rounded hover:bg-red-500 active:bg-red-600"
                         onClick={() => alert("Button Clicked!")}>
                     </button>
 
@@ -25,9 +28,9 @@ const dashboardList = () => {
                     <h2 className="text-2xl font-bold text-center mb-4">Dashboard</h2>
 
                     {/* Anime Placeholders */}
-                    <div className="flex flex-wrap justify-center gap-8 p-4 bg-bgcolor">
+                    <div className="flex flex-wrap justify-center gap-8 p-4 bg-bgcolor rounded shadow-lg">
                         {animePlaceholders.map((anime) => (
-                            <div key={anime.id} className={`bg-white p-3 shadow-md w-[140px] 
+                            <div key={anime.id} className={`bg-white p-3 rounded shadow-lg w-[140px] 
                             ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>
                                 <div className="h-36 bg-gray-200 flex items-center justify-center">
                                     <span className="text-lg font-bold">#{anime.id}</span>
