@@ -8,7 +8,7 @@ const ReviewPage = () => {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Review Submitted!\nTitle: ${title}\nContains Spoilers: ${containsSpoilers}`);
+        alert(`Review Submitted!\nTitle: ${title} \nContent: ${content} \nContains Spoilers: ${containsSpoilers}`);
 
     };
     return (
@@ -27,13 +27,13 @@ const ReviewPage = () => {
                             type="text"
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
-                            className="block w-full border border-gray-400 mb-4 text-black"
+                            className="block w-full border border-gray-400 mb-4 text-white"
                             placeholder=""
                             required
                             />
                             {/* Review Content */}
                             <label className="block text-lg font-semibold mb-2">Review Content</label>
-                            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="text-black block w-full border border-gray-400 p-2 mb-4 h-80"required>
+                            <textarea value={content} onChange={(e) => setContent(e.target.value)} className="text-white block w-full border border-gray-400 p-2 mb-4 h-80"required>
                             </textarea>
                             {/* Spoiler Checkbox */}
                             <div className="flex items-center mb-4">
@@ -41,7 +41,7 @@ const ReviewPage = () => {
                                 <input
                                     type="checkbox"
                                     checked={containsSpoilers}
-                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="text-black w-5 h-5 ml-2"
+                                    onChange={() => setContainsSpoilers(!containsSpoilers)} className="text-white w-5 h-5 ml-2"
                                 />
                             </div>
                             {/* Tips Section */}
