@@ -11,9 +11,9 @@ export function Footer() {
                         <input
                             type="email"
                             placeholder="Enter your email here"
-                            className="p-2 mr-2 rounded border border-gray-300 w-64"
+                            className="p-2 mr-2 rounded-sm border border-gray-300 w-64"
                         />
-                        <button className="p-2 rounded bg-orange-500 text-white max-w-[25vw]">Subscribe</button>
+                        <button className="p-2 rounded-sm bg-orange-500 text-white max-w-[25vw]">Subscribe</button>
                     </div>
                 </div>
                 <hr className="w-full border-t border-gray-700 my-4" />

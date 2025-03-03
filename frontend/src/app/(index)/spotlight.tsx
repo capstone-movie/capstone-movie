@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
-import {ListItem} from "@/app/(index)/list-item";
+import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 import {ListHeader} from "@/app/(index)/list-header";
-import useWindowDimensions from "@/app/(index)/useWindowDimensions";
+import Link from "next/link";
 
 type Response = {
     data: {
@@ -132,7 +132,7 @@ type Props = {
     title: string
 }
 
-export function HorizontalList(prop: Props) {
+export function Spotlight(prop: Props) {
 
     const [data, setData] = useState<Response | null>(null);
 
@@ -154,15 +154,27 @@ export function HorizontalList(prop: Props) {
         });
     }, []);
 
+    const [showVideoURL, setShowVideoURL] = useState('')
+
     return (
         <>
-            <div className={'h-fit'}>
-                <ListHeader text={prop.title}/>
-                <div className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
-                     {
+            <div className={'h-[70vh] relative w-full'}>
+                <div className={'h-full relative w-fit ml-auto'}>
+                    <img src={`https://img.youtube.com/vi/${data?.data[5].trailer.url?.slice(-11)}/maxresdefault.jpg`}
+                         className={'h-full object-cover'}
+                    />
+                    <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-t h-full w-full absolute top-0 left-0'}>
+                    </div>
+                    <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-r h-full w-full absolute top-0 left-0'}>
+                    </div>
+                    {/*               <div className={'bg-bgcolor h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
+                    {
                         data &&
                         data.data.map((anime, index) => (
-                            <div className={`
+                            anime.trailer.embed_url &&
+
+                            <div className={` 
+                                                    
                             w-[100%]
                             500:w-[50%]
                             800:w-[33.33%]
@@ -176,14 +188,62 @@ export function HorizontalList(prop: Props) {
                             h-auto
                             shrink-0
                             `} key={index}>
-                                <ListItem title={anime.title_english ? anime.title_english : anime.title}
-                                          url={anime.images.webp.large_image_url}
-                                          mal_id={anime.mal_id}/>
+
+                                <img src={`https://img.youtube.com/vi/${anime.trailer.url?.slice(-11)}/maxresdefault.jpg`}
+                                     className={'w-full h-full object-cover'}
+                                />
+                                <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
+
+                                    <Link href={{ pathname: "/anime", query: { id: anime.mal_id } }}>
+                                        <button className={'bg-bgcolor rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
+                                            <p className={'text-white text-2xl font-bold'}>
+                                                ?
+                                            </p>
+                                        </button>
+                                    </Link>
+                                    <button onClick={() => {
+                                        setShowVideoURL(anime.trailer.embed_url)
+                                    }}
+                                            className={'bg-bgcolor/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
+                                        <p className={"text-white text-2xl"}>
+                                            Play
+                                        </p>
+                                    </button>
+                                    <div className={'bg-bgcolor/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
+                                        <h3 className={"text-2xl font-bold text-white text-center"}>
+                                            {anime.title_english}
+                                        </h3>
+                                    </div>
+                                </div>
                             </div>
                         ))
                     }
+                </div>*/}
+                </div>
+                <div className={'w-full h-full absolute top-0 left-0'}>
+                    <h3 className={"text-2xl font-bold text-white text-left"}>
+                        {data?.data[5].title_english ? data?.data[5].title_english : data?.data[5].title}
+                    </h3>
+                    <p className={"text-white text-left"}>
+                        {data?.data[5].synopsis}
+                    </p>
+                    <button onClick={() => { setShowVideoURL(data?.data[5].trailer.embed_url ?? '') }}
+                            className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
+                        View Trailer
+                    </button>
+                    <Link href={{ pathname: "/anime", query: { id: data?.data[5].mal_id} }}>
+                        <button className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
+                            More
+                        </button>
+                    </Link>
                 </div>
             </div>
+            {
+                showVideoURL !== '' &&
+                <EmbeddedVideo url={showVideoURL}
+                               title={'test'}
+                               exit={setShowVideoURL}/>
+            }
         </>
     )
 }

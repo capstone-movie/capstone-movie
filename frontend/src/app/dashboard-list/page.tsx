@@ -14,7 +14,7 @@ const dashboardList = () => {
     return (
         <>
             <div className="flex justify-center items-center min-h-screen p-6 text-white">
-                <div className="relative bg-fhcolor p-4 max-w-screen-lg w-full">
+                <div className="relative bg-fhcolor p-4 max-w-[theme(screens.lg)] w-full">
                     {/* Red Placeholder Button */}
                     <button
                         className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md hover:bg-red-500 active:bg-red-600"

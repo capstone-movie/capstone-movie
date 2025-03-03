@@ -212,7 +212,9 @@ export default function () {
                     alt={data.data.title_english}
                 />
                 <div className={'flex flex-col w-full min-w-96 px-10'}>
-                    <p className={'text-white font-bold text-3xl'}>{data.data.title_english}</p>
+                    <p className={'text-white font-bold text-3xl'}>{
+                        <p className={'text-white font-bold text-3xl'}>{data.data.title_english ? data.data.title_english : data.data.title}</p>
+                    }</p>
                     <div className={'flex gap-4 py-2'}>
                         <p className={'text-white text-xl font-semibold'}>{`Score: ${data.data.score}`}</p>
                         <p className={'text-white text-xl font-semibold'}>{`Rank #${data.data.rank}`}</p>

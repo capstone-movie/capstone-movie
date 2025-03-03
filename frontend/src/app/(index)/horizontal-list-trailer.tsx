@@ -158,22 +158,37 @@ export function HorizontalListTrailer(prop: Props) {
 
     return (
         <>
-            <div className={'bg-bgcolor h-fit'}>
+            <div className={'h-fit'}>
                 <ListHeader text={prop.title}/>
-                <div className={'bg-bgcolor h-fit flex overflow-x-scroll gap-4 no-scrollbar overflow-y-hidden'}>
+                <div className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
                     {
                         data &&
                         data.data.map((anime, index) => (
                             anime.trailer.embed_url &&
-                            <div className={'bg-green-200 h-[30vh] aspect-video'}
-                                 key={index}>
-                                <img src={`https://img.youtube.com/vi/${anime.trailer.url?.slice(-11)}/0.jpg`}
+
+                            <div className={` 
+                                                    
+                            w-[100%]
+                            500:w-[50%]
+                            800:w-[33.33%]
+                            1100:w-[25%]
+                            1400:w-[20%]
+                            1700:w-[16.66%]
+                            2000:w-[14.28%]
+                            2300:w-[12.5%] 
+                            2600:w-[11.11%]
+                            px-1
+                            h-auto
+                            shrink-0
+                            `} key={index}>
+
+                                <img src={`https://img.youtube.com/vi/${anime.trailer.url?.slice(-11)}/maxresdefault.jpg`}
                                     className={'w-full h-full object-cover'}
                                 />
                                 <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
 
                                     <Link href={{ pathname: "/anime", query: { id: anime.mal_id } }}>
-                                        <button className={'bg-bgcolor rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
+                                        <button className={'rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
                                             <p className={'text-white text-2xl font-bold'}>
                                                 ?
                                             </p>
