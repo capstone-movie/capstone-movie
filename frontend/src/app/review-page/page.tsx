@@ -9,6 +9,7 @@ const ReviewPage = () => {
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         alert(`Review Submitted!\nTitle: ${title}\nContains Spoilers: ${containsSpoilers}`);
+
     };
     return (
         <>

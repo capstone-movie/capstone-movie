@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 const SignupPopup = () => {
     const [isVisible, setIsVisible] = useState(true)          //popup-visibility
@@ -22,11 +22,27 @@ const SignupPopup = () => {
             handleSubscribe()
         }
     }
+    /* Close popup when clicking anywhere after confirmation appears */
+    useEffect(() => {
+        if (showCheckEmail) {
+            const closeOnClick = () => {
+                setIsVisible(false);
+            };
+            document.addEventListener("click", closeOnClick);
+
+            return () => {
+                document.removeEventListener("click", closeOnClick);
+            };
+        }
+    }, [showCheckEmail]);
     /* if popup is hidden, removes the popup  */
     if (!isVisible) return null
 
     return (
         <>
+            {/* Blurred background */}
+            <div className="w-full h-full fixed top-0 left-0 pointer-events-none bg-black/50 backdrop-blur" />
+
             <div className="fixed inset-0 flex items-center justify-center text-white">
                 <div className="bg-bgcolor p-8 w-96 text-center shadow-lg rounded-md">
                     {showCheckEmail ? (
@@ -42,7 +58,7 @@ const SignupPopup = () => {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="mt-4 w-full p-2 border rounded-md"
+                                className="mt-4 w-full p-2 border rounded-md text-black"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 onKeyDown={enterPress}/>
