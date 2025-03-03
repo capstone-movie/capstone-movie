@@ -1,7 +1,6 @@
 import {useEffect, useState} from "react";
 import {ListItem} from "@/app/(index)/list-item";
 import {ListHeader} from "@/app/(index)/list-header";
-import useWindowDimensions from "@/app/(index)/useWindowDimensions";
 
 type Response = {
     data: {
@@ -173,7 +172,7 @@ export function HorizontalList(prop: Props) {
                             2300:w-[12.5%] 
                             2600:w-[11.11%]
                             px-1
-                            h-auto
+                            h-[300px]
                             shrink-0
                             `} key={index}>
                                 <ListItem title={anime.title_english ? anime.title_english : anime.title}
