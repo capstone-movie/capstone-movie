@@ -44,7 +44,13 @@ const SignupPopup = () => {
             <div className="w-full h-full fixed top-0 left-0 pointer-events-none bg-black/50 backdrop-blur" />
 
             <div className="fixed inset-0 flex items-center justify-center text-white">
-                <div className="bg-bgcolor p-8 w-96 text-center shadow-lg rounded-md">
+                <div className="bg-bgcolor p-8 w-96 text-center shadow-lg rounded-md relative">
+                    {/* Close Button (X) - Positioned INSIDE Top-Right & White Color */}
+                    <button
+                        onClick={handleNoThanks}
+                        className="absolute right-3 top-3 text-white text-2xl">
+                        ✖
+                    </button>
                     {showCheckEmail ? (
                         <>
                             <h2 className="text-xl font-bold">Welcome to AniRec</h2>
@@ -58,7 +64,7 @@ const SignupPopup = () => {
                             <input
                                 type="email"
                                 placeholder="Enter your email"
-                                className="mt-4 w-full p-2 border rounded-md text-black"
+                                className="mt-4 w-full p-2 border rounded-md text-black bg-white"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 onKeyDown={enterPress}/>
