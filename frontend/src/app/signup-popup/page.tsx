@@ -45,7 +45,7 @@ const SignupPopup = () => {
 
             <div className="fixed inset-0 flex items-center justify-center text-white">
                 <div className="bg-bgcolor p-8 w-96 text-center shadow-lg rounded-md relative">
-                    {/* Close Button (X) - Positioned INSIDE Top-Right & White Color */}
+                    {/* Close Button (X)*/}
                     <button
                         onClick={handleNoThanks}
                         className="absolute right-3 top-3 text-white text-2xl">
