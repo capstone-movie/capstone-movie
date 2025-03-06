@@ -82,7 +82,7 @@ export function Navbar() {
 
             {/* Overlay */}
             {(isOpen || isSearchOpen) && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm z-10" onClick={() => { setIsOpen(false); setIsSearchOpen(false); }}></div>
+                <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-10" onClick={() => { setIsOpen(false); setIsSearchOpen(false); }}></div>
             )}
         </>
     );
