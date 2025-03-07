@@ -129,7 +129,6 @@ type Response = {
 
 type Props = {
     url: string
-    title: string
 }
 
 export function Spotlight(prop: Props) {
@@ -156,82 +155,38 @@ export function Spotlight(prop: Props) {
 
     const [showVideoURL, setShowVideoURL] = useState('')
 
+    const focus = data?.data[5];
+
+    if (focus === undefined) {
+        return <></>
+    }
+
     return (
         <>
-            <div className={'h-[70vh] relative w-full'}>
+            <div className={'h-[70vh] relative w-full mx-auto'}>
                 <div className={'h-full relative w-fit ml-auto'}>
-                    <img src={`https://img.youtube.com/vi/${data?.data[5].trailer.url?.slice(-11)}/maxresdefault.jpg`}
+                    <img src={`https://img.youtube.com/vi/${focus.trailer.url?.slice(-11)}/maxresdefault.jpg`}
                          className={'h-full object-cover'}
-                    />
+                         alt={"Spotlight thumbnail"}/>
                     <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-t h-full w-full absolute top-0 left-0'}>
                     </div>
                     <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-r h-full w-full absolute top-0 left-0'}>
                     </div>
-                    {/*               <div className={'bg-bgcolor h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
-                    {
-                        data &&
-                        data.data.map((anime, index) => (
-                            anime.trailer.embed_url &&
-
-                            <div className={` 
-                                                    
-                            w-[100%]
-                            500:w-[50%]
-                            800:w-[33.33%]
-                            1100:w-[25%]
-                            1400:w-[20%]
-                            1700:w-[16.66%]
-                            2000:w-[14.28%]
-                            2300:w-[12.5%] 
-                            2600:w-[11.11%]
-                            px-1
-                            h-auto
-                            shrink-0
-                            `} key={index}>
-
-                                <img src={`https://img.youtube.com/vi/${anime.trailer.url?.slice(-11)}/maxresdefault.jpg`}
-                                     className={'w-full h-full object-cover'}
-                                />
-                                <div className={' w-full h-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
-
-                                    <Link href={{ pathname: "/anime", query: { id: anime.mal_id } }}>
-                                        <button className={'bg-bgcolor rounded-full size-10 absolute right-2 top-2 border-white border-2'}>
-                                            <p className={'text-white text-2xl font-bold'}>
-                                                ?
-                                            </p>
-                                        </button>
-                                    </Link>
-                                    <button onClick={() => {
-                                        setShowVideoURL(anime.trailer.embed_url)
-                                    }}
-                                            className={'bg-bgcolor/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
-                                        <p className={"text-white text-2xl"}>
-                                            Play
-                                        </p>
-                                    </button>
-                                    <div className={'bg-bgcolor/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
-                                        <h3 className={"text-2xl font-bold text-white text-center"}>
-                                            {anime.title_english}
-                                        </h3>
-                                    </div>
-                                </div>
-                            </div>
-                        ))
-                    }
-                </div>*/}
                 </div>
-                <div className={'w-full h-full absolute top-0 left-0'}>
-                    <h3 className={"text-2xl font-bold text-white text-left"}>
-                        {data?.data[5].title_english ? data?.data[5].title_english : data?.data[5].title}
+                <div className={'w-full h-full absolute top-0 left-0 p-5'}>
+                    <h3 className={"text-4xl font-bold text-white text-left mb-5"}>
+                        {focus.title_english || focus.title}
                     </h3>
-                    <p className={"text-white text-left"}>
-                        {data?.data[5].synopsis}
+                    <p className={"text-white text-left mb-5"}>
+                        {focus.synopsis}
                     </p>
-                    <button onClick={() => { setShowVideoURL(data?.data[5].trailer.embed_url ?? '') }}
-                            className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
+                    <button onClick={() => {
+                        setShowVideoURL(focus.trailer.embed_url ?? '')
+                    }}
+                            className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer mr-5'}>
                         View Trailer
                     </button>
-                    <Link href={{ pathname: "/anime", query: { id: data?.data[5].mal_id} }}>
+                    <Link href={{pathname: "/anime", query: {id: focus.mal_id}}}>
                         <button className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
                             More
                         </button>
