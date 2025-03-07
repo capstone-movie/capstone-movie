@@ -18,7 +18,7 @@ const dashboardList = () => {
                     {/* Red Placeholder Button */}
                     <button
                         className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center shadow-md hover:bg-red-500 active:bg-red-600"
-                        onClick={() => alert("Button Clicked!")}>
+                        onClick={() => alert("Clicked!")}>
                     </button>
 
                     {/* Section Header */}
@@ -27,8 +27,7 @@ const dashboardList = () => {
                     {/* Anime Placeholders */}
                     <div className="flex flex-wrap justify-center gap-8 p-4 bg-bgcolor">
                         {animePlaceholders.map((anime) => (
-                            <div key={anime.id} className={`bg-white p-3 shadow-md w-[140px] 
-                            ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>
+                            <div key={anime.id} className={`bg-white p-3 shadow-md w-[150px]`}>
                                 <div className="h-36 bg-gray-200 flex items-center justify-center">
                                     <span className="text-lg font-bold">#{anime.id}</span>
                                 </div>

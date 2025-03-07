@@ -31,16 +31,14 @@ const personalDashboard = () => {
                         {/* Red Placeholder Button */}
                         <button
                             className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center rounded shadow-lg hover:bg-red-500 active:bg-red-600"
-                            onClick={() => alert("Button Clicked!")}>
+                            onClick={() => alert("Clicked!")}>
                         </button>
                         {/* Section Header */}
                         <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
-
                         {/* Anime Placeholders */}
-                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-6 sm:gap-16 lg:gap-24 p-6 bg-bgcolor overflow-x-auto rounded shadow-lg">
+                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-16 p-6 bg-bgcolor overflow-x-auto rounded shadow-lg">
                             {animePlaceholders.map((anime) => (
-                                <div key={anime.id} className={`bg-white p-3 w-[140px] rounded shadow-lg
-                                    ${anime.id === 4 || anime.id === 5 ? "hidden sm:block" : ""}`}>
+                                <div key={anime.id} className={`bg-white p-3 w-[150px] rounded shadow-lg`}>
                                     <div className="h-36 bg-gray-200 flex items-center justify-center rounded shadow-lg">
                                         <span className="text-lg font-bold">#{anime.id}</span>
                                     </div>
