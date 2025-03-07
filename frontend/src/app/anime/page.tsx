@@ -275,15 +275,17 @@ export default function () {
                         {
                             dataChar.data.map((character) => (
                                 !character.character.images.jpg.image_url.includes('questionmark') &&
-                                <div key={character.character.mal_id}
-                                     className={'w-[220px] h-fit flex flex-col'}>
-                                    <img
-                                        className={'h-[35vh] object-cover rounded-xl outline-2 outline outline-gray-800 -outline-offset-2'}
-                                        src={character.character.images.jpg.image_url}
-                                        alt={character.character.name}
-                                    />
+                                <div key={character.character.mal_id} className={'w-[220px] rounded-xl'}>
+                                    <div className={'bg-red-500 w-full h-[35vh] rounded-xl overflow-hidden'}>
+                                        <img
+                                            className={'object-cover w-full h-full scale-105 hover:scale-110 duration-300'}
+                                            src={character.character.images.jpg.image_url}
+                                            alt={character.character.name}
+                                        />
+                                    </div>
                                     <p className={'px-2 text-white text-nowrap font-bold'}>{`${character.character.name}`}</p>
                                 </div>
+
                             ))
                         }
                     </div>
