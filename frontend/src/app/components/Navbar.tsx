@@ -15,7 +15,7 @@ export function Navbar() {
 
     return (
         <>
-            <nav className="w-full bg-fhcolor text-white flex justify-between items-center p-4 relative">
+            <nav className="w-full bg-fhcolor/90 backdrop-blur-xs text-white flex justify-between items-center p-4 sticky top-0 z-20 border-b-[1px] border-[#9994]">
                 {/* Hamburger Menu */}
                 <button onClick={toggleMenu} className="block text-white">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -55,8 +55,8 @@ export function Navbar() {
             </nav>
 
             {/* Mobile Left Tab Menu */}
-            {isOpen && (
-                <div className="fixed inset-y-0 left-0 w-64 bg-fhcolor text-white px-6 py-4 space-y-2 z-20">
+            {(
+                <div className={`${isOpen?'left-0':'-left-64'} fixed inset-y-0 -left-64 w-64 bg-fhcolor text-white px-6 py-4 space-y-2 z-20 duration-200`}>
                     <button onClick={toggleMenu} className="text-white mb-4">
                         <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
