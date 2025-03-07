@@ -172,7 +172,7 @@ export function HorizontalList(prop: Props) {
                             2300:w-[12.5%] 
                             2600:w-[11.11%]
                             px-1
-                            h-[300px]
+                            h-[25rem]
                             shrink-0
                             `} key={index}>
                                 <ListItem title={anime.title_english ? anime.title_english : anime.title}

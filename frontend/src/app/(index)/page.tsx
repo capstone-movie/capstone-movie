@@ -8,7 +8,7 @@ export default function () {
         <>
             <Spotlight url={'https://api.jikan.moe/v4/seasons/upcoming?sfw'}
                        title={'Trailers'}/>
-            <div className={'-translate-y-[200px]'}>
+            <div className={''}>
                 <HorizontalList url={'https://api.jikan.moe/v4/top/anime?sfw'}
                                 title={'Popular Anime'}/>
                 <HorizontalList url={'https://api.jikan.moe/v4/seasons/now?sfw'}
