@@ -4,7 +4,7 @@ import morgan from 'morgan'
 import { indexRoute } from './apis/index.route'
 import session from 'express-session'
 import { createClient,  RedisClientType } from 'redis'
-import RedisStore from 'connect-redis'
+import {RedisStore} from 'connect-redis'
 
 // The following class creates the app and instantiates the server
 export class App {
