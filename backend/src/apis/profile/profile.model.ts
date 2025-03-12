@@ -22,6 +22,6 @@ export type PrivateProfile = z.infer<typeof PrivateProfileSchema>
 
 export async function insertProfile (profile: PrivateProfile): Promise<string> {
     const { profileId, profileActivationToken, profileCreateAt, profileEmail, profileHash, profileUsername } = profile
-    await sql `INSERT INTO profile(profile_id, profile_activation_token, profile_created_at, profile_email, profile_hash, profile_username) VALUES (${profileId}, ${profileActivationToken}, ${profileCreateAt}, ${profileEmail}, ${profileHash}, ${profileUsername})`
+    await sql `INSERT INTO profile(profile_id, profile_activation_token, profile_create_at, profile_email, profile_hash, profile_username) VALUES (${profileId}, ${profileActivationToken}, ${profileCreateAt}, ${profileEmail}, ${profileHash}, ${profileUsername})`
     return 'Profile Successfully Created'
 }
