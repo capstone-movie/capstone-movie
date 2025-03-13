@@ -38,11 +38,12 @@ export async function signUpProfileController (request: Request, response: Respo
             <p><a href="${basePath}">${basePath}</a></p>`
 
         const mailgunMessage = {
-            from: `Mailgun Sandbox <postmaster@{process.env.MAILGUN_DOMAIN as string}>`,
+            from: `Mailgun Sandbox <postmaster@${process.env.MAILGUN_DOMAIN as string}>`,
             to: profileEmail,
             subject: 'One step closer to Ani-Rec -- Account Activation',
             html: message
         }
+        console.log(mailgunMessage.from)
         const profile: PrivateProfile = {
             profileId: profileId,
             profileActivationToken,

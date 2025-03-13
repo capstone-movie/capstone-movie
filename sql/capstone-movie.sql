@@ -46,7 +46,7 @@ CREATE TABLE profile (
                          profile_id UUID PRIMARY KEY,
                          profile_activation_token VARCHAR(256),
                          profile_create_at TIMESTAMPTZ,
-                         profile_email VARCHAR(256),
+                         profile_email VARCHAR(256) UNIQUE,
                          profile_hash VARCHAR(256),
                          profile_username VARCHAR(128)
 );
