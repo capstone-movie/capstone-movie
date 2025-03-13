@@ -1,4 +1,3 @@
-import {generateJwt, validatePassword} from '../../utils/auth.utils'
 import {Request, Response} from 'express'
 import {
     deleteReviewSchema,
@@ -6,9 +5,7 @@ import {
     getReviewsByProfileIdSchema,
     getReviewsByAnimeIdSchema
 } from './review.validator'
-import {zodErrorResponse} from '../../utils/response.utils'
 import {v7 as uuid} from 'uuid'
-import {Status} from "../../utils/interfaces/Status";
 import {
     insertReviews,
     updateReviews,
@@ -47,7 +44,7 @@ export async function createReviewController(request: Request, response: Respons
         const reviewData = validationResult.data;
 
         // create a new review ID
-        reviewData.review_id = uuid();
+        reviewData.reviewId = uuid();
 
         // insert the review into the database
         const insertResult = await insertReviews(reviewData);
