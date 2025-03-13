@@ -2,7 +2,7 @@ import { z } from 'zod'
 
 export const PrivateProfileSchema = z.object({
     profileId: z.string({
-        required_error: 'profileID is required',
+        required_error: 'profileId is required',
         invalid_type_error: 'Please provide valid profileId',
     })
         .uuid({ message: 'please provide a valid profileId'}),
@@ -10,7 +10,7 @@ export const PrivateProfileSchema = z.object({
         required_error: 'profileActivationToken is required',
         invalid_type_error: 'Please provide valid profileActivationToken',
     })
-        .length(256, { message: 'Profile activation token must be a string with a maximum length of 256 characters' })
+        .length(32, { message: 'Profile activation token must be a string with a maximum length of 32 characters' })
         .nullable(),
     profileCreateAt: z.coerce.date({
         required_error: 'profileCreateAt date is required',
@@ -27,7 +27,7 @@ export const PrivateProfileSchema = z.object({
         required_error: 'profileHash is required',
         invalid_type_error: 'Please provide valid profileHash',
     })
-        .length(256, { message: 'profileHash must be 256 characters' }),
+        .length(97, { message: 'profileHash must be 97 characters' }),
         profileUsername: z.string()
             .trim()
             .min(3, { message: 'please provide a valid profileUsername (min 3 characters)' })

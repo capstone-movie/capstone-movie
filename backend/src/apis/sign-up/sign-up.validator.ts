@@ -8,7 +8,7 @@ import {PrivateProfileSchema} from '../profile/profile.validator'
  */
 
 export const SignUpProfileSchema = PrivateProfileSchema
-    .omit({  profileHash: true, profileActivationToken: true, profileCreateAt: true, profileUsername: true })
+    .omit({  profileHash: true, profileActivationToken: true, profileCreateAt: true })
     .extend({
         profilePasswordConfirm: z.string({invalid_type_error: 'profile password must be strong', required_error: 'profile password is required'})
             .min(8, { message: 'please provide a valid password (min 8 characters)' })

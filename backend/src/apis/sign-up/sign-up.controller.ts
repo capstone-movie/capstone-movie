@@ -15,7 +15,7 @@ import { zodErrorResponse } from '../../utils/response.utils'
  * @returns response to the client indicating whether the sign-up was successful or not
  * */
 
-export async function signUpProfileController (request: Request, response: Response) {
+export async function signUpProfileController (request: Request, response: Response) : Promise<Response | undefined> {
     try {
         const validationResult = SignUpProfileSchema.safeParse(request.body)
         if(!validationResult.success) {
