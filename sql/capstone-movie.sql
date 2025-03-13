@@ -44,10 +44,10 @@ CREATE TABLE anime_genres (
 -- Create the "profile" table
 CREATE TABLE profile (
                          profile_id UUID PRIMARY KEY,
-                         profile_activation_token VARCHAR(256),
+                         profile_activation_token VARCHAR(32),
                          profile_create_at TIMESTAMPTZ,
                          profile_email VARCHAR(256) UNIQUE,
-                         profile_hash VARCHAR(256),
+                         profile_hash VARCHAR(97),
                          profile_username VARCHAR(128)
 );
 
