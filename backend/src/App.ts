@@ -6,6 +6,7 @@ import session from 'express-session'
 import { createClient,  RedisClientType } from 'redis'
 import {RedisStore} from 'connect-redis'
 import {signUpRoute} from "./apis/sign-up/sign-up.route";
+import {signInRoute} from "./apis/sign-in/sign-in.route";
 
 // The following class creates the app and instantiates the server
 export class App {
@@ -43,6 +44,7 @@ export class App {
     // private method for setting up routes in their basic sense (ie. any route that performs an action on profiles starts with /profiles)
     private routes (): void {
         this.app.use(indexRoute.basePath, indexRoute.router)
+        this.app.use(signInRoute.basePath, signInRoute.router)
         this.app.use(signUpRoute.basePath, signUpRoute.router)
     }
 

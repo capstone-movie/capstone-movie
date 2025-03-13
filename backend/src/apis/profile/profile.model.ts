@@ -44,6 +44,20 @@ export async function selectPrivateProfileByActivationToken(profileActivationTok
     return result.length === 1 ? result[0] : null
 }
 
+export async function selectPrivateProfileByProfileEmail(profileEmail: string): Promise<PrivateProfile | null> {
+    const rowList = await sql`
+        SELECT profile_id,
+               profile_activation_token,
+               profile_create_at,
+               profile_email,
+               profile_hash,
+               profile_username
+        FROM profile
+        WHERE profile_email = ${profileEmail}`
+    const result = PrivateProfileSchema.array().max(1).parse(rowList)
+    return result.length === 1 ? result[0] : null
+}
+
 export async function updateProfile(profile: PrivateProfile): Promise<string> {
     const {profileId, profileActivationToken, profileCreateAt, profileEmail, profileHash, profileUsername} = profile
     await sql`UPDATE profile
