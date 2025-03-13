@@ -30,7 +30,7 @@ import {
  * @return {Promise<Response>} The response object with the status and message of the operation.
  */
 
-export async function createReviewController(request: Request, response: Response): Promise<Response> {
+export async function createReviewController(request: Request, response: Response): Promise<any> {
     try {
         // validate the review data coming from the request body
         const validationResult = reviewSchema.safeParse(request.body);
@@ -63,7 +63,7 @@ export async function createReviewController(request: Request, response: Respons
     }
 }
 
-export async function updateReviewController(request: Request, response: Response): Promise<Response> {
+export async function updateReviewController(request: Request, response: Response): Promise<any> {
     try {
         // validate the review data coming from the request body
         const validationResult = reviewSchema.safeParse(request.body);
@@ -105,7 +105,7 @@ export async function updateReviewController(request: Request, response: Respons
  *
  * @return {Promise<Response>} The response object with the status and message of the operation.
  */
-export async function deleteReviewController(request: Request, response: Response): Promise<Response> {
+export async function deleteReviewController(request: Request, response: Response): Promise<any> {
     try {
         // validate the review ID coming from the request body
         const validationResult = deleteReviewSchema.safeParse(request.body);
@@ -144,7 +144,7 @@ export async function deleteReviewController(request: Request, response: Respons
     }
 }
 
-export async function getReviewsByProfileIdController(request: Request, response: Response): Promise<Response> {
+export async function getReviewsByProfileIdController(request: Request, response: Response): Promise<any> {
     try {
         // validate the profile ID coming from the request body
         const validationResult = getReviewsByProfileIdSchema.safeParse(request.body);
@@ -175,7 +175,7 @@ export async function getReviewsByProfileIdController(request: Request, response
     }
 }
 
-export async function getReviewsByAnimeIdController(request: Request, response: Response): Promise<Response> {
+export async function getReviewsByAnimeIdController(request: Request, response: Response): Promise<any> {
     try {
         // validate the anime ID coming from the request body
         const validationResult = getReviewsByAnimeIdSchema.safeParse(request.body);
