@@ -4,42 +4,42 @@ import {reviewSchema} from "./review.validator";
 
 export async function insertReviews(reviewData: z.infer<typeof reviewSchema>): Promise<boolean> {
     const {
-        reviewId,
-        reviewAnimeId,
-        reviewProfileId,
-        reviewAnimeRating,
-        reviewBody,
-        reviewCreatedAt,
-        reviewSpoiler,
-        reviewStatus
+        review_id,
+        review_anime_id,
+        review_profile_id,
+        review_anime_rating,
+        review_body,
+        review_created_at,
+        review_spoiler,
+        review_status
     } = reviewData;
 
     await sql`INSERT INTO review (review_id, review_anime_id, review_profile_id, review_anime_rating, review_body, review_created_at, review_spoiler, review_status)
-              VALUES (${reviewId}, ${reviewAnimeId}, ${reviewProfileId}, ${reviewAnimeRating}, ${reviewBody}, ${reviewCreatedAt}, ${reviewSpoiler}, ${reviewStatus})`;
+              VALUES (${review_id}, ${review_anime_id}, ${review_profile_id}, ${review_anime_rating}, ${review_body}, ${review_created_at}, ${review_spoiler}, ${review_status})`;
 
     return true;
 }
 export async function updateReviews(reviewData: z.infer<typeof reviewSchema>): Promise<boolean> {
     const {
-        reviewId,
-        reviewAnimeId,
-        reviewProfileId,
-        reviewAnimeRating,
-        reviewBody,
-        reviewCreatedAt,
-        reviewSpoiler,
-        reviewStatus
+        review_id,
+        review_anime_id,
+        review_profile_id,
+        review_anime_rating,
+        review_body,
+        review_created_at,
+        review_spoiler,
+        review_status
     } = reviewData;
 
     await sql`UPDATE review
-              SET review_anime_id = ${reviewAnimeId},
-                  review_profile_id = ${reviewProfileId},
-                  review_anime_rating = ${reviewAnimeRating},
-                  review_body = ${reviewBody},
-                  review_created_at = ${reviewCreatedAt},
-                  review_spoiler = ${reviewSpoiler},
-                  review_status = ${reviewStatus}
-              WHERE review_id = ${reviewId}`;
+              SET review_anime_id = ${review_anime_id},
+                  review_profile_id = ${review_profile_id},
+                  review_anime_rating = ${review_anime_rating},
+                  review_body = ${review_body},
+                  review_created_at = ${review_created_at},
+                  review_spoiler = ${review_spoiler},
+                  review_status = ${review_status}
+              WHERE review_id = ${review_id}`;
 
     return true;
 }
