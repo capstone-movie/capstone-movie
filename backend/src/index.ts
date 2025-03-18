@@ -5,15 +5,6 @@ import {createClient, RedisClientType} from "redis";
 
 let redisClient : RedisClientType | undefined
 
-declare module 'express-session' {
-  export interface SessionData {
-    profile: PublicProfile|undefined
-    signature: string|undefined
-    jwt: string|undefined
-  }
-}
-
-
 async function main (): Promise<void> {
   if (redisClient === undefined) {
     redisClient = createClient({ socket: { host: process.env.REDIS_HOST } })

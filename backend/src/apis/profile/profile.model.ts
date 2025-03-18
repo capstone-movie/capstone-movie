@@ -13,7 +13,7 @@ import {sql} from '../../utils/database.utils'
  **/
 
 export type PrivateProfile = z.infer<typeof PrivateProfileSchema>
-
+export type PublicProfile = z.infer<typeof PublicProfileSchema>
 /**
  * insert a new profile into the profile table
  * @param profile the profile to insert
