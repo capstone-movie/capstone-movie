@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS genres;
 
 -- Create the "anime" table
 CREATE TABLE anime (
-                       anime_id UUID PRIMARY KEY,
+                       anime_id DECIMAL PRIMARY KEY,
                        anime_aired_end DATE,
                        anime_aired_start DATE,
                        anime_broadcast VARCHAR(256),
@@ -30,14 +30,14 @@ CREATE TABLE anime (
 
 -- Create the "genres" table
 CREATE TABLE genres (
-                        genres_id UUID PRIMARY KEY,
+                        genres_id DECIMAL PRIMARY KEY,
                         genres_name VARCHAR(256)
 );
 
 -- Create the "anime_genres" junction table
 CREATE TABLE anime_genres (
-                              anime_genres_anime_id UUID REFERENCES anime(anime_id),
-                              anime_genres_genres_id UUID REFERENCES genres(genres_id),
+                              anime_genres_anime_id DECIMAL REFERENCES anime(anime_id),
+                              anime_genres_genres_id DECIMAL REFERENCES genres(genres_id),
                               PRIMARY KEY (anime_genres_anime_id, anime_genres_genres_id)
 );
 
@@ -53,7 +53,7 @@ CREATE TABLE profile (
 
 -- Create the "watch_list" table
 CREATE TABLE watch_list (
-                            watch_list_anime_id UUID REFERENCES anime(anime_id),
+                            watch_list_anime_id DECIMAL REFERENCES anime(anime_id),
                             watch_list_profile_id UUID REFERENCES profile(profile_id),
                             watch_list_favorite SMALLINT,
                             watch_list_hidden SMALLINT,
@@ -64,7 +64,7 @@ CREATE TABLE watch_list (
 -- Create the "review" table
 CREATE TABLE review (
                         review_id UUID PRIMARY KEY,
-                        review_anime_id UUID REFERENCES anime(anime_id),
+                        review_anime_id DECIMAL REFERENCES anime(anime_id),
                         review_profile_id UUID REFERENCES profile(profile_id),
                         review_anime_rating SMALLINT,
                         review_body VARCHAR(2048),

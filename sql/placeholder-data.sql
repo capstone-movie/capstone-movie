@@ -1,4 +1,4 @@
- -- Insert fake profile data
+/* -- Insert fake profile data
  INSERT INTO profile (
      profile_id,
      profile_activation_token,
@@ -14,7 +14,7 @@
               'somehashedpassword',
               'fakeusername'
           );
-
+*/
  -- Insert fake anime data
  INSERT INTO anime (
      anime_id,
@@ -36,7 +36,7 @@
      anime_twitter_url,
      anime_type
  ) VALUES (
-              'd2f1a4e2-3e5c-4a1b-9d42-45d8c9a3e8b1',
+              '1',
               '2025-05-01T00:00:00Z',
               '2025-01-01T00:00:00Z',
               'Weekly on Sundays',

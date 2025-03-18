@@ -1,8 +1,7 @@
 import { z } from 'zod';
-import { v7 as uuid } from 'uuid';
 
 export const animeSchema = z.object({
-    animeId: z.string().uuid({ message: "Anime ID must be a valid UUID v4" }).default(() => uuid()),
+    animeId: z.number(),
     animeAiredEnd: z.date().optional(),
     animeAiredStart: z.date().optional(),
     animeBroadcast: z.string().max(256, { message: "Anime broadcast must be a string with a maximum length of 256 characters" }).optional(),
@@ -21,3 +20,7 @@ export const animeSchema = z.object({
     animeTwitterUrl: z.string().url({ message: "Anime Twitter URL must be a valid URL" }).max(2048, { message: "Anime Twitter URL must be a string with a maximum length of 2048 characters" }).optional(),
     animeType: z.string().max(128, { message: "Anime type must be a string with a maximum length of 128 characters" }).optional()
 });
+
+export const getAnimeByIdSchema = z.object({
+    anime_id: z.string()
+})

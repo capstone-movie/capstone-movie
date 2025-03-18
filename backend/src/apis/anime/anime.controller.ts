@@ -1,23 +1,22 @@
 import {Request, Response} from 'express'
 import {
-    animeSchema
+    getAnimeByIdSchema
 } from './anime.validator'
-import {v7 as uuid} from 'uuid'
-import {
-    insertReviews,
-    updateReviews,
-    deleteReviews,
-    getProfileIdByReviewId,
-    getReviewsByProfileId,
-    getReviewsByAnimeId
-} from "./anime.model";
+import {zodErrorResponse} from "../../utils/response.utils";
+import {getAnimeById} from "./anime.model";
 
-export async function getAnimeController(request: Request, response: Response): Promise<any> {
-    const {anime_id} = request.body
-    // Validate the request body against the schema
-    if (!animeIdSchema.safeParse({anime_id}).success) {
-        return response.status(400).json({error: 'Invalid anime ID format'})
+export async function getAnimeByIdController(request: Request, response: Response): Promise<any> {
+
+    const validationResult = getAnimeByIdSchema.safeParse(request.params)
+    if(!validationResult.success){
+        return zodErrorResponse(response,validationResult.error)
     }
-    const anime = await animeSchema.parseAsync({anime_id})
-    return response.status(200).json(anime)
+    const {anime_id} = validationResult.data
+    const anime_id_num = parseInt(anime_id)
+
+    const result = await getAnimeById(anime_id_num)
+
+    console.log(result)
+
+    return response.status(200).json(anime_id_num)
 }
