@@ -15,4 +15,6 @@ router.post("/", addToWatchListController);
 router.put("/", updateWatchListController);
 router.delete("/", removeFromWatchListController);
 
-export default router;
+const basePath = "/apis/watch-list"
+
+export const watchListRoute = {basePath, router}

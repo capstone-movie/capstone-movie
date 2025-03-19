@@ -11,14 +11,14 @@ export async function insertWatchList(watchListData: z.infer<typeof watchListSch
         watchListLater = 0,
     } = watchListData;
     await sql`
-        INSERT INTO watch_list (watch_list_anime_id, watch_list_profile_id, watch_list_favorite, watch_list_hidden, watch_list_later)
-        VALUES (${watchListAnimeId}, ${watchListProfileId}, ${watchListFavorite}, ${watchListHidden}, ${watchListLater})
-        ON CONFLICT (watch_list_anime_id, watch_list_profile_id)
-        DO UPDATE SET
-            watch_list_favorite = EXCLUDED.watch_list_favorite,
-            watch_list_hidden = EXCLUDED.watch_list_hidden,
-            watch_list_later = EXCLUDED.watch_list_later;
-    `;
+    INSERT INTO watch_list (watch_list_anime_id, watch_list_profile_id, watch_list_favorite, watch_list_hidden, watch_list_later)
+    VALUES (${watchListAnimeId}::UUID, ${watchListProfileId}::UUID, ${watchListFavorite}, ${watchListHidden}, ${watchListLater})
+    ON CONFLICT (watch_list_anime_id, watch_list_profile_id)
+    DO UPDATE SET
+        watch_list_favorite = EXCLUDED.watch_list_favorite,
+        watch_list_hidden = EXCLUDED.watch_list_hidden,
+        watch_list_later = EXCLUDED.watch_list_later;
+`;
     return true;
 }
 export async function updateWatchListEntry(watchListData: z.infer<typeof watchListSchema>): Promise<boolean> {
@@ -35,28 +35,31 @@ export async function updateWatchListEntry(watchListData: z.infer<typeof watchLi
             watch_list_favorite = ${watchListFavorite},
             watch_list_hidden = ${watchListHidden},
             watch_list_later = ${watchListLater}
-        WHERE watch_list_anime_id = ${watchListAnimeId} AND watch_list_profile_id = ${watchListProfileId};
+        WHERE watch_list_anime_id = ${watchListAnimeId}::UUID
+          AND watch_list_profile_id = ${watchListProfileId}::UUID;
     `;
     return true;
 }
 export async function deleteWatchListEntry(watchListAnimeId: string, watchListProfileId:string): Promise<boolean> {
     await sql`
-        DELETE from watch_list
-        Where watch_list_anime_id=${watchListAnimeId} AND watch_list_profile_id=${watchListProfileId};
+        DELETE FROM watch_list
+        WHERE watch_list_anime_id = ${watchListAnimeId}::UUID
+          AND watch_list_profile_id = ${watchListProfileId}::UUID;
     `;
     return true;
 }
 export async function getWatchListByProfileId(profileId: string): Promise<any[]> {
     const result = await sql`
         SELECT * FROM watch_list
-        WHERE watch_list_profile_id = ${profileId};
+        WHERE watch_list_profile_id = ${profileId}::UUID;
     `;
     return result;
 }
 export async function getWatchListEntry(watchListAnimeId: string, watchListProfileId: string): Promise<any | null> {
     const result = await sql`
         SELECT * FROM watch_list
-        WHERE watch_list_anime_id = ${watchListAnimeId} and watch_list_profile_id = ${watchListProfileId};
+        WHERE watch_list_anime_id = ${watchListAnimeId}::UUID 
+        AND watch_list_profile_id = ${watchListProfileId}::UUID
     `;
     return result.length > 0 ? result[0] : null;
 }
