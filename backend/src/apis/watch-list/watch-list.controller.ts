@@ -1,118 +1,155 @@
-import { Request, Response } from "express";
+import {Request, Response} from "express";
 import {
-    insertWatchList,
-    updateWatchListEntry,
-    deleteWatchListEntry,
-    getWatchListByProfileId,
-    getWatchListEntry
+    addWatchListFavorite,
+    getWatchListFavorite,
+    deleteWatchListFavorite,
+
+    deleteWatchListHidden,
+    getWatchListHidden,
+    addWatchListHidden,
+
+    addWatchListLater,
+    getWatchListLater,
+    deleteWatchListLater
 } from "./watch-list.model";
-import { z } from "zod";
-import {
-    watchListSchema,
-    getWatchListByProfileSchema,
-    updateWatchListSchema,
-} from "./watch-list.validator";
 
-/*
- * get a specific watch list entry
- * retrieves a watch list entry based upon anime ID and profile ID
- */
-
-export async function getWatchListEntryController(request: Request, response: Response): Promise<any> {
+export async function addWatchListFavoriteController(request: Request, response: Response): Promise<any> {
     try {
-        const { animeId, profileId} = request.params;
-        const watchListEntry = await getWatchListEntry(animeId, profileId);
-
-        if(!watchListEntry) {
-            return response.status(404).json({status: 404, message: "Watch list entry not found"})
+        const {watchListAnimeId, watchListRank} = request.body;
+        console.log(watchListAnimeId);
+        console.log(watchListRank);
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
         }
-        return response.status(200).json({ status: 200, message: "Watch list entry successful", data: watchListEntry})
+        const entry = {
+            watch_list_anime_id: watchListAnimeId,
+            watch_list_profile_id: profileId,
+            watch_list_rank: watchListRank
+        }
+        await addWatchListFavorite(entry);
+        return response.status(200).json({status: 200, message: "Watch list entry successful"})
+    } catch (error: any) {
+        return response.status(500).json({status: 500, message: error.message})
+    }
+}
+export async function getWatchListFavoriteController(request: Request, response: Response): Promise<any> {
+    try {
+        const profileId = request.session.profile?.profileId;
+        console.log(profileId);
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
+        }
+        const watchList = await getWatchListFavorite(profileId);
+        return response.status(200).json({status: 200, message: "Watch list retrieved successfully", data: watchList})
+    } catch (error: any) {
+        return response.status(500).json({status: 500, message: error.message})
+    }
+}
+export async function deleteWatchListFavoriteController(request: Request, response: Response): Promise<any> {
+    try {
+        const {watchListAnimeId} = request.body;
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
+        }
+        await deleteWatchListFavorite(watchListAnimeId, profileId);
+        return response.status(200).json({status: 200, message: "removed from watch list if exists"})
     } catch (error: any) {
         return response.status(500).json({status: 500, message: error.message})
     }
 }
 
-/*
- * get all watch list entries for a profile ID
- */
-
-export async function getWatchListByProfileController(request: Request, response: Response): Promise<any> {
+export async function addWatchListHiddenController(request: Request, response: Response): Promise<any> {
     try {
-        const { profileId} = request.params;
-
-        const validationResult = getWatchListByProfileSchema.safeParse({ profileId });
-        if (!validationResult.success) {
-            return response.status(400).json({ status: 400, message: validationResult.error.format() })
+        const {watchListAnimeId, watchListRank} = request.body;
+        console.log(watchListAnimeId);
+        console.log(watchListRank);
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
         }
-        const watchList = await getWatchListByProfileId(profileId);
-        if(!watchList.length) {
-            return response.status(404).json({ status: 404, message: "No watch list entries found for this profile" })
+        const entry = {
+            watch_list_anime_id: watchListAnimeId,
+            watch_list_profile_id: profileId,
+            watch_list_rank: watchListRank
         }
-        return response.status(200).json({ status: 200, message: "Watch list retrieved successfully", data: watchList})
+        await addWatchListHidden(entry);
+        return response.status(200).json({status: 200, message: "Watch list entry successful"})
     } catch (error: any) {
-        return response.status(500).json({ status: 500, message: error.message })
+        return response.status(500).json({status: 500, message: error.message})
+    }
+}
+export async function getWatchListHiddenController(request: Request, response: Response): Promise<any> {
+    try {
+        const profileId = request.session.profile?.profileId;
+        console.log(profileId);
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
+        }
+        const watchList = await getWatchListHidden(profileId);
+        return response.status(200).json({status: 200, message: "Watch list retrieved successfully", data: watchList})
+    } catch (error: any) {
+        return response.status(500).json({status: 500, message: error.message})
+    }
+}
+export async function deleteWatchListHiddenController(request: Request, response: Response): Promise<any> {
+    try {
+        const {watchListAnimeId} = request.body;
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
+        }
+        await deleteWatchListHidden(watchListAnimeId, profileId);
+        return response.status(200).json({status: 200, message: "removed from watch list if exists"})
+    } catch (error: any) {
+        return response.status(500).json({status: 500, message: error.message})
     }
 }
 
-/*
- * adds an anime to the watch list
- * creates a new watch list entry or updates an existing one
- */
-
-export async function addToWatchListController(request: Request, response: Response): Promise<any> {
+export async function addWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
-        const validationResult = watchListSchema.safeParse(request.body);
-
-        if(!validationResult.success) {
-            return response.status(400).json({ status: 400, message: validationResult.error.errors})
+        const {watchListAnimeId, watchListRank} = request.body;
+        console.log(watchListAnimeId);
+        console.log(watchListRank);
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
         }
-        await insertWatchList(validationResult.data);
-        return response.status(201).json({ status: 201, message: "Added to watch list successfully" })
+        const entry = {
+            watch_list_anime_id: watchListAnimeId,
+            watch_list_profile_id: profileId,
+            watch_list_rank: watchListRank
+        }
+        await addWatchListLater(entry);
+        return response.status(200).json({status: 200, message: "Watch list entry successful"})
     } catch (error: any) {
-        return response.status(500).json({ status: 500, message: error.message })
+        return response.status(500).json({status: 500, message: error.message})
     }
 }
-
-/*
- * update a watch list entry
- * updates an existing watch list entry status (Favorite, Hidden, Later)
- */
-
-export async function updateWatchListController(request: Request, response: Response): Promise<any> {
+export async function getWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
-        const validationResult = updateWatchListSchema.safeParse(request.body);
-
-        if(!validationResult.success) {
-            return response.status(400).json({ status: 400, message: validationResult.error.format() })
+        const profileId = request.session.profile?.profileId;
+        console.log(profileId);
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
         }
-        const updatedData = {
-            watchListAnimeId: validationResult.data.animeId,
-            watchListProfileId: validationResult.data.profileId,
-            watchListFavorite: validationResult.data.watchListFavorite,
-            watchListHidden: validationResult.data.watchListHidden,
-            watchListLater: validationResult.data.watchListLater,
-        }
-        await updateWatchListEntry(updatedData);
-        return response.status(200).json({ status: 200, message: "Watch list updated successfully" })
+        const watchList = await getWatchListLater(profileId);
+        return response.status(200).json({status: 200, message: "Watch list retrieved successfully", data: watchList})
     } catch (error: any) {
-        return response.status(500).json({ status: 500, message: error.message })
+        return response.status(500).json({status: 500, message: error.message})
     }
 }
-
-/*
- * remove an anime from the watch list
- * deletes an entry from the watch list
- */
-
-export async function removeFromWatchListController(request: Request, response: Response): Promise<any> {
+export async function deleteWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
-        const { animeId, profileId } = request.body;
-        if(!animeId || !profileId) {
-            return response.status(400).json({ status: 400, message: "animeId and profileId are required" })
+        const {watchListAnimeId} = request.body;
+        const profileId = request.session.profile?.profileId;
+        if (profileId === undefined) {
+            return response.status(400).json({status: 400, message: "You're not logged in"})
         }
-        await deleteWatchListEntry(animeId, profileId);
-        return response.status(200).json({ status: 200, message: "removed from watch list successfully" })
+        await deleteWatchListLater(watchListAnimeId, profileId);
+        return response.status(200).json({status: 200, message: "removed from watch list if exists"})
     } catch (error: any) {
-        return response.status(500).json({ status: 500, message: error.message })
+        return response.status(500).json({status: 500, message: error.message})
     }
 }

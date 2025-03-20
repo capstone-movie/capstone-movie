@@ -1,18 +1,18 @@
 import {Router} from 'express'
 import {
-    getAnimeByIdController
+    getAnimeByGenreController,
+    getAnimeByIdController,
+    getAnimeTopController,
+    getAnimeRecentController
 } from './anime.controller'
 
-// declare a basePath for this router
 const basePath = '/apis/anime'
 
-// instantiate a new router object
 const router = Router()
 
-// define signup route for this router
 router.route('/id/:anime_id').get(getAnimeByIdController)
-//router.route('/new').get(getNewAnimesController)
-//router.route('/top').get(getTopAnimesController)
+router.route('/top').get(getAnimeTopController)
+router.route('/recent').get(getAnimeRecentController)
+router.route('/genre/:genre').get(getAnimeByGenreController)
 
-// export the router with the basePath and router object
 export const animeRoute = {basePath, router}

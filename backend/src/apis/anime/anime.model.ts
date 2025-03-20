@@ -8,10 +8,35 @@ export async function getAnimeById(anime_jikan_id: number): Promise<any> {
     return rowList[0]
 }
 
-export async function deleteAllAnime(): Promise<boolean> {
-    await sql`DELETE
-              FROM anime`
-    return true
+export async function deleteAllAnime(): Promise<any> {
+    return sql`DELETE
+               FROM anime`
+}
+
+export async function getAnimeRecent(): Promise<any> {
+    return sql`
+        SELECT anime_jikan_id, anime_title, anime_title_english, anime_score, anime_rank, anime_genres, anime_aired_start, anime_aired_end, anime_type
+        FROM anime
+        WHERE anime_aired_start IS NOT NULL AND anime_type != 'Movie'
+        ORDER BY anime_aired_start DESC
+        LIMIT 50`
+}
+
+export async function getAnimeTop(): Promise<any> {
+    return sql`
+        SELECT anime_title, anime_title_english, anime_score, anime_rank, anime_genres
+        FROM anime
+        ORDER BY anime_rank
+        LIMIT 50`
+}
+
+export async function getAnimeByGenre(genre: string): Promise<any> {
+    return sql`
+        SELECT anime_title, anime_title_english, anime_score, anime_rank, anime_genres
+        FROM anime
+        WHERE anime_genres ILIKE '%' || ${genre} || '%'
+        ORDER BY anime_rank
+        LIMIT 5`
 }
 
 export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
@@ -20,7 +45,8 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
             INSERT INTO anime (anime_id, anime_jikan_id, anime_aired_start, anime_aired_end, anime_broadcast,
                                anime_description, anime_demographic, anime_duration, anime_episodes,
                                anime_themes, anime_genres, anime_rating, anime_rank, anime_score,
-                               anime_status, anime_title, anime_title_english, anime_title_japanese, anime_type)
+                               anime_status, anime_title, anime_title_english, anime_title_japanese, anime_type, 
+                               anime_trailer_url, anime_youtube_thumbnail_url, anime_thumbnail_url)
             VALUES
             ${sql(anime.map(anime => [
                 anime.anime_id,
@@ -41,10 +67,13 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
                 anime.anime_title,
                 anime.anime_title_english,
                 anime.anime_title_japanese,
-                anime.anime_type
+                anime.anime_type,
+                anime.anime_trailer_url,
+                anime.anime_youtube_thumbnail_url,
+                anime.anime_thumbnail_url
             ]))}
-        `;
-        return true;
+        `
+        return true
     } catch (error) {
         console.log(error)
         return false

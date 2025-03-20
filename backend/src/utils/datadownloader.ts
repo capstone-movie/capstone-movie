@@ -44,7 +44,10 @@ function dataDownloader(): Promise<any> {
                         anime_title: anime.title,
                         anime_title_english: anime.title_english,
                         anime_title_japanese: anime.title_japanese,
-                        anime_type: anime.type
+                        anime_type: anime.type,
+                        anime_trailer_url: anime.trailer.embed_url,
+                        anime_youtube_thumbnail_url: anime.trailer.images.maximum_image_url,
+                        anime_thumbnail_url: anime.images.webp.large_image_url,
                     };
                     animes.push(customAnime)
                 }

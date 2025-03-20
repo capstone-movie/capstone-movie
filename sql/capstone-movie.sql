@@ -1,4 +1,6 @@
-DROP TABLE IF EXISTS watch_list;
+DROP TABLE IF EXISTS watch_list_favorite;
+DROP TABLE IF EXISTS watch_list_hidden;
+DROP TABLE IF EXISTS watch_list_later;
 DROP TABLE IF EXISTS review;
 DROP TABLE IF EXISTS anime_genres;
 DROP TABLE IF EXISTS anime;
@@ -24,7 +26,10 @@ CREATE TABLE anime (
                        anime_title TEXT,
                        anime_title_english TEXT,
                        anime_title_japanese TEXT,
-                       anime_type TEXT
+                       anime_type TEXT,
+                       anime_trailer_url TEXT,
+                       anime_youtube_thumbnail_url TEXT,
+                       anime_thumbnail_url TEXT
 );
 
 CREATE TABLE genres (
@@ -46,16 +51,24 @@ CREATE TABLE profile (
                          profile_hash TEXT,
                          profile_username TEXT
 );
-
-CREATE TABLE watch_list (
-                            watch_list_anime_id UUID REFERENCES anime(anime_id),
-                            watch_list_profile_id UUID REFERENCES profile(profile_id),
-                            watch_list_favorite SMALLINT,
-                            watch_list_hidden SMALLINT,
-                            watch_list_later SMALLINT,
-                            PRIMARY KEY (watch_list_anime_id, watch_list_profile_id)
+CREATE TABLE watch_list_later (
+                                  watch_list_anime_id UUID REFERENCES anime(anime_id),
+                                  watch_list_profile_id UUID REFERENCES profile(profile_id),
+                                  watch_list_rank SMALLINT,
+                                  PRIMARY KEY (watch_list_anime_id, watch_list_profile_id)
 );
-
+CREATE TABLE watch_list_hidden (
+                                  watch_list_anime_id UUID REFERENCES anime(anime_id),
+                                  watch_list_profile_id UUID REFERENCES profile(profile_id),
+                                  watch_list_rank SMALLINT,
+                                  PRIMARY KEY (watch_list_anime_id, watch_list_profile_id)
+);
+CREATE TABLE watch_list_favorite (
+                                  watch_list_anime_id UUID REFERENCES anime(anime_id),
+                                  watch_list_profile_id UUID REFERENCES profile(profile_id),
+                                  watch_list_rank SMALLINT,
+                                  PRIMARY KEY (watch_list_anime_id, watch_list_profile_id)
+);
 CREATE TABLE review (
                         review_id UUID PRIMARY KEY,
                         review_anime_id UUID REFERENCES anime(anime_id),
@@ -72,7 +85,11 @@ CREATE INDEX IF NOT EXISTS idx_genres_genres_id ON genres(genres_id);
 CREATE INDEX IF NOT EXISTS idx_anime_genres_anime_id ON anime_genres(anime_genres_anime_id);
 CREATE INDEX IF NOT EXISTS idx_anime_genres_genres_id ON anime_genres(anime_genres_genres_id);
 CREATE INDEX IF NOT EXISTS idx_profile_profile_id ON profile(profile_id);
-CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list(watch_list_anime_id);
-CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list(watch_list_profile_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_later(watch_list_anime_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_later(watch_list_profile_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_hidden(watch_list_anime_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_hidden(watch_list_profile_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_favorite(watch_list_anime_id);
+CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_favorite(watch_list_profile_id);
 CREATE INDEX IF NOT EXISTS idx_review_anime_id ON review(review_anime_id);
 CREATE INDEX IF NOT EXISTS idx_review_profile_id ON review(review_profile_id);
