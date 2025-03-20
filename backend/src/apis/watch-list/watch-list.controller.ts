@@ -15,24 +15,12 @@ import {
 
 export async function addWatchListFavoriteController(request: Request, response: Response): Promise<any> {
     try {
-        const {watchListAnimeId, watchListRank} = request.body;
-        console.log(watchListAnimeId);
-        console.log(watchListRank);
-        const profileId = request.session.profile?.profileId;
-        if (profileId === undefined) {
-            return response.status(400).json({status: 400, message: "You're not logged in"})
-        }
-        const entry = {
-            watch_list_anime_id: watchListAnimeId,
-            watch_list_profile_id: profileId,
-            watch_list_rank: watchListRank
-        }
-        await addWatchListFavorite(entry);
-        return response.status(200).json({status: 200, message: "Watch list entry successful"})
+        await updateWatchList(request, response, getWatchListFavorite, addWatchListFavorite);
     } catch (error: any) {
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function getWatchListFavoriteController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
@@ -46,6 +34,7 @@ export async function getWatchListFavoriteController(request: Request, response:
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function deleteWatchListFavoriteController(request: Request, response: Response): Promise<any> {
     try {
         const {watchListAnimeId} = request.body;
@@ -62,24 +51,12 @@ export async function deleteWatchListFavoriteController(request: Request, respon
 
 export async function addWatchListHiddenController(request: Request, response: Response): Promise<any> {
     try {
-        const {watchListAnimeId, watchListRank} = request.body;
-        console.log(watchListAnimeId);
-        console.log(watchListRank);
-        const profileId = request.session.profile?.profileId;
-        if (profileId === undefined) {
-            return response.status(400).json({status: 400, message: "You're not logged in"})
-        }
-        const entry = {
-            watch_list_anime_id: watchListAnimeId,
-            watch_list_profile_id: profileId,
-            watch_list_rank: watchListRank
-        }
-        await addWatchListHidden(entry);
-        return response.status(200).json({status: 200, message: "Watch list entry successful"})
+        await updateWatchList(request, response, getWatchListHidden, addWatchListHidden);
     } catch (error: any) {
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function getWatchListHiddenController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
@@ -93,6 +70,7 @@ export async function getWatchListHiddenController(request: Request, response: R
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function deleteWatchListHiddenController(request: Request, response: Response): Promise<any> {
     try {
         const {watchListAnimeId} = request.body;
@@ -109,24 +87,12 @@ export async function deleteWatchListHiddenController(request: Request, response
 
 export async function addWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
-        const {watchListAnimeId, watchListRank} = request.body;
-        console.log(watchListAnimeId);
-        console.log(watchListRank);
-        const profileId = request.session.profile?.profileId;
-        if (profileId === undefined) {
-            return response.status(400).json({status: 400, message: "You're not logged in"})
-        }
-        const entry = {
-            watch_list_anime_id: watchListAnimeId,
-            watch_list_profile_id: profileId,
-            watch_list_rank: watchListRank
-        }
-        await addWatchListLater(entry);
-        return response.status(200).json({status: 200, message: "Watch list entry successful"})
+        await updateWatchList(request, response, getWatchListLater, addWatchListLater);
     } catch (error: any) {
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function getWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
@@ -140,6 +106,7 @@ export async function getWatchListLaterController(request: Request, response: Re
         return response.status(500).json({status: 500, message: error.message})
     }
 }
+
 export async function deleteWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
         const {watchListAnimeId} = request.body;
@@ -152,4 +119,33 @@ export async function deleteWatchListLaterController(request: Request, response:
     } catch (error: any) {
         return response.status(500).json({status: 500, message: error.message})
     }
+}
+
+
+
+//helper function
+export async function updateWatchList(
+    request: any,
+    response: any,
+    getWatchList: (profileId: string) => Promise<any[]>,
+    addWatchList: (entry: any) => Promise<boolean>
+): Promise<void> {
+    const {watchListAnimeId, watchListRank} = request.body;
+    const profileId = request.session.profile?.profileId;
+    if (profileId === undefined) {
+        return response.status(400).json({status: 400, message: "You're not logged in"})
+    }
+    const entry = {
+        watchListAnimeId: watchListAnimeId,
+        watchListProfileId: profileId,
+        watchListRank: watchListRank
+    };
+    const watchList = await getWatchList(profileId);
+    const newList = watchList.filter(item => item.watchListAnimeId !== watchListAnimeId);
+    newList.splice(watchListRank, 0, entry);
+    newList.forEach((item, index) => {
+        item.watchListRank = index;
+    });
+    await Promise.all(newList.map(entry => addWatchList(entry)));
+    return response.status(200).json({status: 200, message: "Watch list entry successful"})
 }
