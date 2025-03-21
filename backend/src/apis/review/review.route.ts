@@ -15,10 +15,10 @@ const router = Router()
 
 // define signup route for this router
 router.route('/create').post(createReviewController)
-router.route('/update').post(updateReviewController)
-router.route('/delete').post(deleteReviewController)
-router.route('/get-review-by-profile-id').post(getReviewsByProfileIdController)
-router.route('/get-review-by-anime-id').post(getReviewsByAnimeIdController)
+router.route('/update').put(updateReviewController)
+router.route('/delete').delete(deleteReviewController)
+router.route('/get-by-profile').get(getReviewsByProfileIdController)
+router.route('/get-by-anime/:animeId').get(getReviewsByAnimeIdController)
 
 // export the router with the basePath and router object
 export const reviewRoute = {basePath, router}

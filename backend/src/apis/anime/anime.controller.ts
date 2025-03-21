@@ -10,8 +10,8 @@ export async function getAnimeByIdController(request: Request, response: Respons
     if(!validationResult.success){
         return zodErrorResponse(response,validationResult.error)
     }
-    const {anime_id} = validationResult.data
-    const anime_id_num = parseInt(anime_id)
+    const {animeId} = validationResult.data
+    const anime_id_num = parseInt(animeId)
     const result = await getAnimeById(anime_id_num)
     if(!result){
         return response.status(400).json('Anime not found')

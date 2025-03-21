@@ -10,7 +10,7 @@ const basePath = '/apis/anime'
 
 const router = Router()
 
-router.route('/id/:anime_id').get(getAnimeByIdController)
+router.route('/id/:animeId').get(getAnimeByIdController)
 router.route('/top').get(getAnimeTopController)
 router.route('/recent').get(getAnimeRecentController)
 router.route('/genre/:genre').get(getAnimeByGenreController)

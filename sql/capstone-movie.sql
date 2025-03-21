@@ -71,7 +71,7 @@ CREATE TABLE watch_list_favorite (
 );
 CREATE TABLE review (
                         review_id UUID PRIMARY KEY,
-                        review_anime_id UUID REFERENCES anime(anime_id),
+                        review_jikan_id INT,
                         review_profile_id UUID REFERENCES profile(profile_id),
                         review_anime_rating SMALLINT,
                         review_body TEXT,
@@ -91,5 +91,4 @@ CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_hidden(watch_li
 CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_hidden(watch_list_profile_id);
 CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_favorite(watch_list_anime_id);
 CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_favorite(watch_list_profile_id);
-CREATE INDEX IF NOT EXISTS idx_review_anime_id ON review(review_anime_id);
 CREATE INDEX IF NOT EXISTS idx_review_profile_id ON review(review_profile_id);

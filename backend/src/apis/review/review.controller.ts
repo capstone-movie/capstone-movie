@@ -2,7 +2,6 @@ import {Request, Response} from 'express'
 import {
     deleteReviewSchema,
     reviewSchema,
-    getReviewsByProfileIdSchema,
     getReviewsByAnimeIdSchema
 } from './review.validator'
 import {v7 as uuid} from 'uuid'
@@ -14,6 +13,7 @@ import {
     getReviewsByProfileId,
     getReviewsByAnimeId
 } from "./review.model";
+import {number} from "zod";
 
 /**
  * Create Review Controller
@@ -42,9 +42,14 @@ export async function createReviewController(request: Request, response: Respons
 
         // deconstruct the review data from the request body
         const reviewData = validationResult.data;
+        const profileId = request.session.profile?.profileId as string;
+
+        if (!profileId)
+            return response.status(400).json({status: 400, message: 'You ain\'t logged in'});
 
         // create a new review ID
         reviewData.reviewId = uuid();
+        reviewData.reviewProfileId = profileId
 
         // insert the review into the database
         const insertResult = await insertReviews(reviewData);
@@ -76,6 +81,10 @@ export async function updateReviewController(request: Request, response: Respons
         // deconstruct the review data from the request body
         const reviewData = validationResult.data;
 
+        if (reviewData.reviewProfileId !== request.session.profile?.profileId) {
+            return response.status(403).json({status: 403, message: 'This is not your review'});
+        }
+
         // insert the review into the database
         const insertResult = await updateReviews(reviewData);
 
@@ -85,7 +94,7 @@ export async function updateReviewController(request: Request, response: Respons
         }
 
         // return a response to the client
-        return response.status(201).json({status: 201, message: 'Review created successfully', data: reviewData});
+        return response.status(201).json({status: 201, message: 'Review updated successfully', data: reviewData});
 
     } catch (error: any) {
         // catch any errors that occurred during the review creation process and return a response to the client
@@ -120,6 +129,9 @@ export async function deleteReviewController(request: Request, response: Respons
 
         const profileId = await getProfileIdByReviewId(reviewId);
 
+        if( !profileId )
+            return response.status(200).json({status: 200, message: 'Review not found'})
+
         //check if session is currently the author of this review
         const isAuthor = request.session.profile?.profileId === profileId;
 
@@ -147,24 +159,15 @@ export async function deleteReviewController(request: Request, response: Respons
 export async function getReviewsByProfileIdController(request: Request, response: Response): Promise<any> {
     try {
         // validate the profile ID coming from the request body
-        const validationResult = getReviewsByProfileIdSchema.safeParse(request.body);
-
-        console.log(validationResult);
-        // if the validation is unsuccessful, return a preformatted response to the client
-        if (!validationResult.success) {
-            return response.status(400).json({status: 400, message: validationResult.error.errors});
-        }
-
         // deconstruct the profile ID from the request body
-        const {profileId} = validationResult.data;
+        const profileId = request.session.profile?.profileId;
+
+        if (!profileId) {
+            return response.status(400).json({status: 400, message: 'You ain\'t logged in'});
+        }
 
         // get the reviews from the database
         const reviews = await getReviewsByProfileId(profileId);
-
-        // if there are no reviews, return a response to the client
-        if (reviews.length === 0) {
-            return response.status(404).json({status: 404, message: 'No reviews found'});
-        }
 
         // return a response to the client
         return response.status(200).json({status: 200, message: 'Reviews retrieved successfully', data: reviews});
@@ -178,7 +181,7 @@ export async function getReviewsByProfileIdController(request: Request, response
 export async function getReviewsByAnimeIdController(request: Request, response: Response): Promise<any> {
     try {
         // validate the anime ID coming from the request body
-        const validationResult = getReviewsByAnimeIdSchema.safeParse(request.body);
+        const validationResult = getReviewsByAnimeIdSchema.safeParse(request.params);
 
         // if the validation is unsuccessful, return a preformatted response to the client
         if (!validationResult.success) {
@@ -189,12 +192,7 @@ export async function getReviewsByAnimeIdController(request: Request, response: 
         const {animeId} = validationResult.data;
 
         // get the reviews from the database
-        const reviews = await getReviewsByAnimeId(animeId);
-
-        // if there are no reviews, return a response to the client
-        if (reviews.length === 0) {
-            return response.status(404).json({status: 404, message: 'No reviews found'});
-        }
+        const reviews = await getReviewsByAnimeId(parseInt(animeId))
 
         // return a response to the client
         return response.status(200).json({status: 200, message: 'Reviews retrieved successfully', data: reviews});
