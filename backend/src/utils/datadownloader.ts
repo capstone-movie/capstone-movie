@@ -1,6 +1,7 @@
 import axios from "axios"
 import {v7 as uuid} from "uuid"
 import {deleteAllAnime, insertMultipleAnime} from "../apis/anime/anime.model";
+import {insertGenres} from "../apis/genres/genres.model";
 
 function dataDownloader(): Promise<any> {
     return main()
@@ -17,6 +18,7 @@ function dataDownloader(): Promise<any> {
     async function downloadAnimes() {
 
         let pageIndex = 1
+        const set = new Set <string>()
         while (true) {
             try {
                 const {data} = await axios.get(`https://api.jikan.moe/v4/anime?page=${pageIndex}&limit=25`)
@@ -50,6 +52,9 @@ function dataDownloader(): Promise<any> {
                         anime_thumbnail_url: anime.images.webp.large_image_url,
                     };
                     animes.push(customAnime)
+                    for (let name of anime.genres) {
+
+                    }
                 }
                 await insertMultipleAnime(animes)
                 console.log('added page ' + pageIndex)
