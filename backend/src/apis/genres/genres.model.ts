@@ -8,10 +8,8 @@ export async function insertGenres(uuid, genre) {
 }
 
 export async function insertMultipleAnimeGenres(anime, genre_ids){
-    for(let i = 0; i < genre_ids.length; i++) {
         await sql`INSERT INTO anime_genres(anime_genres_anime_id, anime_genres_genres_id)
-                  VALUES (${anime}, ${genre_ids[i]})`
-    }
+                  VALUES (${anime}, ${genre_ids})`
     return 'Anime Genres Successfully Created'
 }
 

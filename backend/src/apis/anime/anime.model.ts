@@ -79,3 +79,45 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
         return false
     }
 }
+
+export async function insertAnime(anime: any): Promise<boolean> {
+    try {
+
+        const a = anime;
+        console.log(a.anime_title_japanese)
+        await sql`
+            INSERT INTO anime (anime_id, anime_jikan_id, anime_aired_start, anime_aired_end, anime_broadcast,
+                               anime_description, anime_demographic, anime_duration, anime_episodes,
+                               anime_rating, anime_rank, anime_score,
+                               anime_status, anime_title, anime_title_english, anime_title_japanese, anime_type, 
+                               anime_trailer_url, anime_youtube_thumbnail_url, anime_thumbnail_url)
+            VALUES (
+                ${a.anime_id},
+                ${a.anime_jikan_id},
+                ${a.anime_aired_start},
+                ${a.anime_aired_end},
+                ${a.anime_broadcast},
+                ${a.anime_description},
+                ${a.anime_demographic},
+                ${a.anime_duration},
+                ${a.anime_episodes},
+                ${a.anime_rating},
+                ${a.anime_rank},
+                ${a.anime_score},
+                ${a.anime_status},
+                ${a.anime_title},
+                ${a.anime_title_english},
+                ${a.anime_title_japanese},
+                ${a.anime_type},
+                ${a.anime_trailer_url},
+                ${a.anime_youtube_thumbnail_url},
+                ${a.anime_thumbnail_url}
+            )
+        `;
+
+    return true;
+    } catch (error) {
+        console.log(error);
+        return false;
+    }
+}

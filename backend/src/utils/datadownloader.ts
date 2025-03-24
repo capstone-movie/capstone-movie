@@ -1,6 +1,6 @@
 import axios from "axios"
 import {v7 as uuid} from "uuid"
-import {deleteAllAnime, insertMultipleAnime} from "../apis/anime/anime.model";
+import {deleteAllAnime, insertAnime} from "../apis/anime/anime.model";
 import {
     deleteAllAnimeGenres,
     deleteAllGenres,
@@ -57,12 +57,11 @@ function dataDownloader(): Promise<any> {
                         anime_youtube_thumbnail_url: anime.trailer.images.maximum_image_url,
                         anime_thumbnail_url: anime.images.webp.large_image_url,
                     };
-                    animes.push(customAnime)
+                    await insertAnime(customAnime)
                 }
                 console.log('added page ' + pageIndex)
                 ++pageIndex
-                if (pageIndex > 1){
-                    break                }
+
                 if (!data.pagination.has_next_page)
                     break;
             } catch (e) {
@@ -77,7 +76,6 @@ function dataDownloader(): Promise<any> {
                 if (!genres.includes(genre.name) && genre.name){
                     genres.push(genre.name)
                 }
-                console.log(genres)
             })
         })
 
@@ -87,8 +85,9 @@ function dataDownloader(): Promise<any> {
             genre_uuids.push(uid)
             await insertGenres(uid, genres[i])
         }
-        console.log(genres)
-        await insertMultipleAnime(animes)
+
+
+
         for(let i = 0; i < animes.length; i++) {
             const anime = animes[i]
             for(let j = 0; j < anime.anime_genres.length; j++) {
@@ -96,6 +95,7 @@ function dataDownloader(): Promise<any> {
                 const genre_id = genre_uuids[genres.indexOf(genre.name)]
                 await insertMultipleAnimeGenres(anime.anime_id, genre_id)
             }
+
         }
         console.log('finished')
     }
