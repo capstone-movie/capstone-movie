@@ -11,6 +11,7 @@ import {signOutRoute} from "./apis/sign-out/sign-out.route";
 import {reviewRoute} from "./apis/review/review.route";
 import {animeRoute} from "./apis/anime/anime.route";
 import {watchListRoute} from "./apis/watch-list/watch-list.route";
+import {genresRoute} from "./apis/genres/genres.route";
 
 // The following class creates the app and instantiates the server
 export class App {
@@ -53,6 +54,7 @@ export class App {
         this.app.use(signOutRoute.basePath, signOutRoute.router)
         this.app.use(reviewRoute.basePath, reviewRoute.router)
         this.app.use(animeRoute.basePath, animeRoute.router)
+        this.app.use(genresRoute.basePath, genresRoute.router)
         this.app.use(watchListRoute.basePath, watchListRoute.router)
     }
 

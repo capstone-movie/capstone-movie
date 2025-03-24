@@ -3,7 +3,7 @@ import {
     getAnimeByIdSchema
 } from './anime.validator'
 import {zodErrorResponse} from "../../utils/response.utils";
-import {getAnimeRecent, getAnimeTop, getAnimeByGenre, getAnimeById} from "./anime.model";
+import {getAnimeRecent, getAnimeTop, getAnimeById} from "./anime.model";
 
 export async function getAnimeByIdController(request: Request, response: Response): Promise<any> {
     const validationResult = getAnimeByIdSchema.safeParse(request.params)
@@ -32,11 +32,11 @@ export async function getAnimeTopController(request: Request, response: Response
     }
     return response.status(200).json(result)
 }
-export async function getAnimeByGenreController(request: Request, response: Response): Promise<any> {
+/*export async function getAnimeByGenreController(request: Request, response: Response): Promise<any> {
     const {genre} = request.params
     const result = await getAnimeByGenre(genre)
     if(!result){
         return response.status(400).json('Anime not found')
     }
     return response.status(200).json(result)
-}
+}*/

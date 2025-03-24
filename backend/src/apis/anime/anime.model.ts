@@ -2,10 +2,38 @@ import {sql} from "../../utils/database.utils";
 
 export async function getAnimeById(anime_jikan_id: number): Promise<any> {
     const rowList = await sql`
-        SELECT *
-        FROM anime
-        WHERE anime_jikan_id = ${anime_jikan_id}`
-    return rowList[0]
+        SELECT
+            a.anime_id,
+            a.anime_jikan_id,
+            a.anime_aired_end,
+            a.anime_aired_start,
+            a.anime_broadcast,
+            a.anime_description,
+            a.anime_demographic,
+            a.anime_duration,
+            a.anime_episodes,
+            a.anime_rating,
+            a.anime_rank,
+            a.anime_score,
+            a.anime_status,
+            a.anime_title,
+            a.anime_title_english,
+            a.anime_title_japanese,
+            a.anime_type,
+            a.anime_trailer_url,
+            a.anime_youtube_thumbnail_url,
+            a.anime_thumbnail_url,
+            ARRAY(
+                    SELECT g.genres_name, g.genres_id
+                    FROM genres g
+                             INNER JOIN anime_genres ag ON ag.anime_genres_genres_id = g.genres_id
+                    WHERE ag.anime_genres_anime_id = a.anime_id
+            ) AS genres
+        FROM anime a
+        WHERE a.anime_jikan_id = ${anime_jikan_id}
+    `;
+
+    return rowList[0]; // return the first record
 }
 
 export async function deleteAllAnime(): Promise<any> {
@@ -13,33 +41,89 @@ export async function deleteAllAnime(): Promise<any> {
                FROM anime`
 }
 
-
-
 export async function getAnimeRecent(): Promise<any> {
-    return sql`
-        SELECT anime_jikan_id, anime_title, anime_title_english, anime_score, anime_rank, anime_aired_start, anime_aired_end, anime_type
-        FROM anime
-        WHERE anime_aired_start IS NOT NULL AND anime_type != 'Movie'
+    const rowList = await sql`
+        SELECT 
+            anime_id,
+            anime_jikan_id, 
+            anime_title, 
+            anime_title_english, 
+            anime_title_japanese, 
+            anime_description, 
+            anime_demographic, 
+            anime_duration, 
+            anime_episodes, 
+            anime_rating, 
+            anime_rank, 
+            anime_score, 
+            anime_status, 
+            anime_type, 
+            anime_broadcast, 
+            anime_aired_start, 
+            anime_aired_end, 
+            anime_trailer_url, 
+            anime_youtube_thumbnail_url, 
+            anime_thumbnail_url,
+            ARRAY(
+                SELECT g.genres_name
+                FROM genres g
+                INNER JOIN anime_genres ag ON ag.anime_genres_genres_id = g.genres_id
+                WHERE ag.anime_genres_anime_id = a.anime_id
+            ) AS genres
+        FROM anime a
+        WHERE anime_aired_start IS NOT NULL 
+          AND anime_type != 'Movie'
         ORDER BY anime_aired_start DESC
-        LIMIT 50`
+        LIMIT 50
+    `;
+    return rowList; // Return the list of anime records
 }
+
 
 export async function getAnimeTop(): Promise<any> {
-    return sql`
-        SELECT anime_title, anime_title_english, anime_score, anime_rank 
-        FROM anime
+    const rowList = await sql`
+        SELECT 
+            anime_id,
+            anime_jikan_id, 
+            anime_title, 
+            anime_title_english, 
+            anime_title_japanese, 
+            anime_description, 
+            anime_demographic, 
+            anime_duration, 
+            anime_episodes, 
+            anime_rating, 
+            anime_rank, 
+            anime_score, 
+            anime_status, 
+            anime_type, 
+            anime_broadcast, 
+            anime_aired_start, 
+            anime_aired_end, 
+            anime_trailer_url, 
+            anime_youtube_thumbnail_url, 
+            anime_thumbnail_url,
+            ARRAY(
+                SELECT g.genres_name
+                FROM genres g
+                INNER JOIN anime_genres ag ON ag.anime_genres_genres_id = g.genres_id
+                WHERE ag.anime_genres_anime_id = a.anime_id
+            ) AS genres
+        FROM anime a
         ORDER BY anime_rank
-        LIMIT 50`
+        LIMIT 50
+    `;
+    return rowList; // Return the list of top anime records
 }
 
-export async function getAnimeByGenre(genre: string): Promise<any> {
+/*export async function getAnimeByGenre(genre: string): Promise<any> {
     return sql`
         SELECT anime_title, anime_title_english, anime_score, anime_rank, anime_genres
         FROM anime
         WHERE anime_genres ILIKE '%' || ${genre} || '%'
         ORDER BY anime_rank
         LIMIT 5`
-}
+}*/
 
 export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
     try {
