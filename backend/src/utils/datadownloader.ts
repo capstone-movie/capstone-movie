@@ -1,13 +1,21 @@
 import axios from "axios"
 import {v7 as uuid} from "uuid"
 import {deleteAllAnime, insertMultipleAnime} from "../apis/anime/anime.model";
+import {
+    deleteAllAnimeGenres,
+    deleteAllGenres,
+    insertGenres,
+    insertMultipleAnimeGenres
+} from "../apis/genres/genres.model";
 
 function dataDownloader(): Promise<any> {
     return main()
 
     async function main() {
         try {
+            await deleteAllAnimeGenres()
             await deleteAllAnime()
+            await deleteAllGenres()
             await downloadAnimes()
         } catch (e) {
             console.log(e)
@@ -17,14 +25,14 @@ function dataDownloader(): Promise<any> {
     async function downloadAnimes() {
 
         let pageIndex = 1
+        const animes = []
+
         while (true) {
             try {
                 const {data} = await axios.get(`https://api.jikan.moe/v4/anime?page=${pageIndex}&limit=25`)
 
-                const animes = []
                 for (let i = 0; i < data.data.length; i++) {
                     const anime = data.data[i]
-
                     const customAnime = {
                         anime_id: uuid(),
                         anime_jikan_id: anime.mal_id,
@@ -35,8 +43,8 @@ function dataDownloader(): Promise<any> {
                         anime_demographic: anime.demographics.map((d: { name: any; }) => d.name).join(", "),
                         anime_duration: anime.duration,
                         anime_episodes: anime.episodes,
-                        anime_themes: anime.themes.map((g: { name: any }) => g.name).join(", "),
-                        anime_genres: anime.genres.map((g: { name: any }) => g.name).join(", "),
+                        anime_themes: anime.themes.map((t: { name: any; }) => t.name).join(", "),
+                        anime_genres: anime.genres,
                         anime_rating: anime.rating,
                         anime_rank: anime.rank,
                         anime_score: anime.score,
@@ -51,14 +59,42 @@ function dataDownloader(): Promise<any> {
                     };
                     animes.push(customAnime)
                 }
-                await insertMultipleAnime(animes)
                 console.log('added page ' + pageIndex)
                 ++pageIndex
+                if (pageIndex > 1){
+                    break                }
                 if (!data.pagination.has_next_page)
                     break;
             } catch (e) {
                 //rate limited
                 await sleep(50)
+            }
+        }
+
+        const genres: any = []
+        animes.map((anime) => {
+            anime.anime_genres.map((genre: any) => {
+                if (!genres.includes(genre.name) && genre.name){
+                    genres.push(genre.name)
+                }
+                console.log(genres)
+            })
+        })
+
+        const genre_uuids = []
+        for(let i = 0; i < genres.length; i++) {
+            const uid= uuid()
+            genre_uuids.push(uid)
+            await insertGenres(uid, genres[i])
+        }
+        console.log(genres)
+        await insertMultipleAnime(animes)
+        for(let i = 0; i < animes.length; i++) {
+            const anime = animes[i]
+            for(let j = 0; j < anime.anime_genres.length; j++) {
+                const genre = anime.anime_genres[j]
+                const genre_id = genre_uuids[genres.indexOf(genre.name)]
+                await insertMultipleAnimeGenres(anime.anime_id, genre_id)
             }
         }
         console.log('finished')

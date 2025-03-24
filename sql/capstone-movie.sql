@@ -17,8 +17,6 @@ CREATE TABLE anime (
                        anime_demographic TEXT,
                        anime_duration TEXT,
                        anime_episodes SMALLINT,
-                       anime_themes TEXT,
-                       anime_genres TEXT,
                        anime_rating TEXT,
                        anime_rank INT,
                        anime_score FLOAT,

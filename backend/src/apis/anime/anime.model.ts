@@ -13,9 +13,11 @@ export async function deleteAllAnime(): Promise<any> {
                FROM anime`
 }
 
+
+
 export async function getAnimeRecent(): Promise<any> {
     return sql`
-        SELECT anime_jikan_id, anime_title, anime_title_english, anime_score, anime_rank, anime_genres, anime_aired_start, anime_aired_end, anime_type
+        SELECT anime_jikan_id, anime_title, anime_title_english, anime_score, anime_rank, anime_aired_start, anime_aired_end, anime_type
         FROM anime
         WHERE anime_aired_start IS NOT NULL AND anime_type != 'Movie'
         ORDER BY anime_aired_start DESC
@@ -24,7 +26,7 @@ export async function getAnimeRecent(): Promise<any> {
 
 export async function getAnimeTop(): Promise<any> {
     return sql`
-        SELECT anime_title, anime_title_english, anime_score, anime_rank, anime_genres
+        SELECT anime_title, anime_title_english, anime_score, anime_rank 
         FROM anime
         ORDER BY anime_rank
         LIMIT 50`
@@ -44,7 +46,7 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
         await sql`
             INSERT INTO anime (anime_id, anime_jikan_id, anime_aired_start, anime_aired_end, anime_broadcast,
                                anime_description, anime_demographic, anime_duration, anime_episodes,
-                               anime_themes, anime_genres, anime_rating, anime_rank, anime_score,
+                               anime_rating, anime_rank, anime_score,
                                anime_status, anime_title, anime_title_english, anime_title_japanese, anime_type, 
                                anime_trailer_url, anime_youtube_thumbnail_url, anime_thumbnail_url)
             VALUES
@@ -58,8 +60,6 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
                 anime.anime_demographic,
                 anime.anime_duration,
                 anime.anime_episodes,
-                anime.anime_themes,
-                anime.anime_genres,
                 anime.anime_rating,
                 anime.anime_rank,
                 anime.anime_score,
