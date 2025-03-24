@@ -6,6 +6,6 @@ const basePath = '/apis/genres'
 const router = Router()
 
 router.route('/all').get(getAllGenresController)
-router.route('/genres/:genresName').get(getAnimeByGenreNameController)
+router.route('/:genresName').get(getAnimeByGenreNameController)
 
 export const genresRoute = {basePath, router}
