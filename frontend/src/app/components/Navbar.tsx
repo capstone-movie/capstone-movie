@@ -3,9 +3,15 @@ import React, {use, useEffect, useState} from 'react';
 import Link from "next/link";
 import SignupPopup from "@/app/components/Signup-Popup";
 import LoginPopup from "@/app/components/Login-Popup";
-import {getSession, Session} from "@/utils/auth.utils";
+import {clearSession, getSession, Session} from "@/utils/auth.utils";
+import {postSignIn} from "@/utils/models/sign-in/sign-in.action";
+import {postSignOut} from "@/utils/models/sign-out/sign-out.action";
 
-export function Navbar() {
+interface NavbarProps {
+    clearSessionAction?: any
+}
+
+export function Navbar({clearSessionAction}: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSignupPopupVisible, setIsSignupPopupVisible] = useState(false); // State to control Signup Popup visibility
@@ -15,8 +21,7 @@ export function Navbar() {
     useEffect(() => {
         const fetchSession = async () => {
             try {
-                const session = await getSession(); // Await the result of getSession
-                setSession(session)
+                setSession(await getSession())
             } catch (error) {
                 console.error('Error fetching session:', error); // Handle any errors
             }
@@ -47,22 +52,8 @@ export function Navbar() {
     };
 
     const handleLogout = () => {
-        fetch('/apis/sign-out/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then((response) => {
-                if (response.ok) {
-                    console.log('Logout successful');
-                    setSession(undefined); // Clear session on successful logout
-                } else {
-                    console.error('Logout failed');
-                }
-            })
-            .catch((error) => {
-                console.error('Error during logout:', error);
+        postSignOut().then(r => {
+            setSession(undefined)
         })
     }
 
@@ -130,7 +121,7 @@ export function Navbar() {
                     session ? (
                         <div className="space-x-2">
                             <button onClick={handleLogout}
-                                className="px-2 py-2  hover:bg-white/20 duration-200 rounded-md">
+                                    className="px-2 py-2  hover:bg-white/20 duration-200 rounded-md">
                                 {'Log Out'}
                             </button>
                         </div>

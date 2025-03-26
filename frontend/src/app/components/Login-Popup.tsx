@@ -32,6 +32,7 @@ const LoginPopup = ({closePopup}: { closePopup: () => void }) => {
                 // if status object returned from express is 200 (successful) resetForm
                 reset()
                 closePopup()
+                window.location.reload()
             }
             // use setStatus to display status from express
             setStatus(response)

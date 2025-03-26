@@ -2,6 +2,7 @@ import type {Metadata} from 'next'
 import '../globals.css'
 import {Navbar} from "@/app/components/Navbar";
 import {Footer} from "@/app/components/Footer";
+import {clearSession} from "@/utils/auth.utils";
 
 export const metadata: Metadata = {
     title: 'AniRection',
@@ -19,7 +20,7 @@ export default function RootLayout(props: RootLayoutProps) {
               lang="en"
               suppressHydrationWarning>
         <body>
-            <Navbar/>
+            <Navbar clearSessionAction={clearSession} />
             {children}
             <Footer/>
         </body>
