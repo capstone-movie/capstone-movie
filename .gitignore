@@ -3,6 +3,7 @@
 .idea
 */.Ds_Store
 
+/frontend/.env.development
 project.env
 */.pnp
 */.pnp.js

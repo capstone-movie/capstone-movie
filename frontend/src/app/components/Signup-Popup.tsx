@@ -1,13 +1,13 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 
-const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
+const SignupPopup = ({closePopup}: { closePopup: () => void }) => {
     const [isVisible, setIsVisible] = useState(true); // Popup visibility
     const [email, setEmail] = useState(""); // Stores the email
     const [showCheckEmail, setShowCheckEmail] = useState(false); // Confirmation popup
 
     /* User clicks the subscribe */
-    const handleSubscribe = () => {
+    const handleSignup = () => {
         if (email.trim() !== "") {
             setShowCheckEmail(true);
         }
@@ -18,14 +18,6 @@ const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
         setIsVisible(false);
         closePopup(); // Close the popup when the user chooses "No Thanks"
     };
-
-    /* "Enter" press */
-    const enterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === "Enter") {
-            handleSubscribe();
-        }
-    };
-
     /* Close popup when clicking anywhere after confirmation appears */
     useEffect(() => {
         if (showCheckEmail) {
@@ -61,31 +53,42 @@ const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
                     >
                         ✖
                     </button>
+                    <h2 className="text-2xl font-bold">Welcome to AniRec</h2>
+
                     {showCheckEmail ? (
                         <>
-                            <h2 className="text-xl font-bold">Welcome to AniRec</h2>
                             <p className="mt-2">Check your email to continue</p>
                             <p className="text-gray-500 mt-1">({email})</p>
                         </>
                     ) : (
                         <>
-                            <h2 className="text-xl font-bold">Welcome to AniRec</h2>
-                            <p className="mt-6">Subscribe to stay up to date!</p>
-                            <input
-                                type="email"
-                                placeholder="Enter your email"
-                                className="mt-4 w-full p-2 border rounded-md text-black bg-white"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                onKeyDown={enterPress}
-                            />
-
-                            <button
-                                className="mt-4 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-                                onClick={handleSubscribe}
-                            >
-                                Subscribe
-                            </button>
+                            <form>
+                                <p className="text-xl mt-6">Sign up</p>
+                                <label className={'float-left'}>Email</label>
+                                <input
+                                    autoComplete='email'
+                                    type="email"
+                                    placeholder="Enter your email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                                    className="my-2 w-full p-2 border rounded-md text-black bg-white"
+                                />
+                                <label className={'float-left'}>Password</label>
+                                <input
+                                    autoComplete={'new-password'}
+                                    name='profilePassword'
+                                    placeholder="Create a password"
+                                    id="profilePassword"
+                                    type="password"
+                                    className="mt-2 w-full p-2 border rounded-md text-black bg-white"
+                                />
+                                <button
+                                    className="mt-4 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+                                    onClick={handleSignup}
+                                >
+                                    Sign up
+                                </button>
+                            </form>
                             <button
                                 className="mt-4 text-sm text-gray-400 hover:underline"
                                 onClick={handleNoThanks}

@@ -2,11 +2,13 @@
 import React, { useState } from 'react';
 import Link from "next/link";
 import SignupPopup from "@/app/components/Signup-Popup";
+import LoginPopup from "@/app/components/Login-Popup";
 
 export function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSignupPopupVisible, setIsSignupPopupVisible] = useState(false); // State to control Signup Popup visibility
+    const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false); // State to control Signup Popup visibility
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -23,6 +25,11 @@ export function Navbar() {
     // Show Signup Popup
     const showSignupPopup = () => {
         setIsSignupPopupVisible(true); // Show the popup when the button is clicked
+    };
+
+    // Show Signup Popup
+    const showLoginPopup = () => {
+        setIsLoginPopupVisible(true); // Show the popup when the button is clicked
     };
 
     return (
@@ -85,7 +92,10 @@ export function Navbar() {
                 </button>
                 {/* Sign In/Sign Up Buttons */}
                 <div className="space-x-2">
-                    <button className="px-2 py-2" onClick={showSignupPopup}>Sign In/Sign Up</button>
+                    <button className="px-2 py-2 hover:bg-white/20 duration-200 rounded-md" onClick={showLoginPopup}>Login</button>
+                </div>
+                <div className="space-x-2">
+                    <button className="px-2 py-2 hover:bg-white/20 duration-200 rounded-md" onClick={showSignupPopup}>Sign Up</button>
                 </div>
             </nav>
             {/* Mobile Left Tab Menu */}
@@ -119,6 +129,11 @@ export function Navbar() {
                     <button className="block hover:text-gray-300">Personal Dashboard</button>
                 </Link>
             </div>
+
+            {/* Show the Login Popup */}
+            {isLoginPopupVisible && <LoginPopup closePopup={function(): void {
+                setIsLoginPopupVisible(false);
+            } }/>}
 
             {/* Show the Signup Popup */}
             {isSignupPopupVisible && <SignupPopup closePopup={function(): void {
