@@ -1,7 +1,8 @@
 'use client'
 
-import { useEffect, useState } from "react";
-import { EmbeddedVideo } from "@/app/(index)/embedded-video";
+import {useEffect, useState} from "react";
+import {EmbeddedVideo} from "@/app/(index)/embedded-video";
+import {fetchHorizontalList} from "@/app/(index)/horizontal-list.action";
 
 type Response = {
     data: {
@@ -133,29 +134,18 @@ type Props = {
 }
 
 export function GridView(prop: Props) {
-    const [data, setData] = useState<Response | null>(null);
+    const [data, setData] = useState<any>(null);
     const [showVideoURL, setShowVideoURL] = useState('');
 
-    // Effect to fetch data whenever the URL changes
+
     useEffect(() => {
         const fetchData = async () => {
-            const url = prop.url;
-            while (true) {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const newData: Response = await response.json();
-                    newData.data = newData.data.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i);
-                    newData.data = newData.data.filter((v) => !v.genres.some((genre) => genre.name === 'Hentai'));
-                    setData(newData);
-                    break;
-                }
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }
+            const result = await fetchHorizontalList(prop.url)
+            setData(result)
         };
-
-        fetchData().then(() => {});
-
-    }, [prop.url]); // Run whenever `prop.url` changes
+        fetchData().then(() => {
+        });
+    }, [prop.url]);
 
     return (
         <>
@@ -165,30 +155,34 @@ export function GridView(prop: Props) {
             <div className={' bg-bgcolor flex flex-wrap justify-center'}>
                 {
                     data &&
-                    data.data.map((anime, index) => (
-                        anime.trailer.embed_url &&
-                        <div key={index} className={'h-[450px] w-[300px]'}>
-                            <img
-                                src={anime.images.webp.large_image_url}
-                                alt={anime.title}
-                                className={'size-full object-cover'}
-                            />
-                            <div className={' size-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
-                                <button onClick={() => {
-                                    setShowVideoURL(anime.trailer.embed_url)
-                                }}
-                                        className={'bg-black/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
-                                    <p className={"text-white text-2xl"}>
-                                        Play
-                                    </p>
-                                </button>
-                                <div className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
-                                    <h3 className={"text-2xl font-bold text-white text-center"}>
-                                        {anime.title_english ? anime.title_english : anime.title}
-                                    </h3>
+                    data.map((anime: any, index: number) => (
+                        anime.animeTrailerUrl &&
+                        (
+                            <div key={index} className={'h-[450px] w-[300px]'}>
+                                <img
+                                    src={anime.animeThumbnailUrl}
+                                    alt={anime.animeTitleEnglish}
+                                    className={'size-full object-cover'}
+                                />
+                                <div
+                                    className={' size-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
+                                    <button onClick={() => {
+                                        setShowVideoURL(anime.animeTrailerUrl)
+                                    }}
+                                            className={'bg-black/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
+                                        <p className={"text-white text-2xl"}>
+                                            Play
+                                        </p>
+                                    </button>
+                                    <div
+                                        className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
+                                        <h3 className={"text-2xl font-bold text-white text-center"}>
+                                            {anime.animeTitleEnglish ? anime.animeTitleEnglish : anime.animeTitle}
+                                        </h3>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        )
                     ))
                 }
             </div>

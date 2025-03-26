@@ -6,26 +6,22 @@ import { GridView } from "@/app/category/grid-view"; // Assuming GridView is the
 export default function CategoryPage() {
     const searchParams = useSearchParams();
     const type = searchParams.get('type'); // Directly getting the query parameter
-
-    // Set the appropriate URL based on the query parameter
     let apiUrl = '';
     let title = '';
-
     switch (type) {
         case 'recent':
-            apiUrl = 'https://api.jikan.moe/v4/seasons/now?sfw';
+            apiUrl = 'anime/recent';
             title = 'Recent Anime';
             break;
         case 'recommended':
-            apiUrl = 'https://api.jikan.moe/v4/top/anime?sfw&page=2';
+            apiUrl = 'genres/Action';
             title = 'Recommended Anime';
             break;
         default:
-            apiUrl = 'https://api.jikan.moe/v4/top/anime?sfw';
+            apiUrl = 'anime/top';
             title = 'Popular Anime';
             break;
     }
-
     return (
         <>
             <GridView url={apiUrl} title={title} />
