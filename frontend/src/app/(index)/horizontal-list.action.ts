@@ -1,6 +1,6 @@
 'use server'
 
-export async function fetchHorizontalList(url): Promise<any> {
+export async function fetchHorizontalList(url: string): Promise<any> {
     try {
         const response = await fetch(`${process.env.PUBLIC_API_URL}/apis/anime/${url}`, {
             method: 'GET',

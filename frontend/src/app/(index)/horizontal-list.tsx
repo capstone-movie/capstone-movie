@@ -16,18 +16,7 @@ export function HorizontalList(prop: Props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            const test =  await fetchHorizontalList(prop.url);
-            /*const url = prop.url;
-            while (true) {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const newData: Response = await response.json();
-                    setData(newData);
-                    console.log(newData);
-                    break;
-                }
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }*/
+            setData(await fetchHorizontalList(prop.url))
         };
         fetchData().then(() => {
         });
