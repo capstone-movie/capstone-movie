@@ -31,6 +31,7 @@ export function HorizontalList(prop: Props) {
                     {
                         data &&
                         data.map((anime: any, index: number) => (
+                            anime.animeTrailerUrl &&
                             <div className={`
                             w-[100%]
                             500:w-[50%]
