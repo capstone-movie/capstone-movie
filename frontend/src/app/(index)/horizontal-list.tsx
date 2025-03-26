@@ -16,7 +16,8 @@ export function HorizontalList(prop: Props) {
 
     useEffect(() => {
         const fetchData = async () => {
-            setData(await fetchHorizontalList(prop.url))
+            const result = await fetchHorizontalList(prop.url)
+            setData(result)
         };
         fetchData().then(() => {
         });
@@ -29,7 +30,7 @@ export function HorizontalList(prop: Props) {
                 <div className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
                     {
                         data &&
-                        data.data.map((anime: any, index: number) => (
+                        data.map((anime: any, index: number) => (
                             <div className={`
                             w-[100%]
                             500:w-[50%]
@@ -40,13 +41,14 @@ export function HorizontalList(prop: Props) {
                             2000:w-[14.28%]
                             2300:w-[12.5%] 
                             2600:w-[11.11%]
+                            no-scrollbar
                             px-1
                             h-[25rem]
                             shrink-0
                             `} key={index}>
-                                <ListItem title={anime.title_english ? anime.title_english : anime.title}
-                                          url={anime.images.webp.large_image_url}
-                                          mal_id={anime.mal_id}/>
+                                <ListItem title={anime.animeTitleEnglish ? anime.animeTitleEnglish : anime.animeTitle}
+                                          url={anime.animeThumbnailUrl}
+                                          mal_id={anime.animeJikanId}/>
                             </div>
                         ))
                     }

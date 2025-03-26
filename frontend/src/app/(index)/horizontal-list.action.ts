@@ -2,7 +2,8 @@
 
 export async function fetchHorizontalList(url: string): Promise<any> {
     try {
-        const response = await fetch(`${process.env.PUBLIC_API_URL}/apis/anime/${url}`, {
+        const fullUrl = `${process.env.PUBLIC_API_URL}/apis/${url}`
+        const response = await fetch(fullUrl, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

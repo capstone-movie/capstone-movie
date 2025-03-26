@@ -6,6 +6,16 @@
   --color-bgcolor: #13283f;
   --color-fhcolor: #1d3d61;
   --color-popcolor: #b5c8de;
+  --breakpoint-500: 500px;
+  --breakpoint-800: 800px;
+  --breakpoint-1100: 1100px;
+  --breakpoint-1400: 1400px;
+  --breakpoint-1700: 1700px;
+  --breakpoint-2000: 2000px;
+  --breakpoint-2300: 2300px;
+  --breakpoint-2600: 2600px;
+  --breakpoint-2900: 2900px;
+  --breakpoint-3200: 3200px;
 }
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
@@ -22,5 +32,15 @@
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-gray-200, currentColor);
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
