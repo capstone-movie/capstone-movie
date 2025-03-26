@@ -1,6 +1,9 @@
+'use client';
+
 import {useEffect, useState} from "react";
 import {ListItem} from "@/app/(index)/list-item";
 import {ListHeader} from "@/app/(index)/list-header";
+import {fetchHorizontalList} from "@/app/(index)/horizontal-list.action";
 
 type Props = {
     url: string
@@ -11,9 +14,11 @@ export function HorizontalList(prop: Props) {
 
     const [data, setData] = useState<any>(null);
 
+
     useEffect(() => {
         const fetchData = async () => {
-            const url = prop.url;
+            const test =  await fetchHorizontalList(prop.url);
+            /*const url = prop.url;
             while (true) {
                 const response = await fetch(url);
                 if (response.ok) {
@@ -23,7 +28,7 @@ export function HorizontalList(prop: Props) {
                     break;
                 }
                 await new Promise(resolve => setTimeout(resolve, 500));
-            }
+            }*/
         };
         fetchData().then(() => {
         });
@@ -34,9 +39,9 @@ export function HorizontalList(prop: Props) {
             <div className={'h-fit'}>
                 <ListHeader text={prop.title}/>
                 <div className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}>
-                     {
+                    {
                         data &&
-                        data.data.map((anime, index) => (
+                        data.data.map((anime: any, index: number) => (
                             <div className={`
                             w-[100%]
                             500:w-[50%]

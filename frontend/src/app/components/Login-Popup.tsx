@@ -41,10 +41,6 @@ const LoginPopup = ({closePopup}: { closePopup: () => void }) => {
         }
     }
 
-
-
-
-
     /* "NoThanks" press */
     const handleNoThanks = () => {
         setIsVisible(false);
@@ -76,7 +72,7 @@ const LoginPopup = ({closePopup}: { closePopup: () => void }) => {
                             <h1 className="text-3xl font-bold">Welcome back.</h1>
                             <div>
                                 <div className="mb-2 block">
-                                    <label htmlFor="email1" value="Your email"/>
+                                    <label htmlFor="email1" >Your email</label>
                                 </div>
                                 <input
                                     autoComplete='email'
@@ -93,7 +89,7 @@ const LoginPopup = ({closePopup}: { closePopup: () => void }) => {
                             </div>
                             <div>
                                 <div className="mb-2 block">
-                                    <label htmlFor="password1" value="Your password"/>
+                                    <label htmlFor="password1" >Your password</label>
                                 </div>
                                 <input
                                     autoComplete='current-password'

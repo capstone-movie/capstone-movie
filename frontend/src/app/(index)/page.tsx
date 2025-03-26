@@ -8,12 +8,12 @@ export default function () {
         <>
             <Spotlight url={'https://api.jikan.moe/v4/seasons/now?sfw'}/>
             <div className={''}>
-                <HorizontalList url={'http://pnguyen68.ddfullstack.cloud:8080/apis/anime/top'}
+                <HorizontalList url={'top'}
                                 title={'Popular Anime'}/>
-                <HorizontalList url={'http://pnguyen68.ddfullstack.cloud:8080/apis/anime/recent'}
+       {/*         <HorizontalList url={'recent'}
                                 title={'Recent Anime'}/>
-                <HorizontalList url={'http://pnguyen68.ddfullstack.cloud:8080/apis/anime/genre/action'}
-                                title={'Recommended Anime'}/>
+                <HorizontalList url={'genre/action'}
+                                title={'Recommended Anime'}/>*/}
             </div>
         </>
     );

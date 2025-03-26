@@ -48,7 +48,7 @@ export async function signInController (request: Request, response: Response): P
         }
 
         // if sign in was successful, create a new session for the client and return a response to the client
-        const { profileId, profileCreateAt, profileHash, profileUsername} = profile
+        const { profileId, profileCreateAt, profileUsername} = profile
 
         // generate a new signature for the session
         const signature: string = uuid()
@@ -57,7 +57,7 @@ export async function signInController (request: Request, response: Response): P
         const authorization: string = generateJwt({
             profileId,
             profileCreateAt,
-            profileHash,
+            profileEmail,
             profileUsername
         }, signature)
 

@@ -1,37 +1,57 @@
 "use client";
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SignUp, SignUpProfileSchema } from "@/utils/models/sign-up/sign-up.model";
+import { postSignIn } from "@/utils/models/sign-in/sign-in.action";
+import { Status } from '@/utils/interfaces/Status'
+import { DisplayStatus } from "@/components/display-status";
+import { DisplayError } from "@/components/display-error";
+import { postSignUp } from "@/utils/models/sign-up/sign-up.action";
+import {v7 as uuid} from 'uuid'
 
-const SignupPopup = ({closePopup}: { closePopup: () => void }) => {
+const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
     const [isVisible, setIsVisible] = useState(true); // Popup visibility
-    const [email, setEmail] = useState(""); // Stores the email
-    const [showCheckEmail, setShowCheckEmail] = useState(false); // Confirmation popup
+    const [status, setStatus] = useState<Status | null>(null);
+    const [checkEmail, setCheckEmail] = useState<boolean>(false);
 
-    /* User clicks the subscribe */
-    const handleSignup = () => {
-        if (email.trim() !== "") {
-            setShowCheckEmail(true);
+    const [showPassword, setShowPassword] = useState(false); // State to toggle password visibility
+
+    const defaultValues: SignUp = {
+        profileEmail: '',
+        profilePassword: '',
+        profileUsername: 'DefaultUsername', // Default username value,
+        profileId: uuid() // Default UUID value,
+    }
+
+    const { register, handleSubmit, reset, formState: { errors } } = useForm<SignUp>({
+        resolver: zodResolver(SignUpProfileSchema),
+        defaultValues,
+        mode: 'onBlur'
+    });
+
+    // define what happens onSubmit
+    const fireServerAction = async (data: SignUp) => {
+        try {
+            // call to the postSignUp server action
+            const response = await postSignUp(data);
+            if (response.status === 200) {
+                // if status object returned from express is 200 (successful) resetForm
+                setCheckEmail(true);
+            }
+            // use setStatus to display status from express
+            setStatus(response);
+        } catch (error) {
+            // if an error occurs let user know to try later
+            setStatus({ status: 500, message: 'sign up request failed try again', data: undefined });
         }
-    };
+    }
 
     /* "NoThanks" press */
     const handleNoThanks = () => {
         setIsVisible(false);
         closePopup(); // Close the popup when the user chooses "No Thanks"
     };
-    /* Close popup when clicking anywhere after confirmation appears */
-    useEffect(() => {
-        if (showCheckEmail) {
-            const closeOnClick = () => {
-                setIsVisible(false);
-                closePopup(); // Close the popup after confirmation
-            };
-            document.addEventListener("click", closeOnClick);
-
-            return () => {
-                document.removeEventListener("click", closeOnClick);
-            };
-        }
-    }, [showCheckEmail]);
 
     /* If popup is hidden, removes the popup */
     if (!isVisible) return null;
@@ -53,50 +73,82 @@ const SignupPopup = ({closePopup}: { closePopup: () => void }) => {
                     >
                         ✖
                     </button>
-                    <h2 className="text-2xl font-bold">Welcome to AniRec</h2>
-
-                    {showCheckEmail ? (
-                        <>
-                            <p className="mt-2">Check your email to continue</p>
-                            <p className="text-gray-500 mt-1">({email})</p>
-                        </>
-                    ) : (
-                        <>
-                            <form>
-                                <p className="text-xl mt-6">Sign up</p>
-                                <label className={'float-left'}>Email</label>
-                                <input
-                                    autoComplete='email'
-                                    type="email"
-                                    placeholder="Enter your email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="my-2 w-full p-2 border rounded-md text-black bg-white"
-                                />
-                                <label className={'float-left'}>Password</label>
-                                <input
-                                    autoComplete={'new-password'}
-                                    name='profilePassword'
-                                    placeholder="Create a password"
-                                    id="profilePassword"
-                                    type="password"
-                                    className="mt-2 w-full p-2 border rounded-md text-black bg-white"
-                                />
-                                <button
-                                    className="mt-4 w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
-                                    onClick={handleSignup}
-                                >
-                                    Sign up
-                                </button>
-                            </form>
-                            <button
-                                className="mt-4 text-sm text-gray-400 hover:underline"
-                                onClick={handleNoThanks}
-                            >
-                                No Thanks
-                            </button>
-                        </>
-                    )}
+                    {
+                        !checkEmail ? (
+                            <>
+                                <form onSubmit={handleSubmit(fireServerAction)} className="flex flex-col mx-auto gap-5">
+                                    <h1 className="text-3xl font-bold">Welcome To AnimeRec.</h1>
+                                    <div>
+                                        <div className="mb-2 block">
+                                            <label htmlFor="email1">Your email</label>
+                                        </div>
+                                        <input
+                                            autoComplete="email"
+                                            {...register('profileEmail')}
+                                            id="email1"
+                                            type="email"
+                                            name="profileEmail"
+                                            placeholder="Enter your email"
+                                            className="mt-2 w-full p-2 border rounded-md text-black bg-white"
+                                            aria-invalid={errors.profileEmail ? 'true' : 'false'}
+                                        />
+                                        <DisplayError error={errors?.profileEmail?.message} />
+                                    </div>
+                                    <div>
+                                        <div className="mb-2 block">
+                                            <label htmlFor="email1">Your username</label>
+                                        </div>
+                                        <input
+                                            autoComplete="email"
+                                            {...register('profileUsername')}
+                                            id="username1"
+                                            type="text"
+                                            name="profileUsername"
+                                            placeholder="Enter your username"
+                                            className="mt-2 w-full p-2 border rounded-md text-black bg-white"
+                                            aria-invalid={errors.profileUsername ? 'true' : 'false'}
+                                        />
+                                        <DisplayError error={errors?.profileUsername?.message} />
+                                    </div>
+                                    <div>
+                                        <div className="mb-2 block">
+                                            <label htmlFor="password1">Your password</label>
+                                        </div>
+                                        <div className="relative">
+                                            <input
+                                                autoComplete="current-password"
+                                                {...register('profilePassword')}
+                                                name="profilePassword"
+                                                id="password1"
+                                                type={showPassword ? 'text' : 'password'} // Toggle between 'text' and 'password'
+                                                placeholder="Enter your password"
+                                                className="mt-2 w-full p-2 border rounded-md text-black bg-white"
+                                                aria-invalid={errors.profilePassword ? 'true' : 'false'}
+                                            />
+                                            {/* Show password toggle */}
+                                            <button
+                                                type="button"
+                                                onClick={() => setShowPassword(!showPassword)}
+                                                className="absolute right-3 top-2 text-lg text-gray-500"
+                                            >
+                                                {showPassword ? 'Hide' : 'Show'}
+                                            </button>
+                                        </div>
+                                        <DisplayError error={errors?.profilePassword?.message} />
+                                    </div>
+                                    <div className="flex my-2">
+                                        <button className="mr-1" color="info" type="submit">Submit</button>
+                                        <button className="ml-1" color="failure" type="reset">Reset</button>
+                                    </div>
+                                </form>
+                                <DisplayStatus status={status} />
+                            </>
+                        ) : (
+                            <div className="text-center">
+                                <h1 className="text-3xl font-bold">Check your email for a confirmation link.</h1>
+                            </div>
+                        )
+                    }
                 </div>
             </div>
         </>

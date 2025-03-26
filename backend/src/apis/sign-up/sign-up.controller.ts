@@ -1,11 +1,11 @@
-import { Request, Response } from 'express'
-import { Status } from '../../utils/interfaces/Status'
+import e, {Request, Response} from 'express'
+import {Status} from '../../utils/interfaces/Status'
 import formData from 'form-data'
 import Mailgun from 'mailgun.js'
-import { setActivationToken, setHash } from '../../utils/auth.utils'
-import { PrivateProfile, insertProfile } from '../profile/profile.model'
-import { SignUpProfileSchema } from './sign-up.validator'
-import { zodErrorResponse } from '../../utils/response.utils'
+import {setActivationToken, setHash} from '../../utils/auth.utils'
+import {PrivateProfile, insertProfile} from '../profile/profile.model'
+import {SignUpProfileSchema} from './sign-up.validator'
+import {zodErrorResponse} from '../../utils/response.utils'
 
 /**
  * Express controller for sign-up
@@ -15,16 +15,19 @@ import { zodErrorResponse } from '../../utils/response.utils'
  * @returns response to the client indicating whether the sign-up was successful or not
  * */
 
-export async function signUpProfileController (request: Request, response: Response) : Promise<Response | undefined> {
+export async function signUpProfileController(request: Request, response: Response): Promise<Response | undefined> {
     try {
         const validationResult = SignUpProfileSchema.safeParse(request.body)
-        if(!validationResult.success) {
+        if (!validationResult.success) {
+            console.log('signUpProfileController', validationResult)
             return zodErrorResponse(response, validationResult.error)
         }
-        const mailgun: Mailgun = new Mailgun(formData)
-        const mailgunClient = mailgun.client({ username: 'api', key: process.env.MAILGUN_API_KEY as string })
+        console.log('signUpProfileController', request.body)
 
-        const { profileName, profileEmail, profilePassword, profileId, profileUsername } = request.body
+        const mailgun: Mailgun = new Mailgun(formData)
+        const mailgunClient = mailgun.client({username: 'api', key: process.env.MAILGUN_API_KEY as string})
+
+        const {profileName, profileEmail, profilePassword, profileId, profileUsername} = request.body
 
         const profileHash = await setHash(profilePassword)
 
@@ -54,6 +57,7 @@ export async function signUpProfileController (request: Request, response: Respo
         }
         await insertProfile(profile)
         await mailgunClient.messages.create(process.env.MAILGUN_DOMAIN as string, mailgunMessage)
+
         const status: Status = {
             status: 200,
             message: 'Profile successfully created please check your email.',
@@ -61,6 +65,14 @@ export async function signUpProfileController (request: Request, response: Respo
         }
         return response.json(status)
     } catch (error: any) {
+        if (error.type === 'MailgunAPIError') {
+            const status: Status = {
+                status: 200,
+                message: 'You good.',
+                data: null
+            }
+            return response.json(status)
+        }
         console.error(error)
         const status: Status = {
             status: 500,

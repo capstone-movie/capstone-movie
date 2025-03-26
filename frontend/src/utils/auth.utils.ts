@@ -21,11 +21,13 @@ const currentTimeInSeconds = new Date().getTime() / 1000
 export async function getSession(): Promise<Session|undefined > {
   // gain access to the cookies
   const cookieStore = await cookies()
+
   // grab the jwt token
   const jwtToken = cookieStore.get("earl-grey")
 
   // if the jwt token exists, parse it and return the decoded session
   if ( jwtToken) {
+
     return  setJwtToken(jwtToken.value)
 
   } else {
