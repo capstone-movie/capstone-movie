@@ -14,7 +14,6 @@ export function HorizontalList(prop: Props) {
 
     const [data, setData] = useState<any>(null);
 
-
     useEffect(() => {
         const fetchData = async () => {
             const test =  await fetchHorizontalList(prop.url);
