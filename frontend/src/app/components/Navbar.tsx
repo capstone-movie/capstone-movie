@@ -20,6 +20,7 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false); // State to control Signup Popup visibility
     const [session, setSession] = useState<Session | undefined>(undefined);
     const [searchResults, setSearchResults] = useState([]); // State to store search results
+    const [searchQuery, setSearchQuery] = useState(""); // State to store search query
     const searchRef = useRef(null);
     const debounceTimeoutRef = useRef(null);
 
@@ -80,7 +81,11 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
         if (query) {
             searchAnime(query).then(data => {
                 console.log(data); // Log the search results to the console
-                setSearchResults(data.slice(0, 3)); // Store the first 3 search results
+                if (data && Array.isArray(data)) {
+                    setSearchResults(data.slice(0, 3)); // Store the first 3 search results
+                } else {
+                    setSearchResults([]); // Clear previous results if data is not an array
+                }
             }).catch(error => {
                 console.error('Error during search:', error);
                 setSearchResults([]); // Clear previous results on error
@@ -92,12 +97,17 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
 
     const handleInputChange = (event) => {
         const query = event.target.value;
+        setSearchQuery(query);
         if (debounceTimeoutRef.current) {
             clearTimeout(debounceTimeoutRef.current);
         }
         debounceTimeoutRef.current = setTimeout(() => {
             handleSearch(query);
         }, 100); // 0.1 seconds delay
+
+        if (query.length === 0) {
+            setSearchResults([]); // Clear search results if query is empty
+        }
     }
 
     return (
@@ -147,18 +157,22 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
                            onChange={handleInputChange}
                     />
                     {/* Search Results */}
-                    {searchResults.length > 0 && (
-                        <div className="absolute top-full left-0 w-full bg-white text-black rounded-b-lg shadow-lg">
-                            {searchResults.map((result, index) => (
-                                <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
-                                    <div className="p-2 border-b border-gray-200 flex items-center cursor-pointer" onClick={() => setSearchResults([])}>
-                                        <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2" />
-                                        <span>
-                                            {result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}
-                                        </span>
-                                    </div>
-                                </Link>
-                            ))}
+                    {searchQuery.length > 0 && (
+                        <div className="absolute top-full left-0 w-full bg-fhcolor text-white rounded-b-lg shadow-lg border-t-2 border-fhcolor">
+                            {searchResults.length > 0 ? (
+                                searchResults.map((result, index) => (
+                                    <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
+                                        <div className="p-2 border-b border-gray-700 flex items-center cursor-pointer hover:bg-fhcolor/80 transition-colors duration-200" onClick={() => setSearchResults([])}>
+                                            <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2 rounded" />
+                                            <span>
+                                                {result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}
+                                            </span>
+                                        </div>
+                                    </Link>
+                                ))
+                            ) : (
+                                <div className="p-2 text-center text-gray-400">No results found</div>
+                            )}
                         </div>
                     )}
                 </div>
