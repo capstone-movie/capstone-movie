@@ -6,7 +6,7 @@ import {Spotlight} from "@/app/(index)/spotlight";
 export default function () {
     return (
         <>
-            <Spotlight url={'https://api.jikan.moe/v4/seasons/now?sfw'}/>
+            <Spotlight url={'anime/top'}/>
             <div className={''}>
                 <HorizontalList url={'anime/top'}
                                 title={'Popular Anime'}/>

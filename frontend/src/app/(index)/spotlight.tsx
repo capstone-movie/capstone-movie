@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 import {ListHeader} from "@/app/(index)/list-header";
 import Link from "next/link";
+import {fetchHorizontalList} from "@/app/(index)/horizontal-list.action";
 
 type Response = {
     data: {
@@ -133,21 +134,12 @@ type Props = {
 
 export function Spotlight(prop: Props) {
 
-    const [data, setData] = useState<Response | null>(null);
+    const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const url = prop.url;
-            while (true) {
-                const response = await fetch(url);
-                if (response.ok) {
-                    const newData: Response = await response.json();
-                    newData.data = newData.data.filter((v, i, a) => a.findIndex(t => (t.title === v.title)) === i)
-                    setData(newData);
-                    break;
-                }
-                await new Promise(resolve => setTimeout(resolve, 500));
-            }
+            const result = await fetchHorizontalList(prop.url)
+            setData(result)
         };
         fetchData().then(() => {
         });
@@ -155,7 +147,12 @@ export function Spotlight(prop: Props) {
 
     const [showVideoURL, setShowVideoURL] = useState('')
 
-    const focus = data?.data[5];
+    let focus = undefined
+
+    if (data && data.length > 5) {
+        focus = data[5]
+        console.log(focus)
+    }
 
     if (focus === undefined) {
         return <></>
@@ -165,29 +162,35 @@ export function Spotlight(prop: Props) {
         <>
             <div className={'h-[70vh] relative w-full mx-auto'}>
                 <div className={'h-full relative w-fit ml-auto'}>
-                    <img src={`https://img.youtube.com/vi/${focus.trailer.url?.slice(-11)}/maxresdefault.jpg`}
+                    <img src={focus.animeYoutubeThumbnailUrl ?? ''}
                          className={'h-full object-cover'}
                          alt={"Spotlight thumbnail"}/>
-                    <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-t h-full w-full absolute top-0 left-0'}>
+                    <div
+                        className={' from-bgcolor to-50% to-transparent bg-gradient-to-t h-full w-full absolute top-0 left-0'}>
                     </div>
-                    <div className={' from-bgcolor to-50% to-transparent bg-gradient-to-r h-full w-full absolute top-0 left-0'}>
+                    <div
+                        className={' from-bgcolor to-50% to-transparent bg-gradient-to-r h-full w-full absolute top-0 left-0'}>
                     </div>
                 </div>
                 <div className={'w-full h-full absolute top-0 left-0 p-5'}>
                     <h3 className={"text-4xl font-bold text-white text-left mb-5"}>
-                        {focus.title_english || focus.title}
+                        {focus.animeTitleEnglish || focus.animeTitle}
                     </h3>
                     <p className={"text-white text-left mb-5"}>
-                        {focus.synopsis}
+                        {focus.animeDescription}
                     </p>
-                    <button onClick={() => {
-                        setShowVideoURL(focus.trailer.embed_url ?? '')
-                    }}
-                            className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer mr-5'}>
-                        View Trailer
-                    </button>
-                    <Link href={{pathname: "/anime", query: {id: focus.mal_id}}}>
-                        <button className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
+                    (
+                        focus.animeYoutubeThumbnailUrl &&
+                        <button onClick={() => {
+                            setShowVideoURL(focus.animeYoutubeThumbnailUrl ?? '')
+                        }}
+                                className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer mr-5'}>
+                            View Trailer
+                        </button>
+                    )
+                    <Link href={{pathname: "/anime", query: {id: focus.animeJikanId}}}>
+                        <button
+                            className={'bg-bgcolor/80 text-white w-[110px] h-[50px] border-2 rounded-xl cursor-pointer'}>
                             More
                         </button>
                     </Link>
