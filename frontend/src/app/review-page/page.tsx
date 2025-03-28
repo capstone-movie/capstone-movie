@@ -1,15 +1,35 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { postReviewAction } from "@/app/review-page/review.action";
 
 const ReviewPage = () => {
+    const params = useParams();
+    const reviewJikanId = Number(params.animeId);
+
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [containsSpoilers, setContainsSpoilers] = useState(false);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        alert(`Review Submitted!\nTitle: ${title} \nContent: ${content} \nContains Spoilers: ${containsSpoilers}`);
 
+        try {
+            await postReviewAction({
+                reviewJikanId,
+                reviewTitle: title,
+                reviewBody: content,
+                reviewSpoiler: containsSpoilers,
+                reviewStatus: "active",
+            });
+            alert(`Review added successfully.`);
+            setTitle("");
+            setContent("");
+            setContainsSpoilers(false);
+        } catch (err) {
+            console.error("Error submitting review", err)
+            alert("Failed to submit review")
+        }
     };
     return (
         <>
@@ -22,7 +42,7 @@ const ReviewPage = () => {
 
                         <form onSubmit={handleSubmit}>
                             {/* Review Title */}
-                            <label className="block text-lg font-semibold mb-2">Review Anime</label>
+                            <label className="block text-lg font-semibold mb-2">Review Title</label>
                             <input
                             type="text"
                             value={title}
@@ -63,7 +83,6 @@ const ReviewPage = () => {
                     </main>
                 </div>
                 {/* Footer */}
-
             </div>
         </>
     )
