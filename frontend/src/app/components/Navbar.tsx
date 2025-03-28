@@ -1,22 +1,27 @@
 'use client';
-import React, {use, useEffect, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from "next/link";
 import SignupPopup from "@/app/components/Signup-Popup";
 import LoginPopup from "@/app/components/Login-Popup";
-import {clearSession, getSession, Session} from "@/utils/auth.utils";
-import {postSignIn} from "@/utils/models/sign-in/sign-in.action";
-import {postSignOut} from "@/utils/models/sign-out/sign-out.action";
+import { clearSession, getSession, Session } from "@/utils/auth.utils";
+import { postSignIn } from "@/utils/models/sign-in/sign-in.action";
+import { postSignOut } from "@/utils/models/sign-out/sign-out.action";
+import { searchAnime } from "@/utils/models/search/search.action";
+import * as querystring from "node:querystring";
 
 interface NavbarProps {
     clearSessionAction?: any
 }
 
-export function Navbar({clearSessionAction}: NavbarProps) {
+export function Navbar({ clearSessionAction }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSignupPopupVisible, setIsSignupPopupVisible] = useState(false); // State to control Signup Popup visibility
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false); // State to control Signup Popup visibility
     const [session, setSession] = useState<Session | undefined>(undefined);
+    const [searchResults, setSearchResults] = useState([]); // State to store search results
+    const searchRef = useRef(null);
+    const debounceTimeoutRef = useRef(null);
 
     useEffect(() => {
         const fetchSession = async () => {
@@ -27,6 +32,20 @@ export function Navbar({clearSessionAction}: NavbarProps) {
             }
         };
         fetchSession();
+    }, []);
+
+    useEffect(() => {
+        // Event listener to detect clicks outside the search bar
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setSearchResults([]); // Hide search results
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
     }, []);
 
     const toggleMenu = () => {
@@ -57,6 +76,30 @@ export function Navbar({clearSessionAction}: NavbarProps) {
         })
     }
 
+    const handleSearch = (query) => {
+        if (query) {
+            searchAnime(query).then(data => {
+                console.log(data); // Log the search results to the console
+                setSearchResults(data.slice(0, 3)); // Store the first 3 search results
+            }).catch(error => {
+                console.error('Error during search:', error);
+                setSearchResults([]); // Clear previous results on error
+            });
+        } else {
+            setSearchResults([]); // Clear previous results if query is empty
+        }
+    }
+
+    const handleInputChange = (event) => {
+        const query = event.target.value;
+        if (debounceTimeoutRef.current) {
+            clearTimeout(debounceTimeoutRef.current);
+        }
+        debounceTimeoutRef.current = setTimeout(() => {
+            handleSearch(query);
+        }, 100); // 0.1 seconds delay
+    }
+
     return (
         <>
             <nav
@@ -81,13 +124,13 @@ export function Navbar({clearSessionAction}: NavbarProps) {
                 </Link>
                 {/* Links */}
                 <div className="hidden 500:flex space-x-6 ml-4">
-                    <Link href={{pathname: "/category", query: {type: "popular"}}} onClick={closeMenu}>
+                    <Link href={{ pathname: "/category", query: { type: "popular" } }} onClick={closeMenu}>
                         <button className="hover:text-gray-300">Popular</button>
                     </Link>
-                    <Link href={{pathname: "/category", query: {type: "recent"}}} onClick={closeMenu}>
+                    <Link href={{ pathname: "/category", query: { type: "recent" } }} onClick={closeMenu}>
                         <button className="hover:text-gray-300">Recent</button>
                     </Link>
-                    <Link href={{pathname: "/category", query: {type: "recommended"}}} onClick={closeMenu}>
+                    <Link href={{ pathname: "/category", query: { type: "recommended" } }} onClick={closeMenu}>
                         <button className="hover:text-gray-300">Recommended</button>
                     </Link>
                     <Link href="/personal-dashboard" onClick={closeMenu}>
@@ -97,10 +140,27 @@ export function Navbar({clearSessionAction}: NavbarProps) {
                 {/* Spacer */}
                 <div className="flex-1"></div>
                 {/* Search Bar */}
-                <div className="relative hidden md:block">
+                <div className="relative hidden md:block" ref={searchRef}>
                     <input type="text"
                            placeholder="Search..."
-                           className="px-3 py-1 rounded-lg text-white placeholder-gray-200 bg-black/20"/>
+                           className="px-3 py-1 rounded-lg text-white placeholder-gray-200 bg-black/20"
+                           onChange={handleInputChange}
+                    />
+                    {/* Search Results */}
+                    {searchResults.length > 0 && (
+                        <div className="absolute top-full left-0 w-full bg-white text-black rounded-b-lg shadow-lg">
+                            {searchResults.map((result, index) => (
+                                <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
+                                    <div className="p-2 border-b border-gray-200 flex items-center cursor-pointer" onClick={() => setSearchResults([])}>
+                                        <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2" />
+                                        <span>
+                                            {result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}
+                                        </span>
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
                 {/* Search Icon for Mobile */}
                 <button onClick={toggleSearch}
@@ -160,13 +220,13 @@ export function Navbar({clearSessionAction}: NavbarProps) {
                 <Link href="/" onClick={closeMenu}>
                     <button className="block hover:text-gray-300">Home</button>
                 </Link>
-                <Link href={{pathname: "/category", query: {type: "popular"}}} onClick={closeMenu}>
+                <Link href={{ pathname: "/category", query: { type: "popular" } }} onClick={closeMenu}>
                     <button className="block hover:text-gray-300">Popular</button>
                 </Link>
-                <Link href={{pathname: "/category", query: {type: "recent"}}} onClick={closeMenu}>
+                <Link href={{ pathname: "/category", query: { type: "recent" } }} onClick={closeMenu}>
                     <button className="block hover:text-gray-300">Recent</button>
                 </Link>
-                <Link href={{pathname: "/category", query: {type: "recommended"}}} onClick={closeMenu}>
+                <Link href={{ pathname: "/category", query: { type: "recommended" } }} onClick={closeMenu}>
                     <button className="block hover:text-gray-300">Recommended</button>
                 </Link>
                 <Link href="/personal-dashboard" onClick={closeMenu}>

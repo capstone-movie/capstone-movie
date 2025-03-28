@@ -18,6 +18,5 @@ export async function postSignOut(): Promise<Status> {
         console.error(error)
         throw error
     })
-
 }
 
