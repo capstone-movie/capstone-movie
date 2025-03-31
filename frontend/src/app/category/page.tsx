@@ -6,6 +6,7 @@ import { GridView } from "@/app/category/grid-view"; // Assuming GridView is the
 export default function CategoryPage() {
     const searchParams = useSearchParams();
     const type = searchParams.get('type'); // Directly getting the query parameter
+    const query = searchParams.get('query') || '';
     let apiUrl = '';
     let title = '';
     switch (type) {
@@ -16,6 +17,10 @@ export default function CategoryPage() {
         case 'recommended':
             apiUrl = 'genres/Action';
             title = 'Recommended Anime';
+            break;
+        case 'search':
+            apiUrl = `anime/search/${query}`;
+            title = 'Search Results: ' + query;
             break;
         default:
             apiUrl = 'anime/top';

@@ -211,39 +211,14 @@ export async function insertAnime(anime: any): Promise<boolean> {
 
 export async function getAnimeSearch(query: string): Promise<any> {
     const rowList = await sql`
-        SELECT 
-            anime_id,
-            anime_jikan_id, 
-            anime_title, 
-            anime_title_english, 
-            anime_title_japanese, 
-            anime_description, 
-            anime_demographic, 
-            anime_duration, 
-            anime_episodes, 
-            anime_rating, 
-            anime_rank, 
-            anime_score, 
-            anime_status, 
-            anime_type, 
-            anime_broadcast, 
-            anime_aired_start, 
-            anime_aired_end, 
-            anime_trailer_url, 
-            anime_youtube_thumbnail_url, 
-            anime_thumbnail_url,
-            ARRAY(
-                SELECT g.genres_name
-                FROM genres g
-                INNER JOIN anime_genres ag ON ag.anime_genres_genres_id = g.genres_id
-                WHERE ag.anime_genres_anime_id = a.anime_id
-            ) AS genres
+        SELECT *
         FROM anime a
-        WHERE a.anime_title ILIKE '%' || ${query} || '%'
-           OR a.anime_title_english ILIKE '%' || ${query} || '%'
-           OR a.anime_title_japanese ILIKE '%' || ${query} || '%'
-        ORDER BY a.anime_title
-        LIMIT 50
+        WHERE (a.anime_title ILIKE '%' || ${query} || '%'
+            OR a.anime_title_english ILIKE '%' || ${query} || '%'
+            OR a.anime_title_japanese ILIKE '%' || ${query} || '%')
+          AND a.anime_score IS NOT NULL
+        ORDER BY a.anime_score DESC
+            LIMIT 50
     `;
     return rowList; // Return the list of anime records matching the search query
 }
