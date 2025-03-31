@@ -24,7 +24,10 @@ export async function getAnimeById(anime_jikan_id: number): Promise<any> {
             a.anime_youtube_thumbnail_url,
             a.anime_thumbnail_url,
             ARRAY(
-                    SELECT g.genres_name, g.genres_id
+                    SELECT jsonb_build_object(
+                                   'genresName', g.genres_name,
+                                   'genresUUID', g.genres_id
+                           )
                     FROM genres g
                              INNER JOIN anime_genres ag ON ag.anime_genres_genres_id = g.genres_id
                     WHERE ag.anime_genres_anime_id = a.anime_id
