@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useState} from "react";
-import {EmbeddedVideo} from "@/app/(index)/embedded-video";
+import Link from "next/link";  // Import Link from next/link
 import {fetchHorizontalList} from "@/app/(index)/horizontal-list.action";
 
 type Response = {
@@ -135,8 +135,6 @@ type Props = {
 
 export function GridView(prop: Props) {
     const [data, setData] = useState<any>(null);
-    const [showVideoURL, setShowVideoURL] = useState('');
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -147,6 +145,8 @@ export function GridView(prop: Props) {
         });
     }, [prop.url]);
 
+    console.log(data)
+
     return (
         <>
             <p className={'text-white text-3xl w-fit mx-auto p-4'}>
@@ -156,42 +156,25 @@ export function GridView(prop: Props) {
                 {
                     data &&
                     data.map((anime: any, index: number) => (
-                        anime.animeTrailerUrl &&
-                        (
-                            <div key={index} className={'h-[450px] w-[300px]'}>
+                        <div key={index} className={'h-[450px] w-[300px] rounded-xl overflow-hidden relative border-[1px] border-[#9994]'}>
+                            <Link href={{ pathname: "/anime", query: {id: anime.animeJikanId} }}>
                                 <img
                                     src={anime.animeThumbnailUrl}
-                                    alt={anime.animeTitleEnglish}
-                                    className={'size-full object-cover'}
+                                    alt={anime.animeTitleEnglish || anime.animeTitle}
+                                    className={'w-full h-full object-cover hover:scale-105 duration-200'}
                                 />
-                                <div
-                                    className={' size-full -translate-y-full flex flex-col justify-center opacity-0 hover:opacity-100 duration-500'}>
-                                    <button onClick={() => {
-                                        setShowVideoURL(anime.animeTrailerUrl)
-                                    }}
-                                            className={'bg-black/80 w-[30%] h-[20%] mx-auto flex justify-center items-center border-2 rounded-xl'}>
-                                        <p className={"text-white text-2xl"}>
-                                            Play
-                                        </p>
-                                    </button>
-                                    <div
-                                        className={'bg-black/80 w-full h-fit bottom-0 absolute flex flex-col justify-center'}>
-                                        <h3 className={"text-2xl font-bold text-white text-center"}>
-                                            {anime.animeTitleEnglish ? anime.animeTitleEnglish : anime.animeTitle}
+                                <div className={'w-full h-full -translate-y-full flex flex-col opacity-0 hover:opacity-100 duration-300'}>
+                                    <div className={'bg-bgcolor/80 w-full h-fit mt-auto'}>
+                                        <h3 className={"text-xl font-bold text-white text-center"}>
+                                            {anime.animeTitleEnglish|| anime.animeTitle}
                                         </h3>
                                     </div>
                                 </div>
-                            </div>
-                        )
+                            </Link>
+                        </div>
                     ))
                 }
             </div>
-            {
-                showVideoURL !== '' &&
-                <EmbeddedVideo url={showVideoURL}
-                               title={'test'}
-                               exit={setShowVideoURL}/>
-            }
         </>
     );
 }

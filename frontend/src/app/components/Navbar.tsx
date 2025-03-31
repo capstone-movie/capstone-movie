@@ -89,7 +89,8 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
     const handleSearch = (query) => {
         if (query) {
             searchAnime(query).then(data => {
-                if (data && Array.isArray(data)) {
+                console.log(data)
+                if (data && Array.isArray(data)){
                     setSearchResults(data.slice(0, 3));
                 } else {
                     setSearchResults([]);
@@ -111,10 +112,16 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
         }
         debounceTimeoutRef.current = setTimeout(() => {
             handleSearch(query);
-        }, 100);
+        }, 250);
 
         if (query.length === 0) {
             setSearchResults([]);
+        }
+    }
+
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+            window.location.href = `/category?type=search&query=${searchQuery}`;
         }
     }
 
@@ -163,19 +170,26 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
 
                 {/* Desktop Search Bar */}
                 <div className="relative hidden md:block self-center" ref={searchRef}>
-                    <input type="text" placeholder="Search..." className="px-3 py-1 rounded-lg text-white placeholder-gray-200 bg-black/20" onChange={handleInputChange} value={searchQuery} />
+                    <input type="text" placeholder="Search..." className="px-3 py-1 rounded-lg text-white placeholder-gray-200 bg-black/20" onChange={handleInputChange} value={searchQuery} onKeyDown={handleKeyDown} />
                     {/* Search Results for Desktop */}
                     {searchQuery.length > 0 && (
                         <div className="absolute top-full left-0 w-full bg-fhcolor text-white rounded-b-lg shadow-lg border-t-2 border-fhcolor">
                             {searchResults.length > 0 ? (
-                                searchResults.map((result, index) => (
-                                    <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
-                                        <div className="p-2 border-b border-gray-700 flex items-center cursor-pointer hover:bg-fhcolor/80 transition-colors duration-200" onClick={handleResultClick}>
-                                            <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2 rounded" />
-                                            <span>{result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}</span>
-                                        </div>
-                                    </Link>
-                                ))
+                                <>
+                                    {searchResults.map((result, index) => (
+                                        <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
+                                            <div className="p-2 border-b border-gray-700 flex items-center cursor-pointer hover:bg-fhcolor/80 transition-colors duration-200" onClick={handleResultClick}>
+                                                <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2 rounded" />
+                                                <span>{result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}</span>
+                                            </div>
+                                        </Link>
+                                    ))}
+                                    <div className="p-2 text-center">
+                                        <Link href={{ pathname: "/category", query: { type: "search", query: searchQuery } }}>
+                                            <span className="text-blue-500 hover:underline">More results</span>
+                                        </Link>
+                                    </div>
+                                </>
                             ) : (
                                 <div className="p-2 text-center text-gray-400">No results found</div>
                             )}
@@ -213,20 +227,28 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
                             className="w-full px-3 py-2 rounded-lg text-white placeholder-gray-200 bg-black/20"
                             onChange={handleInputChange}
                             value={searchQuery}
+                            onKeyDown={handleKeyDown}
                             autoFocus
                         />
                         {/* Search Results for Mobile */}
                         {searchQuery.length > 0 && (
                             <div className="absolute top-full left-0 w-full bg-fhcolor text-white rounded-b-lg shadow-lg border-t-2 border-fhcolor">
                                 {searchResults.length > 0 ? (
-                                    searchResults.map((result, index) => (
-                                        <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
-                                            <div className="p-2 border-b border-gray-700 flex items-center cursor-pointer hover:bg-fhcolor/80 transition-colors duration-200" onClick={handleResultClick}>
-                                                <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2 rounded" />
-                                                <span>{result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}</span>
-                                            </div>
-                                        </Link>
-                                    ))
+                                    <>
+                                        {searchResults.map((result, index) => (
+                                            <Link key={index} href={{ pathname: "/anime", query: { id: result.animeJikanId } }}>
+                                                <div className="p-2 border-b border-gray-700 flex items-center cursor-pointer hover:bg-fhcolor/80 transition-colors duration-200" onClick={handleResultClick}>
+                                                    <img src={result.animeThumbnailUrl} alt={result.animeTitle} className="w-10 h-10 mr-2 rounded" />
+                                                    <span>{result.animeTitleEnglish ? result.animeTitleEnglish : result.animeTitleJapanese}</span>
+                                                </div>
+                                            </Link>
+                                        ))}
+                                        <div className="p-2 text-center">
+                                            <Link href={{ pathname: "/category", query: { type: "search", query: searchQuery } }}>
+                                                <span className="text-blue-500 hover:underline">More results</span>
+                                            </Link>
+                                        </div>
+                                    </>
                                 ) : (
                                     <div className="p-2 text-center text-gray-400">No results found</div>
                                 )}
