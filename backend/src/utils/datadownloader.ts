@@ -8,6 +8,8 @@ import {
     insertMultipleAnimeGenres
 } from "../apis/genres/genres.model";
 
+const EXCLUDED_GENRES = ["Erotica", "Ecchi", "Hentai"];
+
 function dataDownloader(): Promise<any> {
     return main()
 
@@ -45,7 +47,7 @@ function dataDownloader(): Promise<any> {
                         anime_duration: anime.duration,
                         anime_episodes: anime.episodes,
                         anime_themes: anime.themes.map((t: { name: any; }) => t.name).join(", "),
-                        anime_genres: anime.genres,
+                        anime_genres: anime.genres.filter((g: { name: string }) => !EXCLUDED_GENRES.includes(g.name)),
                         anime_rating: anime.rating,
                         anime_rank: anime.rank,
                         anime_score: anime.score,
@@ -92,6 +94,7 @@ function dataDownloader(): Promise<any> {
             const anime = animes[i]
             for(let j = 0; j < anime.anime_genres.length; j++) {
                 const genre = anime.anime_genres[j]
+                if (EXCLUDED_GENRES.includes(genre.name)) continue;
                 const genre_id = genre_uuids[genres.indexOf(genre.name)]
                 await insertMultipleAnimeGenres(anime.anime_id, genre_id)
             }

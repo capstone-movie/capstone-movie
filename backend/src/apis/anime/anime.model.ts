@@ -210,11 +210,12 @@ export async function getAnimeSearch(query: string): Promise<any> {
     const rowList = await sql`
         SELECT *
         FROM anime a
-        WHERE a.anime_title ILIKE '%' || ${query} || '%'
-           OR a.anime_title_english ILIKE '%' || ${query} || '%'
-           OR a.anime_title_japanese ILIKE '%' || ${query} || '%'
-        ORDER BY a.anime_rating
-        LIMIT 50
+        WHERE (a.anime_title ILIKE '%' || ${query} || '%'
+            OR a.anime_title_english ILIKE '%' || ${query} || '%'
+            OR a.anime_title_japanese ILIKE '%' || ${query} || '%')
+          AND a.anime_score IS NOT NULL
+        ORDER BY a.anime_score DESC
+            LIMIT 50
     `;
     return rowList; // Return the list of anime records matching the search query
 }
