@@ -49,9 +49,9 @@ export default function () {
                     alt={data.animeTitleEnglish}
                 />
                 <div className={'flex flex-col w-full min-w-96 px-10'}>
-                    <p className={'text-white font-bold text-3xl'}>{
+                    <div className={'text-white font-bold text-3xl'}>{
                         <p className={'text-white font-bold text-3xl'}>{data.animeTitleEnglish ? data.animeTitleEnglish : data.animeTitle}</p>
-                    }</p>
+                    }</div>
                     <div className={'flex gap-4 py-2'}>
                         <p className={'text-white text-xl font-semibold'}>{`Score: ${data.animeScore}`}</p>
                         <p className={'text-white text-xl font-semibold'}>{`Rank #${data.animeRank}`}</p>
