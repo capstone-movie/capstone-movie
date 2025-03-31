@@ -3,8 +3,8 @@
 @source '../node_modules/flowbite-react/dist/esm/**/*.mjs';
 
 @theme {
-  --color-bgcolor: #13283f;
-  --color-fhcolor: #1d3d61;
+  --color-bgcolor: #08121d;
+  --color-fhcolor: #112842;
   --color-popcolor: #b5c8de;
   --breakpoint-500: 500px;
   --breakpoint-800: 800px;
