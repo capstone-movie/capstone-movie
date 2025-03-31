@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useParams } from "next/navigation";
 import { postReviewAction } from "@/app/review-page/review.action";
 
@@ -7,12 +7,18 @@ const ReviewPage = () => {
     const params = useParams();
     const reviewJikanId = Number(params.animeId);
 
+    const [rating, setRating] = useState< number | null >(null);
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [containsSpoilers, setContainsSpoilers] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+
+        if (!rating) {
+            alert("Please select a rating before submitting.");
+            return;
+        }
 
         try {
             await postReviewAction({
@@ -21,11 +27,13 @@ const ReviewPage = () => {
                 reviewBody: content,
                 reviewSpoiler: containsSpoilers,
                 reviewStatus: "active",
+                reviewAnimeRating: rating ?? undefined,
             });
             alert(`Review added successfully.`);
             setTitle("");
             setContent("");
             setContainsSpoilers(false);
+            setRating(null);
         } catch (err) {
             console.error("Error submitting review", err)
             alert("Failed to submit review")
@@ -41,6 +49,42 @@ const ReviewPage = () => {
                         <h1 className="text-4xl font-bold mb-6">Write a Review</h1>
 
                         <form onSubmit={handleSubmit}>
+                            <div className="flex gap-4 items-center justify-start mb-10 relative">
+                                {[...Array(10)].map((_, i) => {
+                                    const val = i + 1;
+                                    const isSelected = rating === val;
+                                    return (
+                                        <div
+                                            key={val}
+                                            className="relative flex flex-col items-center justify-center"
+                                        >
+                                            {/* Rating number */}
+                                            <span className="text-sm text-white">{val}</span>
+                                            {/* Bullet point buttons */}
+                                            <button
+                                                type="button"
+                                                onClick={() => setRating(val)}
+                                                className={`w-6 h-6 rounded-full text-xl flex items-center justify-center transition-all
+                                                ${isSelected ? "text-white" : "text-gray-500 hover:text-white"}`}
+                                                aria-label={`Rating ${val}`}
+                                            >
+                                                ●
+                                            </button>
+                                            {/* Only 1 and 10 get floating labels */}
+                                            {val === 1 && (
+                                                <span className="absolute -bottom-6 text-xs text-gray-400 whitespace-nowrap">
+                                                    (terrible)
+                                                </span>
+                                            )}
+                                            {val === 10 && (
+                                                <span className="absolute -bottom-6 text-xs text-gray-400 whitespace-nowrap">
+                                                    (fantastic)
+                                                </span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
                             {/* Review Title */}
                             <label className="block text-lg font-semibold mb-2">Review Title</label>
                             <input
@@ -76,7 +120,7 @@ const ReviewPage = () => {
                                 </ul>
                             </div>
                             {/* Submit Button */}
-                            <button type="submit" className= "border px-4 py-2 font-semibold rounded-sm hover ">
+                            <button type="submit" className= "border px-4 py-2 font-semibold rounded-sm hover:text-black">
                                 Submit Review
                             </button>
                         </form>
