@@ -24,7 +24,6 @@ export async function addWatchListFavoriteController(request: Request, response:
 export async function getWatchListFavoriteController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
-        console.log(profileId);
         if (profileId === undefined) {
             return response.status(400).json({status: 400, message: "You're not logged in"})
         }
@@ -60,7 +59,6 @@ export async function addWatchListHiddenController(request: Request, response: R
 export async function getWatchListHiddenController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
-        console.log(profileId);
         if (profileId === undefined) {
             return response.status(400).json({status: 400, message: "You're not logged in"})
         }
@@ -96,7 +94,6 @@ export async function addWatchListLaterController(request: Request, response: Re
 export async function getWatchListLaterController(request: Request, response: Response): Promise<any> {
     try {
         const profileId = request.session.profile?.profileId;
-        console.log(profileId);
         if (profileId === undefined) {
             return response.status(400).json({status: 400, message: "You're not logged in"})
         }

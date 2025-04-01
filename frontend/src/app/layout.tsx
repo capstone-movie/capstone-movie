@@ -1,12 +1,10 @@
 import type {Metadata} from 'next'
 import '../globals.css'
-import {Navbar} from "@/app/components/Navbar";
-import {Footer} from "@/app/components/Footer";
-import {clearSession} from "@/utils/auth.utils";
+import ContextWrapper from "@/app/(index)/ContextWrapper";
 
 export const metadata: Metadata = {
-    title: 'AniRection',
-    description: 'Explore the world of AniRection',
+    title: 'AnimeMochi',
+    description: 'Explore the world of AnimeMochi',
 }
 
 type RootLayoutProps = {
@@ -20,9 +18,11 @@ export default function RootLayout(props: RootLayoutProps) {
               lang="en"
               suppressHydrationWarning>
         <body>
-            <Navbar clearSessionAction={clearSession} />
-            {children}
-            <Footer/>
+        <ContextWrapper>
+            {
+                children
+            }
+        </ContextWrapper>
         </body>
         </html>
     )

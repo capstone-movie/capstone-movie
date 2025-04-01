@@ -171,7 +171,6 @@ export async function insertAnime(anime: any): Promise<boolean> {
     try {
 
         const a = anime;
-        console.log(a.anime_title_japanese)
         await sql`
             INSERT INTO anime (anime_id, anime_jikan_id, anime_aired_start, anime_aired_end, anime_broadcast,
                                anime_description, anime_demographic, anime_duration, anime_episodes,

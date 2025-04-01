@@ -1,6 +1,5 @@
 'use client'
 import {HorizontalList} from "@/app/(index)/horizontal-list";
-import {HorizontalListTrailer} from "@/app/(index)/horizontal-list-trailer";
 import {Spotlight} from "@/app/(index)/spotlight";
 
 export default function () {

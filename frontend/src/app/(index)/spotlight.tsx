@@ -26,7 +26,6 @@ export function Spotlight(prop: Props) {
 
     if (data && data.length > 5) {
         focus = data[5]
-        console.log(focus)
     }
 
     if (focus === undefined) {

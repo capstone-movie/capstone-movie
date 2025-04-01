@@ -1,12 +1,15 @@
 'use client'
 
 import {useSearchParams} from "next/navigation";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 import {fetchAnimePage} from "@/app/anime/anime-page.action";
 import {Calendar, CircleX, Clock, Star} from "lucide-react";
 import Recommendations from "@/app/anime/Recommendations";
 import Link from "next/link";
+import {addWatchList} from "@/app/personal-dashboard/watch-list.actions";
+import {getSession, Session} from "@/utils/auth.utils";
+import {SessionContext} from "@/app/(index)/ContextWrapper";
 
 export default function () {
 
@@ -87,7 +90,7 @@ export default function () {
                         <h1 className={'font-bold text-3xl'}>
                             {data.animeTitleEnglish ? data.animeTitleEnglish : data.animeTitleJapanese}
                         </h1>
-                        <AddToListButton animeJikanId={data.animeJikanId}/>
+                        <AddToListButton animeId={data.animeId} animeRank={0}/>
                     </div>
                     <div className={'p-4 border rounded-md border-white/20'}>
                         <h2 className={'font-bold text-xl mb-3'}>
@@ -175,9 +178,6 @@ function convertDate(str: string) {
 }
 
 function WriteReviewButton(animeJikanId: any) {
-
-    console.log(animeJikanId)
-
     return (
         <Link href={{pathname: "/review-page", query: {id: animeJikanId}}}>
             <p className="text-sm w-fit font-bold bg-transparent border-2 border-white/40 text-white rounded-xl px-6 py-3 transition-all duration-200 ease-in-out transform hover:bg-white/20 hover:scale-105 active:bg-white/40 text-nowrap">
@@ -187,30 +187,49 @@ function WriteReviewButton(animeJikanId: any) {
     )
 }
 
-function AddToListButton(animeJikanId: any) {
-
+function AddToListButton({animeId, animeRank}: { animeId: string, animeRank: number }) {
     const [submenu, setSubmenu] = useState(false);
+    //const [session, setSession] = useState<Session | undefined>(undefined);
+    // @ts-ignore
+    const {session} = useContext(SessionContext);
+
+    function doSomething(apiEndpoint: string) {
+        const fetchData = async () => {
+            await addWatchList({animeId: animeId, animeRank: animeRank, apiEndpoint: apiEndpoint})
+        };
+        fetchData().then(() => {
+        });
+    };
 
     return (
         <div className={'flex flex-col items-end'}>
-            <button
+            {
+                session &&
+                <button
 
-                onMouseLeave={()=>{setSubmenu(prev => false)}}
+                    onMouseLeave={() => {
+                        setSubmenu(prev => false)
+                    }}
 
-                onClick={() => {
-                setSubmenu(prev => !prev)
-            }} className="w-fit">
-                <p className="text-sm w-fit font-bold bg-transparent border-2 border-white/40 text-white rounded-xl px-6 py-3 transition-all duration-200 ease-in-out transform hover:bg-white/20 hover:scale-105 active:bg-white/40 text-nowrap">
-                    {'Add To List'}
-                </p>
-            </button>
+                    onClick={() => {
+                        setSubmenu(prev => !prev)
+                    }} className="w-fit">
+                    <p className="text-sm w-fit font-bold bg-transparent border-2 border-white/40 text-white rounded-xl px-6 py-3 transition-all duration-200 ease-in-out transform hover:bg-white/20 hover:scale-105 active:bg-white/40 text-nowrap">
+                        {'Add To List'}
+                    </p>
+                </button>
+            }
             {
                 submenu &&
-                <div className={'bg-fhcolor w-[200px] overflow-hidden flex flex-col rounded-xl absolute translate-y-[45px]'}>
+                <div
+                    className={'bg-fhcolor w-[200px] overflow-hidden flex flex-col rounded-xl absolute translate-y-[45px]'}>
                     <button className={'flex gap-2 hover:bg-white/20 px-2 pt-2 pb-1'}
                             onMouseLeave={() => setSubmenu(prev => false)}
                             onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={()=>{setSubmenu(false)}}>
+                            onClick={() => {
+                                setSubmenu(false);
+                                doSomething('favorite');
+                            }}>
                         <Star color={'#ffc900'}/>
                         <p>
                             Favorite
@@ -219,7 +238,10 @@ function AddToListButton(animeJikanId: any) {
                     <button className={'flex gap-2 hover:bg-white/20 px-2 py-1'}
                             onMouseLeave={() => setSubmenu(prev => false)}
                             onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={()=>{setSubmenu(false)}}>
+                            onClick={() => {
+                                setSubmenu(false);
+                                doSomething('later');
+                            }}>
                         <Clock color={'#ffc900'}/>
                         <p>
                             Watch Later
@@ -228,7 +250,10 @@ function AddToListButton(animeJikanId: any) {
                     <button className={'flex gap-2 hover:bg-white/20 px-2 pb-2 pt-1'}
                             onMouseLeave={() => setSubmenu(prev => false)}
                             onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={()=>{setSubmenu(false)}}>
+                            onClick={() => {
+                                setSubmenu(false);
+                                doSomething('hidden');
+                            }}>
                         <CircleX color={'#ffc900'}/>
                         <p>
                             Hide Anime

@@ -6,7 +6,7 @@ export function Footer() {
             <div className="max-w-7xl mx-auto flex flex-col items-center">
                 <div className="mb-4 text-center">
                     <h2 className="text-2xl font-bold">Newsletter</h2>
-                    <p>Sign up for your daily AniRection</p>
+                    <p>Sign up for your daily dose of AnimeMochi</p>
                     <div className="flex justify-center items-center mt-2 max-w-[70vw]">
                         <input
                             type="email"

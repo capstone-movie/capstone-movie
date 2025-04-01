@@ -11,7 +11,6 @@ export async function activationController(request: Request, response: Response)
         }
         const {activation} = validationResult.data
         const profile = await selectPrivateProfileByActivationToken(activation)
-        console.log(profile)
         if(!profile){
             return response.json({status: 400, data: null, message: "Account activation failed, have you already activated your account?"})
         }
@@ -19,7 +18,6 @@ export async function activationController(request: Request, response: Response)
         await updateProfile(profile)
         return response.json({status: 200, data: null, message: "Account successfully activated"})
     } catch (error) {
-        console.error(error)
         return response.json({status: 500, data: null, message: "Internal Server Error"})
     }
 }

@@ -35,8 +35,6 @@ export async function getAnimeTopController(request: Request, response: Response
 
 export async function getAnimeSearchController(request: Request, response: Response): Promise<Response> {
     const query = request.params['query'];
-    console.log(query)
-
     if (!query) {
         return response.status(400).json({ message: 'Query parameter is required' });
     }

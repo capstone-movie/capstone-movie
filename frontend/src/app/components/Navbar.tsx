@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
+import React, {useContext, useEffect, useRef, useState} from 'react';
 import Link from "next/link";
 import SignupPopup from "@/app/components/Signup-Popup";
 import LoginPopup from "@/app/components/Login-Popup";
@@ -8,6 +8,7 @@ import { postSignIn } from "@/utils/models/sign-in/sign-in.action";
 import { postSignOut } from "@/utils/models/sign-out/sign-out.action";
 import { searchAnime } from "@/utils/models/search/search.action";
 import * as querystring from "node:querystring";
+import {SessionContext} from "@/app/(index)/ContextWrapper";
 
 interface NavbarProps {
     clearSessionAction?: any
@@ -18,22 +19,12 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSignupPopupVisible, setIsSignupPopupVisible] = useState(false);
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
-    const [session, setSession] = useState<Session | undefined>(undefined);
     const [searchResults, setSearchResults] = useState([]);
     const [searchQuery, setSearchQuery] = useState("");
     const searchRef = useRef(null);
     const debounceTimeoutRef = useRef(null);
-
-    useEffect(() => {
-        const fetchSession = async () => {
-            try {
-                setSession(await getSession())
-            } catch (error) {
-                console.error('Error fetching session:', error);
-            }
-        };
-        fetchSession();
-    }, []);
+    // @ts-ignore
+    const { session, setSession } = useContext(SessionContext);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -145,7 +136,7 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
                 <div className="flex items-end space-x-6">
                     {/* Title */}
                     <Link href="/" onClick={closeMenu} className="flex items-center">
-                        <h1 className="text-2xl ml-2 font-bold">AniRection</h1>
+                        <h1 className="text-2xl ml-2 font-bold">AnimeMochi</h1>
                     </Link>
 
                     {/* Links */}
