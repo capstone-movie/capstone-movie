@@ -21,28 +21,29 @@ const personalDashboard = () => {
         <div className="min-h-screen flex flex-col bg-gray-20">
             {/* Main Dashboard Content */}
             <main className="grow container mx-auto p-6 text-white">
-                <h1 className="text-4xl font-bold text-center  mb-6">
+                <h1 className="text-4xl font-bold text-center mb-6">
                     Personal Dashboard
                 </h1>
 
                 {/* Sections */}
                 {sections.map((section, index) => (
-                    <div key={index} className="relative mb-8 bg-fhcolor p-6 min-h-[350px] flex flex-col rounded shadow-lg">
+                    <div key={index} className="relative mb-6 bg-fhcolor p-6 min-h-[350px] flex flex-col rounded shadow-lg">
                         {/* Red Placeholder Button */}
                         <button
-                            className="absolute top-2 right-2 w-6 h-6 bg-red-400 flex items-center justify-center rounded shadow-lg hover:bg-red-500 active:bg-red-600"
-                            onClick={() => alert("Clicked!")}>
+                            className="absolute top-4 right-4 text-sm bg-white text-black px-3 py-1 rounded-md font-semibold shadow hover:bg-gray-100 active:bg-gray-200"
+                            onClick={() => alert("More clicked!")}>
+                            More
                         </button>
                         {/* Section Header */}
                         <h2 className="text-2xl font-bold mb-4">{section.title}</h2>
                         {/* Anime Placeholders */}
-                        <div className="flex flex-nowrap sm:flex-wrap justify-center gap-16 p-6 bg-bgcolor overflow-x-auto rounded shadow-lg">
+                        <div className="flex flex-nowrap justify-start sm:justify-center gap-3 sm:gap-16 px-4 sm:px-6 bg-bgcolor overflow-x-auto rounded shadow-lg">
                             {animePlaceholders.map((anime) => (
-                                <div key={anime.id} className={`bg-white p-3 w-[150px] rounded shadow-lg`}>
-                                    <div className="h-36 bg-gray-200 flex items-center justify-center rounded shadow-lg">
-                                        <span className="text-lg font-bold">#{anime.id}</span>
+                                <div key={anime.id} className="w-[180px] flex-shrink-0 bg-white p-4 rounded shadow-lg">
+                                    <div className="h-44 bg-gray-200 flex items-center justify-center rounded shadow-lg">
+                                        <span className="text-xl font-bold">#{anime.id}</span>
                                     </div>
-                                    <p className="text-center mt-2 font-medium">{anime.title}</p>
+                                    <p className="text-center mt-3 text-base font-semibold">{anime.title}</p>
                                 </div>
                             ))}
                         </div>
