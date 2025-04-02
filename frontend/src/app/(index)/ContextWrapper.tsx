@@ -2,17 +2,18 @@
 import {Navbar} from "@/app/components/Navbar";
 import {clearSession, getSession, Session} from "@/utils/auth.utils";
 import {Footer} from "@/app/components/Footer";
-import {createContext, useEffect} from "react";
+import React, {createContext, useContext, useEffect} from "react";
 import {useState} from "react";
 
-type RootLayoutProps = {
-    children: React.ReactNode
-}
+type SessionContextType = {
+    session: Session | undefined;
+    setSession?: (session: Session) => void;
+};
+export const SessionContext = createContext<SessionContextType | undefined>(undefined);
+export const useSessionContext = () => useContext(SessionContext) ?? {} as SessionContextType;
 
-export const SessionContext = createContext({})
+export default function ContextWrapper({ children }: { children: React.ReactNode }) {
 
-export default function ContextWrapper({children}: RootLayoutProps) {
-    // @ts-ignore
     const [session, setSession] = useState<Session | undefined>(undefined);
 
     useEffect(() => {
@@ -28,7 +29,7 @@ export default function ContextWrapper({children}: RootLayoutProps) {
     }, []);
 
     return (
-        <SessionContext.Provider value={{session: session, setSession: setSession}}>
+        <SessionContext.Provider value={{session, setSession}}>
             <Navbar clearSessionAction={clearSession}/>
             {children}
             <Footer/>

@@ -1,5 +1,7 @@
 'use server';
 
+import {setHeaders} from "@/utils/set-headers.utils";
+
 export async function postReviewAction(review: {
     reviewJikanId: number;
     reviewTitle: string,
@@ -14,9 +16,7 @@ export async function postReviewAction(review: {
     };
     const response = await fetch(`${process.env.REST_API_URL}/apis/review/create`, {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
+        headers: await setHeaders(),
         body: JSON.stringify(reviewContent),
         credentials: 'include',
     });

@@ -20,7 +20,6 @@ export default function Recommendations({urls}) {
         return <></>
 
     data = data.splice(0, 10)
-    console.log(data)
 
     return (
         <div className={'h-fit grid grid-cols-5'}>

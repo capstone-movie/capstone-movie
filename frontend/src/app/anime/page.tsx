@@ -3,12 +3,11 @@
 import {useSearchParams} from "next/navigation";
 import {useContext, useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
-import {fetchAnimePage} from "@/app/anime/anime-page.action";
+import {fetchAnimePage, fetchReviewByAnimeId} from "@/app/anime/anime-page.action";
 import {Calendar, CircleX, Clock, Star} from "lucide-react";
 import Recommendations from "@/app/anime/Recommendations";
 import Link from "next/link";
 import {addWatchList} from "@/app/personal-dashboard/watch-list.actions";
-import {getSession, Session} from "@/utils/auth.utils";
 import {SessionContext} from "@/app/(index)/ContextWrapper";
 
 export default function () {
@@ -139,6 +138,7 @@ export default function () {
                     <p>
                         None, yet. Be the first to write a review!
                     </p>
+                    <GrabThemReviews animeJikanId={data.animeJikanId}/>
                 </div>
             </div>
             {
@@ -177,9 +177,9 @@ function convertDate(str: string) {
     return formattedDate
 }
 
-function WriteReviewButton(animeJikanId: any) {
+function WriteReviewButton(prop: any) {
     return (
-        <Link href={{pathname: "/review-page", query: {id: animeJikanId}}}>
+        <Link href={{pathname: "/review-page", query: {id: prop.animeJikanId}}}>
             <p className="text-sm w-fit font-bold bg-transparent border-2 border-white/40 text-white rounded-xl px-6 py-3 transition-all duration-200 ease-in-out transform hover:bg-white/20 hover:scale-105 active:bg-white/40 text-nowrap">
                 {'Write Review'}
             </p>
@@ -263,4 +263,30 @@ function AddToListButton({animeId, animeRank}: { animeId: string, animeRank: num
             }
         </div>
     )
+}
+
+function GrabThemReviews({animeJikanId}: any) {
+
+    if(!animeJikanId) {
+        return <></>
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const result = await fetchReviewByAnimeId(animeJikanId)
+            console.log(result)
+        };
+        fetchData().then(() => {
+        });
+    }, []);
+
+    return (
+        <>
+            <p>
+                {
+                    `Here you can grab them reviews from ${animeJikanId}`
+                }
+            </p>
+        </>
+    );
 }

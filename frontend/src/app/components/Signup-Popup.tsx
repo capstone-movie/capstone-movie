@@ -20,7 +20,7 @@ const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
     const defaultValues: SignUp = {
         profileEmail: '',
         profilePassword: '',
-        profileUsername: 'DefaultUsername', // Default username value,
+        profileUsername: '', // Default username value,
         profileId: uuid() // Default UUID value,
     }
 
@@ -129,7 +129,7 @@ const SignupPopup = ({ closePopup }: { closePopup: () => void }) => {
                                             <button
                                                 type="button"
                                                 onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-3 top-2 text-lg text-gray-500"
+                                                className="absolute right-3 top-[15px] text-lg text-gray-500"
                                             >
                                                 {showPassword ? 'Hide' : 'Show'}
                                             </button>
