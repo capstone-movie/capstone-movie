@@ -286,6 +286,7 @@ function GrabThemReviews({animeJikanId}: any) {
     );
 }
 
+
 function ReviewList({ data }: { data: any }) {
     const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
 
