@@ -8,9 +8,13 @@ const sections = [
     { title: "Recommendations", key: "recommendations" },
     { title: "Hidden", key: "hidden" },
 ];
-
-const fetchSection = async (key: string) => {
-    // placeholder data
+type AnimeItem = {
+    id: number;
+    title: string;
+    url?: string;
+}
+const fetchSection = async (key: string): Promise<AnimeItem[]> => {
+    // placeholder data rn. swap out with backend fetch
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve([
@@ -25,7 +29,7 @@ const fetchSection = async (key: string) => {
 };
 
 const personalDashboard = () => {
-    const [animeDataBySection, setAnimeDataBySection] = useState({
+    const [animeDataBySection, setAnimeDataBySection] = useState<Record<string, AnimeItem[]>>({
         favorites: [],
         watchLater: [],
         recommendations: [],
@@ -34,11 +38,10 @@ const personalDashboard = () => {
 
     useEffect(() => {
         const fetchAllSections = async () => {
-            const favorites: any = await fetchSection("favorites");
-            const watchLater: any = await fetchSection("watchLater");
-            const recommendations: any = await fetchSection("recommendations");
-            const hidden: any = await fetchSection("hidden");
-
+            const favorites = await fetchSection("favorites");
+            const watchLater = await fetchSection("watchLater");
+            const recommendations = await fetchSection("recommendations");
+            const hidden = await fetchSection("hidden");
             setAnimeDataBySection({
                 favorites,
                 watchLater,
@@ -46,7 +49,6 @@ const personalDashboard = () => {
                 hidden,
             });
         };
-
         fetchAllSections();
     }, []);
 
@@ -84,5 +86,4 @@ const personalDashboard = () => {
         </div>
     );
 };
-
 export default personalDashboard;
