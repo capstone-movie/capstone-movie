@@ -20,13 +20,14 @@ export default function Recommendations({urls}: { urls: string[] }) {
     data = data.splice(0, 10)
 
     return (
-        <div className={'h-fit grid grid-cols-5'}>
+        <div className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden'}>
             {
                 data &&
                 data.map((anime: any, index: number) => (
                     <div className={`
                             p-1
-                            h-[25rem]
+                            h-[15rem]
+                            aspect-[2/3]
                             `} key={index}>
                         <div
                             className={'w-full h-full rounded-xl overflow-hidden group-hover:scale-50 relative border-[1px] border-[#9994]'}
@@ -38,7 +39,7 @@ export default function Recommendations({urls}: { urls: string[] }) {
                             <img
                                 src={anime.animeThumbnailUrl}
                                 alt={anime.animeTitleEnglish}
-                                className={'w-full h-full object-cover bg-white hover:scale-105 duration-200'}
+                                className={'w-full h-full object-cover hover:scale-105 duration-200'}
                             />
                             <div
                                 className={'w-full h-full -translate-y-full flex flex-col opacity-0 hover:opacity-100 duration-300'}>

@@ -31,8 +31,8 @@ export default function () {
         return <></>;
     }
     return (
-        <div className={'h-fit w-full flex flex-col sm:flex-row p-10 relative'}>
-            <div className={'h-full w-full sm:w-[500px] flex flex-col sm:sticky top-28'}>
+        <div className={'h-fit w-screen flex flex-col sm:flex-row relative p-[15px]'}>
+            <div className={'h-full w-full sm:w-[300px] flex-shrink-0 flex flex-col sm:sticky top-28'}>
                 <img
                     className={'w-full object-contain rounded-xl mb-4'}
                     src={data.animeThumbnailUrl}
@@ -67,7 +67,7 @@ export default function () {
                 }
                 {
                     data.genres &&
-                    <div className={'w-full mb-6 border-y-1 py-2 border-white/20 flex gap-2 flex-col'}>
+                    <div className={'w-full border-t-1 py-2 border-white/20 flex gap-2 flex-col'}>
                         <p className={'text-white font-bold'}>
                             {'Genres'}
                         </p>
@@ -82,10 +82,26 @@ export default function () {
                         </div>
                     </div>
                 }
+                {
+                    data.animeTrailerUrl &&
+                    <div className={'flex flex-col'}>
+                        <div className={'p-4 border rounded-md border-white/20'}>
+                            <h2 className={'font-bold text-xl mb-3'}>
+                                Trailer
+                            </h2>
+                            <div className={'w-full aspect-video overflow-hidden justify-between items-center'}>
+                                <iframe src={data.animeTrailerUrl}
+                                        className={'w-full h-full rounded-xl'}
+                                        allowFullScreen
+                                ></iframe>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
-            <div className={'h-full w-full text-white pl-8'}>
+            <div className={'h-full w-full sm:[width:calc(100vw-300px-20px)] mt-4 pl-[10px] text-white'}>
                 <div className={'flex flex-col'}>
-                    <div className={'flex justify-between mb-8'}>
+                    <div className={'flex justify-between mb-4 items-center'}>
                         <h1 className={'font-bold text-3xl'}>
                             {data.animeTitleEnglish ? data.animeTitleEnglish : data.animeTitleJapanese}
                         </h1>
@@ -100,27 +116,10 @@ export default function () {
                         </p>
                     </div>
                 </div>
-
-                {
-                    data.animeTrailerUrl &&
-                    <div className={'flex flex-col my-8'}>
-                        <div className={'p-4 border rounded-md border-white/20'}>
-                            <h2 className={'font-bold text-xl mb-3'}>
-                                Trailer
-                            </h2>
-                            <div className={'w-full aspect-video overflow-hidden justify-between items-center'}>
-                                <iframe src={data.animeTrailerUrl}
-                                        className={'w-full h-full rounded-xl'}
-                                        allowFullScreen
-                                ></iframe>
-                            </div>
-                        </div>
-                    </div>
-                }
                 {
                     data.genres &&
-                    <div className={'flex flex-col my-8'}>
-                        <div className={'p-4 border rounded-md border-white/20'}>
+                    <div className={'flex w-full  flex-col my-8'}>
+                        <div className={'p-4 border relative rounded-md border-white/20'}>
                             <h2 className={'font-bold text-xl mb-3'}>
                                 Recommendations
                             </h2>
@@ -282,35 +281,69 @@ function GrabThemReviews({animeJikanId}: any) {
 
     return (
         <>
-            <div>
-                {!data?.data.length ? (
-                    <p>None, yet. Be the first to write a review!</p>
-                ) : (
-                    data.data.map((review: any, index: number) => (
-                        <div key={index} className="flex flex-col">
-                            <div className={'w-full h-[1px] bg-white/20 my-4'}/>
-                            <div className={'flex justify-between'}>
-                                <p>
-                                    {review.profileUsername}
-                                </p>
-                                <p>
-                                    {convertDate(review.reviewCreatedAt)}
-                                </p>
-                            </div>
-                            <p>
-                                {review.reviewAnimeRating + ' / 10'}
-                            </p>
-                            <p className="font-bold text-xl mb-1 uppercase">
-                                {review.reviewTitle}
-                            </p>
-                            <p className="text-white whitespace-pre-wrap">
-                                {review.reviewBody}
-                            </p>
-                        </div>
-                    ))
-                )}
-            </div>
+            <ReviewList data={data} />
         </>
+    );
+}
 
+function ReviewList({ data }: { data: any }) {
+    const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
+
+    const toggleExpand = (index: number) => {
+        setExpandedIndexes((prev) =>
+            prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+        );
+    };
+
+    return (
+        <div className="space-y-10 px-8 py-12 bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900 min-h-screen">
+            {!data?.data.length ? (
+                <p className="text-center text-zinc-400 text-2xl font-medium italic">
+                    No reviews yet. Be the first to share your thoughts.
+                </p>
+            ) : (
+                data.data.map((review: any, index: number) => {
+                    const expanded = expandedIndexes.includes(index);
+                    const body = review.reviewBody;
+                    const isLong = body.length > 200;
+                    const displayBody = expanded || !isLong ? body : body.slice(0, 200) + "...";
+
+                    return (
+                        <div
+                            key={index}
+                            className="bg-zinc-800 p-8 rounded-2xl border border-zinc-700 shadow-lg transition-transform duration-300 hover:scale-[1.01]"
+                        >
+                            <div className="flex justify-between items-center mb-4 text-zinc-400 text-lg">
+                                <span>{review.profileUsername}</span>
+                                <span className="italic">{convertDate(review.reviewCreatedAt)}</span>
+                            </div>
+
+                            <div className="text-white text-2xl font-semibold mb-4">
+                                {review.reviewAnimeRating} / 10
+                            </div>
+
+                            <h2 className="text-white text-3xl font-bold uppercase tracking-wider mb-4">
+                                {review.reviewTitle}
+                            </h2>
+
+                            <p className="text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2">
+                                {displayBody}
+                            </p>
+
+                            {isLong && (
+                                <button
+                                    onClick={() => toggleExpand(index)}
+                                    className="text-sm text-zinc-400 hover:text-white underline transition"
+                                >
+                                    {expanded ? "Show Less" : "See More"}
+                                </button>
+                            )}
+
+                            <div className="mt-6 h-[1px] bg-zinc-600" />
+                        </div>
+                    );
+                })
+            )}
+        </div>
     );
 }
