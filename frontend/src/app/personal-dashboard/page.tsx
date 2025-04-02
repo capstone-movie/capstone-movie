@@ -34,10 +34,10 @@ const personalDashboard = () => {
 
     useEffect(() => {
         const fetchAllSections = async () => {
-            const favorites = await fetchSection("favorites");
-            const watchLater = await fetchSection("watchLater");
-            const recommendations = await fetchSection("recommendations");
-            const hidden = await fetchSection("hidden");
+            const favorites: any = await fetchSection("favorites");
+            const watchLater: any = await fetchSection("watchLater");
+            const recommendations: any = await fetchSection("recommendations");
+            const hidden: any = await fetchSection("hidden");
 
             setAnimeDataBySection({
                 favorites,
