@@ -140,8 +140,8 @@ export async function insertMultipleAnime(anime: any[]): Promise<boolean> {
             ${sql(anime.map(anime => [
                 anime.anime_id,
                 anime.anime_jikan_id,
-                anime.anime_aired_end,
                 anime.anime_aired_start,
+                anime.anime_aired_end,
                 anime.anime_broadcast,
                 anime.anime_description,
                 anime.anime_demographic,

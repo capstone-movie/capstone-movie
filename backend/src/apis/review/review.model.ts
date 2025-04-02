@@ -9,15 +9,16 @@ export async function insertReviews(reviewData: z.infer<typeof reviewSchema>): P
         reviewJikanId,
         reviewProfileId,
         reviewAnimeRating,
+        reviewTitle,
         reviewBody,
         reviewCreatedAt,
         reviewSpoiler,
         reviewStatus
     } = reviewData;
 
-    await sql`INSERT INTO review (review_id, review_jikan_id, review_profile_id, review_anime_rating, review_body,
+    await sql`INSERT INTO review (review_id, review_jikan_id, review_profile_id, review_anime_rating, review_title, review_body,
                                   review_created_at, review_spoiler, review_status)
-              VALUES (${reviewId}, ${reviewJikanId}, ${reviewProfileId}, ${reviewAnimeRating}, ${reviewBody},
+              VALUES (${reviewId}, ${reviewJikanId}, ${reviewProfileId}, ${reviewAnimeRating}, ${reviewTitle}, ${reviewBody},
                       ${reviewCreatedAt}, ${reviewSpoiler}, ${reviewStatus})`;
 
     return true;
@@ -29,6 +30,7 @@ export async function updateReviews(reviewData: z.infer<typeof reviewSchema>): P
         reviewJikanId,
         reviewProfileId,
         reviewAnimeRating,
+        reviewTitle,
         reviewBody,
         reviewCreatedAt,
         reviewSpoiler,
@@ -39,6 +41,7 @@ export async function updateReviews(reviewData: z.infer<typeof reviewSchema>): P
               SET review_jikan_id     = ${reviewJikanId},
                   review_profile_id   = ${reviewProfileId},
                   review_anime_rating = ${reviewAnimeRating},
+                  review_title        = ${reviewTitle},
                   review_body         = ${reviewBody},
                   review_created_at   = ${reviewCreatedAt},
                   review_spoiler      = ${reviewSpoiler},
@@ -70,8 +73,14 @@ export async function getReviewsByProfileId(profileId: string): Promise<any[]> {
 }
 
 export async function getReviewsByAnimeId(animeJikanId: number): Promise<any[]> {
-    const result = await sql`SELECT *
-                             FROM review
+    const result = await sql`SELECT
+                            r.review_anime_rating,
+                            r.review_title,
+                            r.review_body,
+                            r.review_created_at,
+                            p.profile_username
+                             FROM review r 
+                             JOIN profile p ON r.review_profile_id = p.profile_id
                              WHERE review_jikan_id = ${animeJikanId}`;
     return result;
 }

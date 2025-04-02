@@ -130,14 +130,11 @@ export default function () {
                 }
                 <div className={'p-4 border rounded-md border-white/20'}>
                     <div className={'flex justify-between'}>
-                        <h2 className={'font-bold text-xl mb-3'}>
+                        <h2 className={'font-bold text-xl mb-3 align-middle'}>
                             Reviews
                         </h2>
                         <WriteReviewButton animeJikanId={data.animeJikanId}/>
                     </div>
-                    <p>
-                        None, yet. Be the first to write a review!
-                    </p>
                     <GrabThemReviews animeJikanId={data.animeJikanId}/>
                 </div>
             </div>
@@ -168,7 +165,7 @@ function convertDateRange(data: any) {
 }
 
 function convertDate(str: string) {
-    const date = new Date('2024-03-22T00:00:00.000Z');
+    const date = new Date(str);
     const formattedDate = date.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -267,14 +264,17 @@ function AddToListButton({animeId, animeRank}: { animeId: string, animeRank: num
 
 function GrabThemReviews({animeJikanId}: any) {
 
-    if(!animeJikanId) {
+    if (!animeJikanId) {
         return <></>
     }
+
+    const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await fetchReviewByAnimeId(animeJikanId)
             console.log(result)
+            setData(result)
         };
         fetchData().then(() => {
         });
@@ -282,11 +282,35 @@ function GrabThemReviews({animeJikanId}: any) {
 
     return (
         <>
-            <p>
-                {
-                    `Here you can grab them reviews from ${animeJikanId}`
-                }
-            </p>
+            <div>
+                {!data?.data.length ? (
+                    <p>None, yet. Be the first to write a review!</p>
+                ) : (
+                    data.data.map((review: any, index: number) => (
+                        <div key={index} className="flex flex-col">
+                            <div className={'w-full h-[1px] bg-white/20 my-4'}/>
+                            <div className={'flex justify-between'}>
+                                <p>
+                                    {review.profileUsername}
+                                </p>
+                                <p>
+                                    {convertDate(review.reviewCreatedAt)}
+                                </p>
+                            </div>
+                            <p>
+                                {review.reviewAnimeRating + ' / 10'}
+                            </p>
+                            <p className="font-bold text-xl mb-1 uppercase">
+                                {review.reviewTitle}
+                            </p>
+                            <p className="text-white whitespace-pre-wrap">
+                                {review.reviewBody}
+                            </p>
+                        </div>
+                    ))
+                )}
+            </div>
         </>
+
     );
 }

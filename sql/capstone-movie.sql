@@ -72,6 +72,7 @@ CREATE TABLE review (
                         review_jikan_id INT,
                         review_profile_id UUID REFERENCES profile(profile_id),
                         review_anime_rating SMALLINT,
+                        review_title TEXT,
                         review_body TEXT,
                         review_created_at TIMESTAMPTZ,
                         review_spoiler BOOLEAN,

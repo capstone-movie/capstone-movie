@@ -39,8 +39,8 @@ function dataDownloader(): Promise<any> {
                     const customAnime = {
                         anime_id: uuid(),
                         anime_jikan_id: anime.mal_id,
-                        anime_aired_end: anime.aired.to,
                         anime_aired_start: anime.aired.from,
+                        anime_aired_end: anime.aired.to,
                         anime_broadcast: anime.broadcast.string,
                         anime_description: anime.synopsis,
                         anime_demographic: anime.demographics.map((d: { name: any; }) => d.name).join(", "),

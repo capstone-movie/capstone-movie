@@ -1,9 +1,7 @@
 import {useEffect, useState} from "react";
 import {fetchAnimeRecommendations} from "@/app/anime/anime-page.action";
-import {ListItem} from "@/app/(index)/list-item";
-import Link from "next/link";
 
-export default function Recommendations({urls}) {
+export default function Recommendations({urls}: { urls: string[] }) {
 
     let [data, setData] = useState<any>(null);
 
@@ -30,12 +28,13 @@ export default function Recommendations({urls}) {
                             p-1
                             h-[25rem]
                             `} key={index}>
-                        <div className={'w-full h-full rounded-xl overflow-hidden group-hover:scale-50 relative border-[1px] border-[#9994]'}
-                             onClick={() => {
-                                 const {animeJikanId} = anime;
-                                 window.history.pushState(null, "", `/anime?id=${animeJikanId}`);
-                                 window.location.reload();
-                             }}>
+                        <div
+                            className={'w-full h-full rounded-xl overflow-hidden group-hover:scale-50 relative border-[1px] border-[#9994]'}
+                            onClick={() => {
+                                const {animeJikanId} = anime;
+                                window.history.pushState(null, "", `/anime?id=${animeJikanId}`);
+                                window.location.reload();
+                            }}>
                             <img
                                 src={anime.animeThumbnailUrl}
                                 alt={anime.animeTitleEnglish}
