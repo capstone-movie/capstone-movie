@@ -296,7 +296,7 @@ function ReviewList({ data }: { data: any }) {
     };
 
     return (
-        <div className="space-y-10 px-8 py-12 bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900 min-h-screen">
+        <div className="space-y-10 px-8 py-12 bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900 min-h-[200px]">
             {!data?.data.length ? (
                 <p className="text-center text-zinc-400 text-2xl font-medium italic">
                     No reviews yet. Be the first to share your thoughts.

@@ -81,6 +81,7 @@ export async function getReviewsByAnimeId(animeJikanId: number): Promise<any[]> 
                             p.profile_username
                              FROM review r 
                              JOIN profile p ON r.review_profile_id = p.profile_id
-                             WHERE review_jikan_id = ${animeJikanId}`;
+                             WHERE review_jikan_id = ${animeJikanId}
+                             ORDER BY r.review_created_at DESC`;
     return result;
 }
