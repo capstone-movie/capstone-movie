@@ -1,8 +1,8 @@
 "use client";
-import React, {useContext, useState} from "react";
+import React, {useState} from "react";
 import {useParams, useSearchParams} from "next/navigation";
 import {postReviewAction} from "@/app/review-page/review.action";
-import {SessionContext, useSessionContext} from "@/app/(index)/ContextWrapper";
+import {useSessionContext} from "@/app/(index)/ContextWrapper";
 
 const ReviewPage = () => {
     const params = useParams();
@@ -17,18 +17,14 @@ const ReviewPage = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
         if (!rating) {
             alert("Please select a rating before submitting.");
             return;
         }
-
-
         if(!session){
             alert("Please login to submit a review.");
             return;
         }
-
         try {
             await postReviewAction({
                 reviewJikanId: Number(mal_id),

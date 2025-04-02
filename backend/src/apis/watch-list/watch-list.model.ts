@@ -16,8 +16,10 @@ export async function getWatchListFavorite(profileId: string): Promise<any[]> {
         SELECT w.watch_list_anime_id,
                w.watch_list_profile_id,
                w.watch_list_rank,
+               a.anime_jikan_id,
                a.anime_thumbnail_url,
                a.anime_title_english,
+               a.anime_title,
                a.anime_score
         FROM watch_list_favorite w
                  JOIN anime a
@@ -51,8 +53,10 @@ export async function getWatchListHidden(profileId: string): Promise<any[]> {
         SELECT w.watch_list_anime_id,
                w.watch_list_profile_id,
                w.watch_list_rank,
+               a.anime_jikan_id,
                a.anime_thumbnail_url,
                a.anime_title_english,
+               a.anime_title,
                a.anime_score
         FROM watch_list_hidden w
                  JOIN anime a
@@ -86,8 +90,10 @@ export async function getWatchListLater(profileId: string): Promise<any[]> {
         SELECT w.watch_list_anime_id,
                w.watch_list_profile_id,
                w.watch_list_rank,
+               a.anime_jikan_id,
                a.anime_thumbnail_url,
                a.anime_title_english,
+               a.anime_title,
                a.anime_score
         FROM watch_list_later w
                  JOIN anime a

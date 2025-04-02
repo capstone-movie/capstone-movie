@@ -17,7 +17,6 @@ export default function ContextWrapper({ children }: { children: React.ReactNode
     const [session, setSession] = useState<Session | undefined>(undefined);
 
     useEffect(() => {
-        console.log(session);
         const fetchSession = async () => {
             try {
                 setSession(await getSession())

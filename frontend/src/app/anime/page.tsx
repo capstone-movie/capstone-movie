@@ -1,14 +1,14 @@
 'use client'
 
 import {useSearchParams} from "next/navigation";
-import {useContext, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
 import {fetchAnimePage, fetchReviewByAnimeId} from "@/app/anime/anime-page.action";
 import {Calendar, CircleX, Clock, Star} from "lucide-react";
 import Recommendations from "@/app/anime/Recommendations";
 import Link from "next/link";
 import {addWatchList} from "@/app/personal-dashboard/watch-list.actions";
-import {SessionContext} from "@/app/(index)/ContextWrapper";
+import {useSessionContext} from "@/app/(index)/ContextWrapper";
 
 export default function () {
 
@@ -86,9 +86,6 @@ export default function () {
                     data.animeTrailerUrl &&
                     <div className={'flex flex-col'}>
                         <div className={'p-4 border rounded-md border-white/20'}>
-                            <h2 className={'font-bold text-xl mb-3'}>
-                                Trailer
-                            </h2>
                             <div className={'w-full aspect-video overflow-hidden justify-between items-center'}>
                                 <iframe src={data.animeTrailerUrl}
                                         className={'w-full h-full rounded-xl'}
@@ -186,8 +183,7 @@ function WriteReviewButton(prop: any) {
 function AddToListButton({animeId, animeRank}: { animeId: string, animeRank: number }) {
     const [submenu, setSubmenu] = useState(false);
     //const [session, setSession] = useState<Session | undefined>(undefined);
-    // @ts-ignore
-    const {session} = useContext(SessionContext);
+    const {session} = useSessionContext()
 
     function doSomething(apiEndpoint: string) {
         const fetchData = async () => {
