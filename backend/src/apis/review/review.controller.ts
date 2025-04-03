@@ -14,6 +14,8 @@ import {
     getReviewsByAnimeId
 } from "./review.model";
 import {number} from "zod";
+import {getAnimeById} from "../anime/anime.model";
+import {generateReview} from "./review-generator";
 
 /**
  * Create Review Controller
@@ -129,7 +131,7 @@ export async function deleteReviewController(request: Request, response: Respons
 
         const profileId = await getProfileIdByReviewId(reviewId);
 
-        if( !profileId )
+        if (!profileId)
             return response.status(200).json({status: 200, message: 'Review not found'})
 
         //check if session is currently the author of this review
@@ -193,6 +195,22 @@ export async function getReviewsByAnimeIdController(request: Request, response: 
 
         // get the reviews from the database
         const reviews = await getReviewsByAnimeId(parseInt(animeId))
+
+        try
+        {
+            if (reviews.length == 0) {
+                const result = await getAnimeById(parseInt(animeId))
+                const description = result.animeDescription.substring(0, 1000)
+                if (description.length > 200) {
+                    const newReviewBody = await generateReview(response, request, description)
+                    await insertReviews(newReviewBody);
+                    return response.status(200).json({status: 200, message: 'Reviews retrieved successfully', data: reviews});
+                }
+            }
+        }catch (error: any) {
+            console.log("Unable to generate reviews.")
+            //soft error, don't break
+        }
 
         // return a response to the client
         return response.status(200).json({status: 200, message: 'Reviews retrieved successfully', data: reviews});
