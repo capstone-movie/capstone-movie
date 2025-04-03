@@ -11,7 +11,7 @@ export function ListHeader(prop: Props) {
                 {prop.text}
             </h2>
             <Link href={'/category'}>
-                <button className={"bg-white text-black px-2 py-0 rounded-md h-fit font-semibold ml-2 mt-1.5"}>
+                <button className="bg-gradient-to-l from-blue-500 to-purple-600 text-white px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-semibold ml-2 mt-1.5 hover:scale-105">
                     More
                 </button>
             </Link>

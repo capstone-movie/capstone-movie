@@ -117,11 +117,10 @@ function DashboardList({urlPath}: { urlPath: string }) {
                 <div className={'flex justify-between px-2 py-2'}>
                     <h2 className="text-2xl font-bold">{urlPath}</h2>
                     <button
-                        className="text-sm bg-white text-black px-3 py-1 rounded-md font-semibold shadow hover:bg-gray-100 active:bg-gray-200"
-                        onClick={() => setMore(!more)}>
-                        {
-                            more ? 'Collapse' : 'View All'
-                        }
+                        className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105"
+                        onClick={() => setMore(!more)}
+                    >
+                        {more ? 'Collapse' : 'View All'}
                     </button>
                 </div>
 

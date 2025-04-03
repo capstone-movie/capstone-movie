@@ -31,7 +31,7 @@ export default function ContextWrapper({children}: { children: React.ReactNode }
         <SessionContext.Provider value={{session, setSession}}>
             <Navbar clearSessionAction={clearSession}/>
             {children}
-            <Footer/>
+            {/*<Footer/>*/}
         </SessionContext.Provider>
     )
 }
