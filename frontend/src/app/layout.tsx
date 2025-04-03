@@ -17,7 +17,7 @@ export default function RootLayout(props: RootLayoutProps) {
         <html className={'bg-bgcolor'}
               lang="en"
               suppressHydrationWarning>
-        <body>
+        <body className={'overflow-x-hidden'}>
         <ContextWrapper>
             {
                 children

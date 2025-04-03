@@ -117,7 +117,7 @@ export default function () {
                     data.genres &&
                     <div className={'flex w-full  flex-col my-8'}>
                         <div className={'p-4 border relative rounded-md border-white/20'}>
-                            <h2 className={'font-bold text-xl mb-3'}>
+                            <h2 className={'font-bold text-xl mb-3 overflow-x-hidden'}>
                                 Recommendations
                             </h2>
                             <Recommendations urls={makeArrayOfGenres(data)}/>

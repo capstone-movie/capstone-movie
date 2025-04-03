@@ -12,7 +12,7 @@ type SessionContextType = {
 export const SessionContext = createContext<SessionContextType | undefined>(undefined);
 export const useSessionContext = () => useContext(SessionContext) ?? {} as SessionContextType;
 
-export default function ContextWrapper({ children }: { children: React.ReactNode }) {
+export default function ContextWrapper({children}: { children: React.ReactNode }) {
 
     const [session, setSession] = useState<Session | undefined>(undefined);
 
