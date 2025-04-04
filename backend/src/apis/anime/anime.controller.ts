@@ -51,8 +51,8 @@ export async function getAnimeSearchController(request: Request, response: Respo
     }
 }
 /*export async function getAnimeByGenreController(request: Request, response: Response): Promise<any> {
-    const {genre} = request.params
-    const result = await getAnimeByGenre(genre)
+    const {genres} = request.params
+    const result = await getAnimeByGenre(genres)
     if(!result){
         return response.status(400).json('Anime not found')
     }

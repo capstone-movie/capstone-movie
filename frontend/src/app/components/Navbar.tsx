@@ -150,6 +150,9 @@ export function Navbar({clearSessionAction}: NavbarProps) {
                         <Link href={{pathname: "/category", query: {type: "recent"}}} onClick={closeMenu}>
                             <span className="hover:text-gray-300 pb-0.5">Recent</span>
                         </Link>
+                        <Link href={{pathname: "/genres"}} onClick={closeMenu}>
+                            <span className="hover:text-gray-300 pb-0.5">Genres</span>
+                        </Link>
                         <Link href={{pathname: "/category", query: {type: "recommended"}}} onClick={closeMenu}>
                             <span className="hover:text-gray-300 pb-0.5">Recommended</span>
                         </Link>
@@ -300,9 +303,12 @@ export function Navbar({clearSessionAction}: NavbarProps) {
                 <Link href={{pathname: "/category", query: {type: "recommended"}}} onClick={closeMenu}>
                     <button className="block hover:text-gray-300">Recommended</button>
                 </Link>
-                <Link href="/personal-dashboard" onClick={closeMenu}>
-                    <button className="block hover:text-gray-300">Your Dashboard</button>
-                </Link>
+                {
+                    session &&
+                    <Link href="/personal-dashboard" onClick={closeMenu}>
+                        <button className="block hover:text-gray-300">Your Dashboard</button>
+                    </Link>
+                }
             </div>
 
             {/* Dark overlay when menu is open */}

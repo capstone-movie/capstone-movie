@@ -15,6 +15,6 @@ router.route('/id/:animeId').get(getAnimeByIdController)
 router.route('/top').get(getAnimeTopController)
 router.route('/recent').get(getAnimeRecentController)
 router.route('/search/:query').get(getAnimeSearchController)
-/*router.route('/genre/:genre').get(getAnimeByGenreController)*/
+/*router.route('/genres/:genres').get(getAnimeByGenreController)*/
 
 export const animeRoute = {basePath, router}

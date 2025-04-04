@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-
 @source '../node_modules/flowbite-react/dist/esm/**/*.mjs';
 
 @theme {
@@ -17,6 +16,7 @@
   --breakpoint-2900: 2900px;
   --breakpoint-3200: 3200px;
 }
+
 /*
   The default border color has changed to `currentColor` in Tailwind CSS v4,
   so we've added these compatibility styles to make sure everything still

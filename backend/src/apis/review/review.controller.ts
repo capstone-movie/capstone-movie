@@ -120,7 +120,7 @@ export async function deleteReviewController(request: Request, response: Respons
         const validationResult = deleteReviewSchema.safeParse(request.body);
 
         // if the validation is unsuccessful, return a preformatted response to the client
-        if (!validationResult.success) {
+        if (!validationResult.success){
             return response.status(400).json({status: 400, message: validationResult.error.errors});
         }
 

@@ -119,11 +119,11 @@ export async function getAnimeTop(): Promise<any> {
     return rowList; // Return the list of top anime records
 }
 
-/*export async function getAnimeByGenre(genre: string): Promise<any> {
+/*export async function getAnimeByGenre(genres: string): Promise<any> {
     return sql`
         SELECT anime_title, anime_title_english, anime_score, anime_rank, anime_genres
         FROM anime
-        WHERE anime_genres ILIKE '%' || ${genre} || '%'
+        WHERE anime_genres ILIKE '%' || ${genres} || '%'
         ORDER BY anime_rank
         LIMIT 5`
 }*/
