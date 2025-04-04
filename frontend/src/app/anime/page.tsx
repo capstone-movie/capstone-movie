@@ -299,9 +299,16 @@ function GrabThemReviews({animeJikanId}: any) {
 
 function ReviewList({ data }: { data: any }) {
     const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
+    const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
 
     const toggleExpand = (index: number) => {
         setExpandedIndexes((prev) =>
+            prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
+        );
+    };
+
+    const toggleSpoiler = (index: number) => {
+        setRevealedSpoilers((prev) =>
             prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
         );
     };
@@ -314,10 +321,20 @@ function ReviewList({ data }: { data: any }) {
                 </p>
             ) : (
                 data.data.map((review: any, index: number) => {
+                    console.log(`[${index}] Review:`, JSON.stringify(review, null, 2)); // 🧪 Drop it right here
+
+
                     const expanded = expandedIndexes.includes(index);
+                    const isSpoiler = review.reviewSpoiler === true;
+                    const spoilerRevealed = revealedSpoilers.includes(index);
+
                     const body = review.reviewBody;
                     const isLong = body.length > 200;
                     const displayBody = expanded || !isLong ? body : body.slice(0, 200) + "...";
+
+                    const bodyClass = isSpoiler && !spoilerRevealed
+                        ? "blur-md backdrop-blur-sm text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2 transition-all duration-300"
+                        : "text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2 transition-all duration-300";
 
                     return (
                         <div
@@ -337,9 +354,18 @@ function ReviewList({ data }: { data: any }) {
                                 {review.reviewTitle}
                             </h2>
 
-                            <p className="text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2">
+                            <div className={bodyClass}>
                                 {displayBody}
-                            </p>
+                            </div>
+
+                            {isSpoiler && (
+                                <button
+                                    onClick={() => toggleSpoiler(index)}
+                                    className="text-sm text-yellow-500 hover:text-yellow-300 underline mb-2"
+                                >
+                                    {spoilerRevealed ? "Hide Spoiler" : "Reveal Spoiler"}
+                                </button>
+                            )}
 
                             {isLong && (
                                 <button

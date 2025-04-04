@@ -74,13 +74,14 @@ export async function getReviewsByProfileId(profileId: string): Promise<any[]> {
 
 export async function getReviewsByAnimeId(animeJikanId: number): Promise<any[]> {
     const result = await sql`SELECT
-                            r.review_anime_rating,
-                            r.review_title,
-                            r.review_body,
-                            r.review_created_at,
-                            p.profile_username
-                             FROM review r 
-                             JOIN profile p ON r.review_profile_id = p.profile_id
+                                 r.review_anime_rating,
+                                 r.review_title,
+                                 r.review_body,
+                                 r.review_created_at,
+                                 r.review_spoiler,
+                                 p.profile_username
+                             FROM review r
+                                      JOIN profile p ON r.review_profile_id = p.profile_id
                              WHERE review_jikan_id = ${animeJikanId}
                              ORDER BY r.review_created_at DESC`;
     return result;
