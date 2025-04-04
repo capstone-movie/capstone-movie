@@ -18,13 +18,15 @@ export function Spotlight(prop: Props) {
     const [showNavBars, setShowNavBars] = useState(false);
     const [touchStart, setTouchStart] = useState(0);
     const [touchEnd, setTouchEnd] = useState(0);
+    const [showFullDescription, setShowFullDescription] = useState(false);
 
     // Media queries for responsive design
     const isMobile = useMediaQuery("(max-width: 768px)");
     const isSmallMobile = useMediaQuery("(max-width: 480px)");
 
     const toggleDescription = () => {
-        setIsExpanded((prevState) => !prevState);
+        // Show the description overlay instead of expanding in-place
+        setShowFullDescription(true);
     };
 
     // Check if thumbnail URL is valid
@@ -80,14 +82,16 @@ export function Spotlight(prop: Props) {
     }, [prop.url]);
 
     useEffect(() => {
-        if (data && data.length > 0) {
+        // Only auto-advance when description overlay is not shown
+        // and no description is expanded
+        if (data && data.length > 0 && !showFullDescription) {
             const intervalId = setInterval(() => {
                 setCurrentIndex((prevIndex) => (prevIndex + 1) % data.length);
-            }, 5000);
+            }, 7000); // Increased from 5000ms to 10000ms (10 seconds)
 
             return () => clearInterval(intervalId);
         }
-    }, [data]);
+    }, [data, showFullDescription]);
 
     const goToPrevious = () => {
         if (data && data.length > 0) {
@@ -300,13 +304,13 @@ export function Spotlight(prop: Props) {
                             className="bg-black/30 backdrop-blur-md p-3 sm:p-4 md:p-5 rounded-xl border border-white/10 max-w-[700px] mb-3 sm:mb-5 shadow-lg"
                         >
                             <p className="text-white text-left text-sm sm:text-base md:text-lg">
-                                {isExpanded ? focus.animeDescription : truncatedDescription}
+                                {truncatedDescription}
                                 {showReadMore && (
                                     <button
                                         onClick={toggleDescription}
                                         className="ml-2 text-blue-400 hover:text-blue-300 focus:outline-none transition-colors duration-200"
                                     >
-                                        {isExpanded ? "read less" : "read more"}
+                                        read more
                                     </button>
                                 )}
                             </p>
@@ -380,6 +384,67 @@ export function Spotlight(prop: Props) {
                         className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-0"
                     >
                         <EmbeddedVideo url={showVideoURL} title={focus?.animeTitleEnglish || "Anime Trailer"} exit={setShowVideoURL} />
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* New Full Description Overlay */}
+            <AnimatePresence>
+                {showFullDescription && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
+                        onClick={() => setShowFullDescription(false)}
+                    >
+                        <motion.div
+                            initial={{ scale: 0.9, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            exit={{ scale: 0.9, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="bg-black/80 backdrop-blur-md p-5 sm:p-6 md:p-8 rounded-xl border border-white/20
+                                       max-w-2xl w-full max-h-[80vh] overflow-y-auto shadow-2xl"
+                            onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside
+                        >
+                            <div className="flex justify-between items-center mb-4">
+                                <h3 className="text-2xl sm:text-3xl font-bold text-white">
+                                    {focus.animeTitleEnglish || focus.animeTitle}
+                                </h3>
+                                <button
+                                    onClick={() => setShowFullDescription(false)}
+                                    className="text-white/70 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors duration-200"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="prose prose-invert max-w-none">
+                                <p className="text-white/90 text-base sm:text-lg leading-relaxed">
+                                    {focus.animeDescription || "No description available."}
+                                </p>
+                            </div>
+
+                            {focus.animeJikanId && (
+                                <div className="mt-6 pt-4 border-t border-white/10 flex justify-end">
+                                    <Link href={{ pathname: "/anime", query: { id: focus.animeJikanId } }}>
+                                        <motion.button
+                                            whileHover={{ scale: 1.03 }}
+                                            whileTap={{ scale: 0.97 }}
+                                            className="bg-gradient-to-r from-purple-600 to-blue-500 text-white font-medium py-2 px-5 rounded-lg
+                                                    shadow-lg flex items-center gap-2 hover:shadow-blue-500/20 transition-all duration-200"
+                                        >
+                                            <span>View Full Details</span>
+                                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fillRule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
+                                            </svg>
+                                        </motion.button>
+                                    </Link>
+                                </div>
+                            )}
+                        </motion.div>
                     </motion.div>
                 )}
             </AnimatePresence>
