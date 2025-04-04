@@ -13,21 +13,17 @@ import {useSessionContext} from "@/app/(index)/ContextWrapper";
 import { addToListSchema } from "@/app/anime/addToList.validator";
 
 export default function () {
-
     const searchParams = useSearchParams();
     const mal_id: string = searchParams.has('id') ? searchParams.get('id') as string : '1';
-
-    const [showVideoURL, setShowVideoURL] = useState('')
-
+    const [showVideoURL, setShowVideoURL] = useState('');
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await fetchAnimePage(mal_id)
-            setData(result)
+            const result = await fetchAnimePage(mal_id);
+            setData(result);
         };
-        fetchData().then(() => {
-        });
+        fetchData();
     }, []);
     if (!data) {
         return <></>;
@@ -295,11 +291,19 @@ function GrabThemReviews({animeJikanId}: any) {
         </>
     );
 }
-
-
 function ReviewList({ data }: { data: any }) {
     const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
     const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
+    const [reviews, setReviews] = useState(data?.data || []);
+    const { session } = useSessionContext();
+
+    // 🔧 Sync reviews state with data prop
+    useEffect(() => {
+        if (data?.data?.length) {
+            console.log("🔄 Syncing reviews with incoming data:", data.data);
+            setReviews(data.data);
+        }
+    }, [data]);
 
     const toggleExpand = (index: number) => {
         setExpandedIndexes((prev) =>
@@ -313,16 +317,49 @@ function ReviewList({ data }: { data: any }) {
         );
     };
 
+    //const handleEdit = (reviewId: string) => {
+    //    console.log(`Editing review: ${reviewId}`);
+    //    window.location.href = `/review-edit?id=${reviewId}`;
+    //};
+
+    const handleDelete = async (reviewId: string) => {
+        console.log(`🗑️ Attempting to delete review: ${reviewId}`);
+        const confirmed = window.confirm("Are you sure you want to delete this review?");
+        if (!confirmed) return;
+
+        try {
+            const res = await fetch("/apis/review/delete", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ reviewId }),
+            });
+
+            const json = await res.json();
+
+            if (res.ok) {
+                console.log(`Review deleted: ${reviewId}`);
+                alert("Review deleted.");
+                setReviews((prev: any[]) => prev.filter((r) => r.reviewId !== reviewId));
+            } else {
+                console.error(`Failed to delete:`, json);
+                alert("Failed to delete: " + json.message);
+            }
+        } catch (err) {
+            console.error("Error deleting review:", err);
+            alert("Something went wrong.");
+        }
+    };
+
     return (
         <div className="space-y-10 px-8 py-12 bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900 min-h-[200px]">
-            {!data?.data.length ? (
+            {!reviews.length ? (
                 <p className="text-center text-zinc-400 text-2xl font-medium italic">
                     No reviews yet. Be the first to share your thoughts.
                 </p>
             ) : (
-                data.data.map((review: any, index: number) => {
-                    console.log(`[${index}] Review:`, JSON.stringify(review, null, 2)); // 🧪 Drop it right here
-
+                reviews.map((review: any, index: number) => {
+                    console.log(`[${index}] Review:`, review);
+                    console.log(`📝 review.profileUsername: ${review.profileUsername}`);
 
                     const expanded = expandedIndexes.includes(index);
                     const isSpoiler = review.reviewSpoiler === true;
@@ -335,6 +372,8 @@ function ReviewList({ data }: { data: any }) {
                     const bodyClass = isSpoiler && !spoilerRevealed
                         ? "blur-md backdrop-blur-sm text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2 transition-all duration-300"
                         : "text-zinc-300 text-lg leading-relaxed whitespace-pre-wrap mb-2 transition-all duration-300";
+
+                    const isAuthor = session?.profile?.profileId === review.reviewProfileId;
 
                     return (
                         <div
@@ -374,6 +413,17 @@ function ReviewList({ data }: { data: any }) {
                                 >
                                     {expanded ? "Show Less" : "See More"}
                                 </button>
+                            )}
+
+                            {isAuthor && (
+                                <div className="flex gap-4 mt-4">
+                                    <button
+                                        onClick={() => handleDelete(review.reviewId)}
+                                        className="text-sm text-red-400 hover:text-red-200 underline"
+                                    >
+                                        Delete
+                                    </button>
+                                </div>
                             )}
 
                             <div className="mt-6 h-[1px] bg-zinc-600" />
