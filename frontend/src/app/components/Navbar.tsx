@@ -280,7 +280,7 @@ export function Navbar({clearSessionAction}: NavbarProps) {
 
             {/* Mobile Left Tab Menu */}
             <div
-                className={`${isOpen ? 'left-0' : '-left-64'} fixed inset-y-0 -left-64 w-64 bg-fhcolor text-white px-6 py-4 flex flex-col gap-3 z-30 duration-200`}>
+                className={`${isOpen ? 'left-0' : '-left-64'} fixed inset-y-0 -left-64 w-64 bg-fhcolor text-white px-6 py-4 flex flex-col gap-3 z-40 duration-200`}>
                 <button onClick={toggleMenu} className="text-white mb-4">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
                          xmlns="http://www.w3.org/2000/svg">
@@ -308,7 +308,7 @@ export function Navbar({clearSessionAction}: NavbarProps) {
             {/* Dark overlay when menu is open */}
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-20"
+                    className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30"
                     onClick={closeMenu}
                     aria-hidden="true"
                 ></div>
