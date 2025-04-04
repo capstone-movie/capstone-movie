@@ -317,10 +317,10 @@ function ReviewList({ data }: { data: any }) {
         );
     };
 
-    const handleEdit = (reviewId: string) => {
-        console.log(`Editing review: ${reviewId}`);
-        window.location.href = `/review-edit?id=${reviewId}`;
-    };
+    //const handleEdit = (reviewId: string) => {
+    //    console.log(`Editing review: ${reviewId}`);
+    //    window.location.href = `/review-edit?id=${reviewId}`;
+    //};
 
     const handleDelete = async (reviewId: string) => {
         console.log(`🗑️ Attempting to delete review: ${reviewId}`);
@@ -417,12 +417,6 @@ function ReviewList({ data }: { data: any }) {
 
                             {isAuthor && (
                                 <div className="flex gap-4 mt-4">
-                                    <button
-                                        onClick={() => handleEdit(review.reviewId)}
-                                        className="text-sm text-blue-400 hover:text-blue-200 underline"
-                                    >
-                                        Edit
-                                    </button>
                                     <button
                                         onClick={() => handleDelete(review.reviewId)}
                                         className="text-sm text-red-400 hover:text-red-200 underline"
