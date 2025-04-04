@@ -4,7 +4,8 @@ import {
     updateReviewController,
     deleteReviewController,
     getReviewsByProfileIdController,
-    getReviewsByAnimeIdController
+    getReviewsByAnimeIdController,
+    getReviewByIdController
 } from './review.controller'
 
 // declare a basePath for this router
@@ -19,6 +20,7 @@ router.route('/update').put(updateReviewController)
 router.route('/delete').delete(deleteReviewController)
 router.route('/get-by-profile').get(getReviewsByProfileIdController)
 router.route('/get-by-anime/:animeId').get(getReviewsByAnimeIdController)
+router.route('/get/:id').get(getReviewByIdController);
 
 // export the router with the basePath and router object
 export const reviewRoute = {basePath, router}

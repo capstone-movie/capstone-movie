@@ -11,7 +11,7 @@ import {
     deleteReviews,
     getProfileIdByReviewId,
     getReviewsByProfileId,
-    getReviewsByAnimeId
+    getReviewsByAnimeId,
 } from "./review.model";
 import {number} from "zod";
 
@@ -200,5 +200,25 @@ export async function getReviewsByAnimeIdController(request: Request, response: 
     } catch (error: any) {
         // catch any errors that occurred during the review retrieval process and return a response to the client
         return response.status(500).json({status: 500, message: error.message});
+    }
+}
+export async function getReviewByIdController(request: Request, response: Response): Promise<any> {
+    try {
+        const reviewId = request.params.id;
+
+        if (!reviewId) {
+            return response.status(400).json({ status: 400, message: "Review ID is required." });
+        }
+
+        const review = await getReviewById(reviewId);
+
+        if (!review) {
+            return response.status(404).json({ status: 404, message: "Review not found." });
+        }
+
+        return response.status(200).json({ status: 200, data: review });
+
+    } catch (error: any) {
+        return response.status(500).json({ status: 500, message: error.message });
     }
 }

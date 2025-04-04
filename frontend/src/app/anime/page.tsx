@@ -328,7 +328,7 @@ function ReviewList({ data }: { data: any }) {
         if (!confirmed) return;
 
         try {
-            const res = await fetch("/api/review/delete", {
+            const res = await fetch("/apis/review/delete", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ reviewId }),
