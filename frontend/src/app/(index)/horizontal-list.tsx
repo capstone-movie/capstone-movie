@@ -4,6 +4,7 @@ import {useEffect, useState, useRef} from "react";
 import {ListItem} from "@/app/(index)/list-item";
 import {ListHeader} from "@/app/(index)/list-header";
 import {fetchHorizontalList} from "@/app/(index)/horizontal-list.action";
+import {getWatchListServerAction} from "@/app/personal-dashboard/watch-list.actions";
 
 type Props = {
     url: string
@@ -12,14 +13,40 @@ type Props = {
 
 export function HorizontalList(prop: Props) {
     const [data, setData] = useState<any>(null);
+    const [hiddenAnimeData, setHiddenAnimeData] = useState<any>(null);
+    const [isLoading, setIsLoading] = useState(true);
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await fetchHorizontalList(prop.url)
-            setData(result)
+            setIsLoading(true);
+            try {
+                // Fetch both lists in parallel
+                const [result, hidden] = await Promise.all([
+                    fetchHorizontalList(prop.url),
+                    getWatchListServerAction("hidden")
+                ]);
+
+                // Create a Set of hidden anime IDs for efficient lookup
+                const hiddenAnimeIds = new Set(
+                    hidden?.data?.map((anime: any) => anime.animeJikanId) || []
+                );
+
+                // Filter out hidden anime from the main list
+                const filteredResult = result.filter((anime: any) =>
+                    !hiddenAnimeIds.has(anime.animeJikanId)
+                );
+
+                setData(filteredResult);
+                setHiddenAnimeData(hidden);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            } finally {
+                setIsLoading(false);
+            }
         };
-        fetchData().then(() => {});
+
+        fetchData();
     }, [prop.url]);
 
     const scrollLeft = () => {
@@ -41,6 +68,10 @@ export function HorizontalList(prop: Props) {
             });
         }
     };
+
+    if (isLoading) {
+        return <div className="h-[25rem] flex items-center justify-center">Loading...</div>;
+    }
 
     return (
         <>
@@ -64,28 +95,33 @@ export function HorizontalList(prop: Props) {
                         className={'h-fit flex overflow-x-scroll no-scrollbar overflow-y-hidden pr-20'}
                     >
                         {
-                            data &&
-                            data.map((anime: any, index: number) => (
-                                <div className={`
-                                w-[100%]
-                                500:w-[50%]
-                                800:w-[33.33%]
-                                1100:w-[25%]
-                                1400:w-[20%]
-                                1700:w-[16.66%]
-                                2000:w-[14.28%]
-                                2300:w-[12.5%] 
-                                2600:w-[11.11%]
-                                no-scrollbar
-                                px-1
-                                h-[25rem]
-                                shrink-0
-                                `} key={index}>
-                                    <ListItem title={anime.animeTitleEnglish ? anime.animeTitleEnglish : anime.animeTitle}
-                                              url={anime.animeThumbnailUrl}
-                                              mal_id={anime.animeJikanId}/>
+                            data && data.length > 0 ? (
+                                data.map((anime: any, index: number) => (
+                                    <div className={`
+                                    w-[100%]
+                                    500:w-[50%]
+                                    800:w-[33.33%]
+                                    1100:w-[25%]
+                                    1400:w-[20%]
+                                    1700:w-[16.66%]
+                                    2000:w-[14.28%]
+                                    2300:w-[12.5%] 
+                                    2600:w-[11.11%]
+                                    no-scrollbar
+                                    px-1
+                                    h-[25rem]
+                                    shrink-0
+                                    `} key={index}>
+                                        <ListItem title={anime.animeTitleEnglish ? anime.animeTitleEnglish : anime.animeTitle}
+                                                  url={anime.animeThumbnailUrl}
+                                                  mal_id={anime.animeJikanId}/>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="w-full h-[25rem] flex items-center justify-center text-gray-400">
+                                    No items to display
                                 </div>
-                            ))
+                            )
                         }
                     </div>
 

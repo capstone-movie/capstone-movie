@@ -354,7 +354,7 @@ export function Spotlight(prop: Props) {
                 </AnimatePresence>
 
                 {/* Prettier indicators with animations - adjust size on mobile */}
-                <div className="absolute bottom-2 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-1 sm:gap-2 backdrop-blur-sm bg-black/30 px-3 py-1 sm:px-4 sm:py-2 rounded-full z-20">
+                <div className="absolute bottom-2 sm:bottom-6 left-1/2 transform -translate-x-1/2 flex items-center gap-1 sm:gap-2 backdrop-blur-sm bg-black/30 px-3 py-1 sm:px-4 sm:py-2 rounded-full z-00">
                     {data.map((_, index: number) => (
                         <motion.button
                             key={index}
