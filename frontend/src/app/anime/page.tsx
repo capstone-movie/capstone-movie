@@ -10,6 +10,8 @@ import Link from "next/link";
 import {addWatchList} from "@/app/personal-dashboard/watch-list.actions";
 import {useSessionContext} from "@/app/(index)/ContextWrapper";
 
+import { addToListSchema } from "@/app/anime/addToList.validator";
+
 export default function () {
 
     const searchParams = useSearchParams();
@@ -180,82 +182,94 @@ function WriteReviewButton(prop: any) {
     )
 }
 
-function AddToListButton({animeId, animeRank}: { animeId: string, animeRank: number }) {
+function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: number }) {
     const [submenu, setSubmenu] = useState(false);
-    //const [session, setSession] = useState<Session | undefined>(undefined);
-    const {session} = useSessionContext()
+    const { session } = useSessionContext();
 
     function doSomething(apiEndpoint: string) {
         const fetchData = async () => {
-            await addWatchList({animeId: animeId, animeRank: animeRank, apiEndpoint: apiEndpoint})
+            console.log("🚀 Attempting to add to list:", { animeId, animeRank, apiEndpoint });
+
+            const result = addToListSchema.safeParse({
+                animeId,
+                animeRank,
+                apiEndpoint
+            });
+            if (!result.success) {
+                console.error("Validation failed:", result.error.format());
+                alert("Something went wrong. Please try again.");
+                return;
+            }
+            try {
+                await addWatchList(result.data);
+                console.log("Successfully added to list:", result.data);
+            } catch (err) {
+                console.error("Failed to call addWatchList:", err);
+                alert("Failed to add anime to your list.");
+            }
         };
-        fetchData().then(() => {
-        });
-    };
-
+        fetchData();
+    }
     return (
-        <div className={'flex flex-col items-end'}>
-            {
-                session &&
+        <div className="flex flex-col items-end">
+            {session && (
                 <button
-
-                    onMouseLeave={() => {
-                        setSubmenu(prev => false)
-                    }}
-
-                    onClick={() => {
-                        setSubmenu(prev => !prev)
-                    }} className="w-fit">
+                    onMouseLeave={() => setSubmenu(false)}
+                    onClick={() => setSubmenu(prev => !prev)}
+                    className="w-fit"
+                >
                     <p className="text-sm w-fit font-bold bg-transparent border-2 border-white/40 text-white rounded-xl px-6 py-3 transition-all duration-200 ease-in-out transform hover:bg-white/20 hover:scale-105 active:bg-white/40 text-nowrap">
-                        {'Add To List'}
+                        Add To List
                     </p>
                 </button>
-            }
-            {
-                submenu &&
-                <div
-                    className={'bg-fhcolor w-[200px] overflow-hidden flex flex-col rounded-xl absolute translate-y-[45px]'}>
-                    <button className={'flex gap-2 hover:bg-white/20 px-2 pt-2 pb-1'}
-                            onMouseLeave={() => setSubmenu(prev => false)}
-                            onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={() => {
-                                setSubmenu(false);
-                                doSomething('favorite');
-                            }}>
-                        <Star color={'#ffc900'}/>
-                        <p>
-                            Favorite
-                        </p>
+            )}
+
+            {submenu && (
+                <div className="bg-fhcolor w-[200px] overflow-hidden flex flex-col rounded-xl absolute translate-y-[45px]">
+                    <button
+                        className="flex gap-2 hover:bg-white/20 px-2 pt-2 pb-1"
+                        onMouseLeave={() => setSubmenu(false)}
+                        onMouseEnter={() => setSubmenu(true)}
+                        onClick={() => {
+                            setSubmenu(false);
+                            doSomething("favorite");
+                        }}
+                    >
+                        <Star color="#ffc900" />
+                        <p>Favorite</p>
                     </button>
-                    <button className={'flex gap-2 hover:bg-white/20 px-2 py-1'}
-                            onMouseLeave={() => setSubmenu(prev => false)}
-                            onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={() => {
-                                setSubmenu(false);
-                                doSomething('later');
-                            }}>
-                        <Clock color={'#ffc900'}/>
-                        <p>
-                            Watch Later
-                        </p>
+
+                    <button
+                        className="flex gap-2 hover:bg-white/20 px-2 py-1"
+                        onMouseLeave={() => setSubmenu(false)}
+                        onMouseEnter={() => setSubmenu(true)}
+                        onClick={() => {
+                            setSubmenu(false);
+                            doSomething("later");
+                        }}
+                    >
+                        <Clock color="#ffc900" />
+                        <p>Watch Later</p>
                     </button>
-                    <button className={'flex gap-2 hover:bg-white/20 px-2 pb-2 pt-1'}
-                            onMouseLeave={() => setSubmenu(prev => false)}
-                            onMouseEnter={() => setSubmenu(prev => true)}
-                            onClick={() => {
-                                setSubmenu(false);
-                                doSomething('hidden');
-                            }}>
-                        <CircleX color={'#ffc900'}/>
-                        <p>
-                            Hide Anime
-                        </p>
+
+                    <button
+                        className="flex gap-2 hover:bg-white/20 px-2 pb-2 pt-1"
+                        onMouseLeave={() => setSubmenu(false)}
+                        onMouseEnter={() => setSubmenu(true)}
+                        onClick={() => {
+                            setSubmenu(false);
+                            doSomething("hidden");
+                        }}
+                    >
+                        <CircleX color="#ffc900" />
+                        <p>Hide Anime</p>
                     </button>
                 </div>
-            }
+            )}
         </div>
-    )
+    );
 }
+export { AddToListButton };
 
 function GrabThemReviews({animeJikanId}: any) {
 
