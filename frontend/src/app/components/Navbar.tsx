@@ -125,7 +125,7 @@ export function Navbar({clearSessionAction}: NavbarProps) {
     return (
         <>
             <nav
-                className="w-full bg-fhcolor/90 backdrop-blur-xs text-white flex justify-between items-end p-4 sticky top-0 z-40 border-b-[1px] border-[#9994]">
+                className="w-full bg-fhcolor/90 backdrop-blur-xs text-white flex justify-between items-end p-4 sticky top-0 border-b-[1px] border-[#9994]">
                 {/* Hamburger Menu */}
                 <button onClick={toggleMenu} className="block text-white mb-1">
                     <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
