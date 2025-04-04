@@ -9,36 +9,16 @@ import {useSessionContext} from "@/app/(index)/ContextWrapper";
 import {motion} from "framer-motion";
 import {fetchAnimePage} from "@/app/anime/anime-page.action";
 import {Cross, X} from "lucide-react";
+import { addToListSchema } from "@/app/anime/addToList.validator";
+import { z } from "zod";
 
-// use key field to associate the section with its data later on
-const sections = [
-    {title: "Favorite Anime", key: "favorite"},
-    {title: "Watch Later", key: "later"},
-    {title: "Recommendations", key: "recommendations"},
-    {title: "Hidden", key: "hidden"},
-];
-type AnimeItem = {
-    id: number;
-    title: string;
-    url?: string;
-}
-const fetchSection = async (key: string): Promise<AnimeItem[]> => {
-    // placeholder data rn. swap out with backend fetch
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                {id: 1, title: `${key} Anime #1`},
-                {id: 2, title: `${key} Anime #2`},
-                {id: 3, title: `${key} Anime #3`},
-                {id: 4, title: `${key} Anime #4`},
-                {id: 5, title: `${key} Anime #5`},
-            ]);
-        }, 200);
-    });
-};
+const deleteWatchListSchema = z.object({
+    animeId: z.string().uuid("Invalid anime ID"),
+    apiEndpoint: z.enum(["favorite", "later", "hidden"]),
+});
 
 export default function Dashboard() {
-    const [animeDataBySection, setAnimeDataBySection] = useState<Record<string, AnimeItem[]>>({
+    const [animeDataBySection, setAnimeDataBySection] = useState<Record<string, any[]>>({
         favorite: [],
         later: [],
         recommendations: [],
@@ -52,13 +32,11 @@ export default function Dashboard() {
 
             const favorite = await getWatchListServerAction("favorite");
             const watchLater = await getWatchListServerAction("later");
-            const recommendations = await fetchSection("recommendations");
             const hidden = await getWatchListServerAction("hidden");
 
             setAnimeDataBySection({
                 favorite,
                 watchLater,
-                recommendations,
                 hidden,
             });
         };
@@ -85,9 +63,7 @@ export default function Dashboard() {
         </div>
     );
 };
-
 function DashboardList({urlPath}: { urlPath: string }) {
-
     const [data, setData] = useState<any>(null);
     const [more, setMore] = useState(false);
 
@@ -101,14 +77,24 @@ function DashboardList({urlPath}: { urlPath: string }) {
         fetchData();
     }, [urlPath]);
 
-    if (!data) {
-        return <></>;
-    }
-
     const onButtonClickedDelete = async (animeId: string) => {
-        await deleteWatchListServerAction(urlPath, animeId);
-        fetchData();
+        const validation = deleteWatchListSchema.safeParse({ animeId, apiEndpoint: urlPath });
+        if (!validation.success) {
+            console.error("❌ Delete validation error:", validation.error.format());
+            alert("Invalid delete request.");
+            return;
+        }
+        try {
+            await deleteWatchListServerAction(validation.data.apiEndpoint, validation.data.animeId);
+            console.log("🗑️ Successfully deleted:", validation.data);
+            fetchData();
+        } catch (err) {
+            console.error("❌ Delete failed:", err);
+            alert("Failed to delete anime from list.");
+        }
     };
+
+    if (!data) return <></>;
 
     return (
         <div>
@@ -195,36 +181,35 @@ const MyField = ({index, animeId, apiEndpoint, passFetchData}: MyFieldProps) => 
     };
 
     const shoveToBackend = (newValue: number) => {
+        const payload = { animeId, animeRank: Math.max(newValue - 1, 0), apiEndpoint };
+        const validation = addToListSchema.safeParse(payload);
+        if (!validation.success) {
+            console.error("Rank update validation failed:", validation.error.format());
+            alert("Invalid input.");
+            return;
+        }
         const fetchData = async () => {
-            await addWatchList({animeId: animeId, animeRank: Math.max(newValue - 1, 0), apiEndpoint: apiEndpoint})
-            await passFetchData()
+            await addWatchList(validation.data);
+            console.log("Rank updated:", validation.data);
+            await passFetchData();
             setInputValue(`#${index + 1}`);
         };
-        fetchData().then(() => {
-        });
-    }
+        fetchData();
+    };
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            const newValue = inputValue;
-            if (/^\d*$/.test(newValue)) {
-                setInputValue(newValue);
-                shoveToBackend(parseInt(newValue));
-            } else {
-                setInputValue(defaultValue);
-            }
+        if (e.key === "Enter") {
+            const value = parseInt(inputValue.replace("#", ""));
+            if (!isNaN(value)) shoveToBackend(value);
+            else setInputValue(defaultValue);
             e.currentTarget.blur();
         }
     };
 
     const handleFinished = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newValue = e.target.value;
-        if (/^\d*$/.test(newValue)) {
-            setInputValue(newValue);
-            shoveToBackend(parseInt(newValue));
-        } else {
-            setInputValue(defaultValue);
-        }
+        const value = parseInt(e.target.value.replace("#", ""));
+        if (!isNaN(value)) shoveToBackend(value);
+        else setInputValue(defaultValue);
     };
 
     const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -239,7 +224,7 @@ const MyField = ({index, animeId, apiEndpoint, passFetchData}: MyFieldProps) => 
             onBlur={handleFinished}
             onKeyDown={handleKeyDown}
             onFocus={handleFocus}    // Select all text when clicked/focused
-            className={''}
+            className={'text-white font-bold w-[50px] bg-transparent border-b border-white text-center'}
         />
     );
 };
