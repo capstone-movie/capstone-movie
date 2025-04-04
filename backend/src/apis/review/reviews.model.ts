@@ -19,9 +19,3 @@ export async function insertReviews(reviewData: z.infer<typeof reviewSchema>): P
 
     return true;
 }
-export async function getReviewById(id: string) {
-    const result = await sql`
-        SELECT * FROM reviews WHERE review_id = ${id}
-    `;
-    return result[0];
-}
