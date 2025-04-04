@@ -108,7 +108,11 @@ export function Navbar({clearSessionAction}: NavbarProps) {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-            window.location.href = `/category?type=search&query=${searchQuery}`;
+            // Only navigate if search query is not empty AND there are search results
+            if (searchQuery.trim() !== '' && searchResults.length > 0) {
+                window.location.href = `/category?type=search&query=${searchQuery}`;
+            }
+            event.preventDefault(); // Prevent form submission behavior
         }
     }
 
