@@ -9,6 +9,7 @@ import {getWatchListServerAction} from "@/app/personal-dashboard/watch-list.acti
 type Props = {
     url: string
     title: string
+    queryType: string
 }
 
 export function HorizontalList(prop: Props) {
@@ -76,7 +77,7 @@ export function HorizontalList(prop: Props) {
     return (
         <>
             <div className={'h-fit relative'}>
-                <ListHeader text={prop.title}/>
+                <ListHeader text={prop.title} queryType={prop.queryType}/>
                 <div className={'relative overflow-hidden'}>
                     {/* Left scroll button - overlaid on content */}
                     <button

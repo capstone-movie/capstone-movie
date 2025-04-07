@@ -8,11 +8,14 @@ export default function () {
             <Spotlight url={'anime/top'}/>
             <div className={''}>
                 <HorizontalList url={'anime/top'}
-                                title={'Popular Anime'}/>
+                                title={'Popular Anime'}
+                                queryType={'popular'}/>
                 <HorizontalList url={'anime/recent'}
-                                title={'Recent Anime'}/>
+                                title={'Recent Anime'}
+                                queryType={'recent'}/>
                 <HorizontalList url={'genres/Action'}
-                                title={'Recommended Anime'}/>
+                                title={'Recommended Anime'}
+                                queryType={'recommended'}/>
             </div>
         </>
     );
