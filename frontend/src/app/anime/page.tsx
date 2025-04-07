@@ -197,8 +197,16 @@ function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: n
                 return;
             }
             try {
-                await addWatchList(result.data);
-                console.log("Successfully added to list:", result.data);
+                if (result.data.animeId && result.data.animeRank !== undefined && result.data.apiEndpoint) {
+                    await addWatchList({
+                        animeId: result.data.animeId,
+                        animeRank: result.data.animeRank,
+                        apiEndpoint: result.data.apiEndpoint,
+                    });
+                    console.log("Successfully added to list:", result.data);
+                } else {
+                    console.error("Missing required data:", result.data);
+                }
             } catch (err) {
                 console.error("Failed to call addWatchList:", err);
                 alert("Failed to add anime to your list.");
@@ -265,7 +273,6 @@ function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: n
         </div>
     );
 }
-export { AddToListButton };
 
 function GrabThemReviews({animeJikanId}: any) {
 

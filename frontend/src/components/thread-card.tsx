@@ -14,12 +14,6 @@ export async function ThreadCard(props: Props) {
 				<div className="flex items-center">
 					<Suspense fallback={<div> Loading...</div>}>
 					<p className="inline-flex items-center mr-3 text-sm font-semibold">
-
-						<img
-							className="mr-2 w-8 h-8 rounded-full"
-							src={profile.profileImageUrl ?? '/profile.png'}
-							alt={profile.profileName}
-						/>{profile.profileName}
 					</p>
 					</Suspense>
 					<p className="text-sm ">

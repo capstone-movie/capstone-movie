@@ -1,30 +1,38 @@
 'use client';
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from "next/link";
 import SignupPopup from "@/app/components/Signup-Popup";
 import LoginPopup from "@/app/components/Login-Popup";
-import {postSignOut} from "@/utils/models/sign-out/sign-out.action";
-import {searchAnime} from "@/utils/models/search/search.action";
-import {useSessionContext} from "@/app/(index)/ContextWrapper";
+import { postSignOut } from "@/utils/models/sign-out/sign-out.action";
+import { searchAnime } from "@/utils/models/search/search.action";
+import { useSessionContext } from "@/app/(index)/ContextWrapper";
 
 interface NavbarProps {
-    clearSessionAction?: any
+    clearSessionAction?: () => void;
 }
 
-export function Navbar({clearSessionAction}: NavbarProps) {
+interface AnimeResult {
+    animeJikanId: string;
+    animeTitle: string;
+    animeTitleEnglish?: string;
+    animeTitleJapanese?: string;
+    animeThumbnailUrl: string;
+}
+
+export function Navbar({ clearSessionAction }: NavbarProps) {
     const [isOpen, setIsOpen] = useState(false);
     const [isSearchOpen, setIsSearchOpen] = useState(false);
     const [isSignupPopupVisible, setIsSignupPopupVisible] = useState(false);
     const [isLoginPopupVisible, setIsLoginPopupVisible] = useState(false);
-    const [searchResults, setSearchResults] = useState([]);
+    const [searchResults, setSearchResults] = useState<AnimeResult[]>([]);
     const [searchQuery, setSearchQuery] = useState("");
-    const searchRef = useRef(null);
-    const debounceTimeoutRef = useRef(null);
-    const {session, setSession} = useSessionContext()
+    const searchRef = useRef<HTMLDivElement>(null);
+    const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const { session, setSession } = useSessionContext();
 
     useEffect(() => {
-        const handleClickOutside = (event) => {
-            if (searchRef.current && !searchRef.current.contains(event.target)) {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
                 setSearchResults([]);
             }
         };
@@ -35,7 +43,6 @@ export function Navbar({clearSessionAction}: NavbarProps) {
         };
     }, []);
 
-    // Add effect to disable body scroll when menu is open
     useEffect(() => {
         if (isOpen) {
             document.body.style.overflow = 'hidden';
@@ -47,56 +54,46 @@ export function Navbar({clearSessionAction}: NavbarProps) {
         };
     }, [isOpen]);
 
-    const toggleMenu = () => {
-        setIsOpen(!isOpen);
-    };
-
-    const toggleSearch = () => {
-        setIsSearchOpen(!isSearchOpen);
-    };
-
-    const closeMenu = () => {
-        setIsOpen(false);
-    };
-
-    const showSignupPopup = () => {
-        setIsSignupPopupVisible(true);
-    };
-
-    const showLoginPopup = () => {
-        setIsLoginPopupVisible(true);
-    };
+    const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleSearch = () => setIsSearchOpen(!isSearchOpen);
+    const closeMenu = () => setIsOpen(false);
+    const showSignupPopup = () => setIsSignupPopupVisible(true);
+    const showLoginPopup = () => setIsLoginPopupVisible(true);
 
     const handleLogout = () => {
-        postSignOut().then(r => {
-            setSession(undefined)
-        })
-    }
+        postSignOut().then(() => {
+            if(setSession) {
+                setSession(undefined);
+            }
+        });
+    };
 
-    const handleSearch = (query) => {
+    const handleSearch = (query: string) => {
         if (query) {
-            searchAnime(query).then(data => {
-                console.log(data)
-                if (data && Array.isArray(data)) {
-                    setSearchResults(data.slice(0, 3));
-                } else {
-                    setSearchResults([]);
-                }
-            }).catch(error => {
-                console.error('Error during search:', error);
-                setSearchResults([]);
-            });
+            searchAnime(query)
+                .then((data: any) => {
+                    if (Array.isArray(data)) {
+                        setSearchResults(data.slice(0, 3));
+                    } else {
+                        console.error("Unexpected data format:", data);
+                    }
+                })
+                .catch((err) => {
+                    console.error("Search failed:", err);
+                });
         } else {
             setSearchResults([]);
         }
-    }
+    };
 
-    const handleInputChange = (event) => {
+    const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const query = event.target.value;
         setSearchQuery(query);
+
         if (debounceTimeoutRef.current) {
             clearTimeout(debounceTimeoutRef.current);
         }
+
         debounceTimeoutRef.current = setTimeout(() => {
             handleSearch(query);
         }, 250);
@@ -104,23 +101,22 @@ export function Navbar({clearSessionAction}: NavbarProps) {
         if (query.length === 0) {
             setSearchResults([]);
         }
-    }
+    };
 
-    const handleKeyDown = (event) => {
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
-            // Only navigate if search query is not empty AND there are search results
             if (searchQuery.trim() !== '' && searchResults.length > 0) {
-                window.location.href = `/category?type=search&query=${searchQuery}`;
+                window.location.href = `/category?type=search&query=${encodeURIComponent(searchQuery)}`;
             }
-            event.preventDefault(); // Prevent form submission behavior
+            event.preventDefault();
         }
-    }
+    };
 
     const handleResultClick = () => {
         setSearchQuery("");
         setSearchResults([]);
         setIsSearchOpen(false);
-    }
+    };
 
     return (
         <>

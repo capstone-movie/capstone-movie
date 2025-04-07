@@ -2,14 +2,15 @@
 
 import {setHeaders} from "@/utils/set-headers.utils";
 
-export async function postReviewAction(review: {
-    reviewJikanId: number;
-    reviewTitle: string,
-    reviewBody: string;
-    reviewSpoiler: boolean;
-    reviewStatus: string;
-    reviewAnimeRating: number;
-}) {
+export async function postReviewAction(review: any) {
+    const {
+        reviewJikanId,
+        reviewTitle,
+        reviewBody,
+        reviewSpoiler,
+        reviewStatus,
+        reviewAnimeRating,
+    } = review;
     const reviewContent = {
         ...review,
         reviewCreatedAt: new Date().toISOString(),
