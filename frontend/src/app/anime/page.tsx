@@ -1,5 +1,6 @@
 'use client'
 
+// Import necessary hooks and components
 import {useSearchParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import {EmbeddedVideo} from "@/app/(index)/embedded-video";
@@ -9,15 +10,19 @@ import Recommendations from "@/app/anime/Recommendations";
 import Link from "next/link";
 import {addWatchList} from "@/app/personal-dashboard/watch-list.actions";
 import {useSessionContext} from "@/app/(index)/ContextWrapper";
-
 import { addToListSchema } from "@/app/anime/addToList.validator";
 
+// Default exported functional component for the anime page
 export default function () {
+    // Retrieve search parameters from the URL
     const searchParams = useSearchParams();
     const mal_id: string = searchParams.has('id') ? searchParams.get('id') as string : '1';
+
+    // State variables to manage video URL and fetched data
     const [showVideoURL, setShowVideoURL] = useState('');
     const [data, setData] = useState<any>(null);
 
+    // Fetch anime data when the component mounts
     useEffect(() => {
         const fetchData = async () => {
             const result = await fetchAnimePage(mal_id);
@@ -25,46 +30,51 @@ export default function () {
         };
         fetchData();
     }, []);
+
+    // Render nothing if data is not yet available
     if (!data) {
         return <></>;
     }
+
     return (
         <div className={'h-fit w-screen flex flex-col sm:flex-row relative p-[15px]'}>
+            {/* Left section: Anime details */}
             <div className={'h-full w-full sm:w-[300px] flex-shrink-0 flex flex-col sm:sticky top-28'}>
+                {/* Anime thumbnail */}
                 <img
                     className={'w-full object-contain rounded-xl mb-4'}
                     src={data.animeThumbnailUrl}
                     alt={data.animeTitleEnglish}
                 />
-                {
-                    data.animeScore &&
+                {/* Anime score */}
+                {data.animeScore && (
                     <div className={'w-full h-10 flex gap-2'}>
                         <Star color={'#ffc700'}/>
                         <p className={'text-white font-bold'} aria-label={`Anime score: ${data.animeScore.toFixed(2)}`}>
                             {data.animeScore.toFixed(2)}
                         </p>
                     </div>
-                }
-                {
-                    data.animeAiredStart &&
+                )}
+                {/* Anime airing dates */}
+                {data.animeAiredStart && (
                     <div className={'w-full h-10 flex gap-2'}>
                         <Calendar color={'#734cff'}/>
                         <p className={'text-white font-bold'}>
                             {convertDateRange(data)}
                         </p>
                     </div>
-                }
-                {
-                    data.animeEpisodes &&
+                )}
+                {/* Anime episodes and duration */}
+                {data.animeEpisodes && (
                     <div className={'w-full h-10 flex gap-2'}>
                         <Clock color={'#734cff'}/>
                         <p className={'text-white font-bold'}>
                             {formatEpisodeAndDuration(data)}
                         </p>
                     </div>
-                }
-                {
-                    data.genres &&
+                )}
+                {/* Anime genres */}
+                {data.genres && (
                     <div className={'w-full border-t-1 py-2 border-white/20 flex gap-2 flex-col'}>
                         <p className={'text-white font-bold'}>
                             {'Genres'}
@@ -79,9 +89,9 @@ export default function () {
                             ))}
                         </div>
                     </div>
-                }
-                {
-                    data.animeTrailerUrl &&
+                )}
+                {/* Anime trailer */}
+                {data.animeTrailerUrl && (
                     <div className={'flex flex-col'}>
                         <div className={'p-4 border rounded-md border-white/20'}>
                             <div className={'w-full aspect-video overflow-hidden justify-between items-center'}>
@@ -92,16 +102,20 @@ export default function () {
                             </div>
                         </div>
                     </div>
-                }
+                )}
             </div>
+
+            {/* Right section: Anime content */}
             <div className={'h-full w-full sm:[width:calc(100vw-300px-20px)] mt-4 pl-[10px] text-white'}>
                 <div className={'flex flex-col'}>
+                    {/* Anime title and AddToListButton */}
                     <div className={'flex justify-between mb-4 items-center'}>
                         <h1 className={'font-bold text-3xl'}>
                             {data.animeTitleEnglish ? data.animeTitleEnglish : data.animeTitleJapanese}
                         </h1>
                         <AddToListButton animeId={data.animeId} animeRank={0}/>
                     </div>
+                    {/* Anime summary */}
                     <div className={'p-4 border rounded-md border-white/20'}>
                         <h2 className={'font-bold text-xl mb-3'}>
                             Summary
@@ -111,8 +125,8 @@ export default function () {
                         </p>
                     </div>
                 </div>
-                {
-                    data.genres &&
+                {/* Recommendations */}
+                {data.genres && (
                     <div className={'flex w-full  flex-col my-8'}>
                         <div className={'p-4 border relative rounded-md border-white/20'}>
                             <h2 className={'font-bold text-xl mb-3 overflow-x-hidden'}>
@@ -121,7 +135,8 @@ export default function () {
                             <Recommendations urls={makeArrayOfGenres(data)}/>
                         </div>
                     </div>
-                }
+                )}
+                {/* Reviews */}
                 <div className={'p-4 border rounded-md border-white/20'}>
                     <div className={'flex justify-between'}>
                         <h2 className={'font-bold text-xl mb-3 align-middle'}>
@@ -132,32 +147,37 @@ export default function () {
                     <GrabThemReviews animeJikanId={data.animeJikanId}/>
                 </div>
             </div>
-            {
-                showVideoURL !== '' &&
+
+            {/* Embedded video */}
+            {showVideoURL !== '' && (
                 <EmbeddedVideo url={showVideoURL}
                                title={'test'}
                                exit={setShowVideoURL}/>
-            }
+            )}
         </div>
     );
 }
 
+// Helper function to extract genre names from data
 function makeArrayOfGenres(data: any): any[] {
-    const names: any[] = []
+    const names: any[] = [];
     data.genres.map((genre: any, index: number) => (
         names.push(genre.genresName)
-    ))
-    return names
+    ));
+    return names;
 }
 
+// Helper function to format episode count and duration
 function formatEpisodeAndDuration(data: any) {
-    return `${data.animeEpisodes} episodes, ${data.animeDuration}`
+    return `${data.animeEpisodes} episodes, ${data.animeDuration}`;
 }
 
+// Helper function to format date range
 function convertDateRange(data: any) {
-    return `${convertDate(data.animeAiredStart)} to ${convertDate(data.animeAiredEnd)}`
+    return `${convertDate(data.animeAiredStart)} to ${convertDate(data.animeAiredEnd)}`;
 }
 
+// Helper function to convert date to a readable format
 function convertDate(str: string) {
     const date = new Date(str);
     const formattedDate = date.toLocaleDateString('en-US', {
@@ -165,9 +185,10 @@ function convertDate(str: string) {
         month: 'short',
         day: 'numeric'
     });
-    return formattedDate
+    return formattedDate;
 }
 
+// Button component to navigate to the review page
 function WriteReviewButton(prop: any) {
     return (
         <Link href={{pathname: "/review-page", query: {id: prop.animeJikanId}}}>
@@ -175,13 +196,15 @@ function WriteReviewButton(prop: any) {
                 {'Write Review'}
             </p>
         </Link>
-    )
+    );
 }
 
+// Button component to add anime to a list
 function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: number }) {
     const [submenu, setSubmenu] = useState(false);
     const { session } = useSessionContext();
 
+    // Function to handle adding anime to a specific list
     function doSomething(apiEndpoint: string) {
         const fetchData = async () => {
             console.log("🚀 Attempting to add to list:", { animeId, animeRank, apiEndpoint });
@@ -214,6 +237,7 @@ function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: n
         };
         fetchData();
     }
+
     return (
         <div className="flex flex-col items-end">
             {session && (
@@ -274,22 +298,21 @@ function AddToListButton({ animeId, animeRank }: { animeId: string; animeRank: n
     );
 }
 
+// Component to fetch and display reviews
 function GrabThemReviews({animeJikanId}: any) {
-
     if (!animeJikanId) {
-        return <></>
+        return <></>;
     }
 
     const [data, setData] = useState<any>(null);
 
     useEffect(() => {
         const fetchData = async () => {
-            const result = await fetchReviewByAnimeId(animeJikanId)
-            console.log(result)
-            setData(result)
+            const result = await fetchReviewByAnimeId(animeJikanId);
+            console.log(result);
+            setData(result);
         };
-        fetchData().then(() => {
-        });
+        fetchData().then(() => {});
     }, []);
 
     return (
@@ -298,13 +321,15 @@ function GrabThemReviews({animeJikanId}: any) {
         </>
     );
 }
+
+// Component to display a list of reviews
 function ReviewList({ data }: { data: any }) {
     const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
     const [revealedSpoilers, setRevealedSpoilers] = useState<number[]>([]);
     const [reviews, setReviews] = useState(data?.data || []);
     const { session } = useSessionContext();
 
-    // 🔧 Sync reviews state with data prop
+    // Sync reviews state with incoming data
     useEffect(() => {
         if (data?.data?.length) {
             console.log("🔄 Syncing reviews with incoming data:", data.data);
@@ -312,23 +337,21 @@ function ReviewList({ data }: { data: any }) {
         }
     }, [data]);
 
+    // Toggle expanded state for a review
     const toggleExpand = (index: number) => {
         setExpandedIndexes((prev) =>
             prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
         );
     };
 
+    // Toggle spoiler visibility for a review
     const toggleSpoiler = (index: number) => {
         setRevealedSpoilers((prev) =>
             prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
         );
     };
 
-    //const handleEdit = (reviewId: string) => {
-    //    console.log(`Editing review: ${reviewId}`);
-    //    window.location.href = `/review-edit?id=${reviewId}`;
-    //};
-
+    // Handle review deletion
     const handleDelete = async (reviewId: string) => {
         console.log(`🗑️ Attempting to delete review: ${reviewId}`);
         const confirmed = window.confirm("Are you sure you want to delete this review?");
@@ -359,6 +382,7 @@ function ReviewList({ data }: { data: any }) {
 
     return (
         <div className="space-y-10 px-8 py-12 bg-gradient-to-b from-zinc-900 via-zinc-800 to-zinc-900 min-h-[200px]">
+            {/* Display message if no reviews are available */}
             {!reviews.length ? (
                 <p className="text-center text-zinc-400 text-2xl font-medium italic">
                     No reviews yet. Be the first to share your thoughts.
@@ -387,23 +411,28 @@ function ReviewList({ data }: { data: any }) {
                             key={index}
                             className="bg-zinc-800 p-8 rounded-2xl border border-zinc-700 shadow-lg transition-transform duration-300 hover:scale-[1.01]"
                         >
+                            {/* Review header */}
                             <div className="flex justify-between items-center mb-4 text-zinc-400 text-lg">
                                 <span>{review.profileUsername}</span>
                                 <span className="italic">{convertDate(review.reviewCreatedAt)}</span>
                             </div>
 
+                            {/* Review rating */}
                             <div className="text-white text-2xl font-semibold mb-4">
                                 {review.reviewAnimeRating} / 10
                             </div>
 
+                            {/* Review title */}
                             <h2 className="text-white text-3xl font-bold uppercase tracking-wider mb-4">
                                 {review.reviewTitle}
                             </h2>
 
+                            {/* Review body */}
                             <div className={bodyClass}>
                                 {displayBody}
                             </div>
 
+                            {/* Spoiler toggle button */}
                             {isSpoiler && (
                                 <button
                                     onClick={() => toggleSpoiler(index)}
@@ -413,6 +442,7 @@ function ReviewList({ data }: { data: any }) {
                                 </button>
                             )}
 
+                            {/* Expand/collapse button */}
                             {isLong && (
                                 <button
                                     onClick={() => toggleExpand(index)}
@@ -422,6 +452,7 @@ function ReviewList({ data }: { data: any }) {
                                 </button>
                             )}
 
+                            {/* Author actions */}
                             {isAuthor && (
                                 <div className="flex gap-4 mt-4">
                                     <button
@@ -433,6 +464,7 @@ function ReviewList({ data }: { data: any }) {
                                 </div>
                             )}
 
+                            {/* Divider */}
                             <div className="mt-6 h-[1px] bg-zinc-600" />
                         </div>
                     );
