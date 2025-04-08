@@ -101,7 +101,7 @@ function DashboardList({urlPath}: { urlPath: string }) {
             <div className="bg-fhcolor flex h-fit flex-col rounded-3xl shadow-lg px-4 pb-2">
 
                 <div className={'flex justify-between px-2 py-2'}>
-                    <h2 className="text-2xl font-bold">{urlPath}</h2>
+                    <h2 className="text-2xl font-bold capitalize">{urlPath}</h2>
                     <button
                         className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-sm px-4 py-2 rounded-lg shadow-md hover:shadow-lg transition-all duration-300 font-semibold hover:scale-105"
                         onClick={() => setMore(!more)}
