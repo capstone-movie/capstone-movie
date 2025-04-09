@@ -34,23 +34,47 @@ export default function () {
                     title={'Recommended Anime'}
                     queryType={'recommended'}
                 />
+
                 {/* HorizontalList for recommended anime based on the Action genre */}
                 <HorizontalList
-                    url={'genres/Action'}
-                    title={'Recommended Anime'}
-                    queryType={'recommended'}
+                    url={'genres/Adventure'}
+                    title={'Adventure Anime'}
+                    queryType={'Adventure'}
                 />
+
                 {/* HorizontalList for recommended anime based on the Action genre */}
                 <HorizontalList
-                    url={'genres/Action'}
-                    title={'Recommended Anime'}
-                    queryType={'recommended'}
+                    url={'genres/Sci-Fi'}
+                    title={'Sci-Fi Anime'}
+                    queryType={'Sci-Fi'}
                 />
+
                 {/* HorizontalList for recommended anime based on the Action genre */}
                 <HorizontalList
-                    url={'genres/Action'}
-                    title={'Recommended Anime'}
-                    queryType={'recommended'}
+                    url={'genres/Horror'}
+                    title={'Horror Anime'}
+                    queryType={'Horror'}
+                />
+
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Comedy'}
+                    title={'Comedy Anime'}
+                    queryType={'Comedy'}
+                />
+
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Drama'}
+                    title={'Drama Anime'}
+                    queryType={'Drama'}
+                />
+
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Sports'}
+                    title={'Sport Anime'}
+                    queryType={'Sports'}
                 />
             </div>
         </>

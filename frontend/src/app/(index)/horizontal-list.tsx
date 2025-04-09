@@ -38,8 +38,7 @@ export function HorizontalList(prop: Props) {
                     !hiddenAnimeIds.has(anime.animeJikanId)
                 );
 
-
-                setData(evenMoreFilteredResult);
+                setData(filteredResult);
                 setHiddenAnimeData(hidden);
             } catch (error) {
                 console.error("Error fetching data:", error);
