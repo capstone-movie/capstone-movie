@@ -38,15 +38,6 @@ export function HorizontalList(prop: Props) {
                     !hiddenAnimeIds.has(anime.animeJikanId)
                 );
 
-                const seen = new Set();
-                const evenMoreFilteredResult = filteredResult.filter((anime: any) => {
-                    if (seen.has(anime.animeJikanId)) {
-                        return false;
-                    } else {
-                        seen.add(anime.animeJikanId);
-                        return true;
-                    }
-                });
 
                 setData(evenMoreFilteredResult);
                 setHiddenAnimeData(hidden);
