@@ -70,6 +70,7 @@ export default function () {
                     queryType={'Drama'}
                 />
 
+
                 {/* HorizontalList for recommended anime based on the Action genre */}
                 <HorizontalList
                     url={'genres/Sports'}
