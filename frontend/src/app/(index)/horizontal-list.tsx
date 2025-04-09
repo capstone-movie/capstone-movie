@@ -38,7 +38,13 @@ export function HorizontalList(prop: Props) {
                     !hiddenAnimeIds.has(anime.animeJikanId)
                 );
 
-                setData(filteredResult);
+                //filter out duplicate anime basedd on animeJikanId
+                const evenMoreFilteredResult = filteredResult.filter((anime: any) => {
+                    const duplicate = filteredResult.find((a: any) => a.animeJikanId === anime.animeJikanId);
+                    return duplicate === anime;
+                });
+
+                setData(evenMoreFilteredResult);
                 setHiddenAnimeData(hidden);
             } catch (error) {
                 console.error("Error fetching data:", error);

@@ -91,18 +91,3 @@ CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_hidden(watch_
 CREATE INDEX IF NOT EXISTS idx_watch_list_anime_id ON watch_list_favorite(watch_list_anime_id);
 CREATE INDEX IF NOT EXISTS idx_watch_list_profile_id ON watch_list_favorite(watch_list_profile_id);
 CREATE INDEX IF NOT EXISTS idx_review_profile_id ON review(review_profile_id);
-
-
-SELECT *
-FROM anime
-WHERE anime_title ILIKE '%your name' OR
-    anime_title_english ILIKE '%your name%' OR
-    anime_title_japanese ILIKE '%your name%'
-
-SELECT *
-FROM anime
-WHERE anime_title ILIKE '%'||${query}||'%'
-   OR anime_title_english ILIKE '%'||${query}||'%'
-   OR anime_title_japanese ILIKE '%'||${query}||'%'
-ORDER BY anime_title
-LIMIT 50
