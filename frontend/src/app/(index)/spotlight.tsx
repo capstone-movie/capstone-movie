@@ -63,9 +63,13 @@ export function Spotlight(prop: Props) {
 
                 const validatedItems = await Promise.all(validationPromises);
 
-                // Only keep items with valid thumbnails and limit to 10
+                // Only keep items with valid thumbnails, descriptions of at least 100 characters, and limit to 10
                 const finalItems = validatedItems
-                    .filter(item => item.hasValidThumbnail)
+                    .filter(item =>
+                        item.hasValidThumbnail &&
+                        item.animeDescription &&
+                        item.animeDescription.length >= 100
+                    )
                     .slice(0, 10);
 
                 setData(finalItems);

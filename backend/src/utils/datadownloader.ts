@@ -25,9 +25,9 @@ function dataDownloader(): Promise<any> {
     }
 
     async function downloadAnimes() {
-
         let pageIndex = 1
         const animes = []
+        const seenAnimeIds = new Set() // Keep track of anime IDs we've already processed
 
         while (true) {
             try {
@@ -36,6 +36,16 @@ function dataDownloader(): Promise<any> {
 
                 for (let i = 0; i < data.data.length; i++) {
                     const anime = data.data[i]
+
+                    // Skip duplicates by checking if we've seen this ID before
+                    if (seenAnimeIds.has(anime.mal_id)) {
+                        console.log(`Skipping duplicate anime ID: ${anime.mal_id}`)
+                        continue
+                    }
+
+                    // Mark this ID as seen
+                    seenAnimeIds.add(anime.mal_id)
+
                     const customAnime = {
                         anime_id: uuid(),
                         anime_jikan_id: anime.mal_id,
@@ -63,8 +73,12 @@ function dataDownloader(): Promise<any> {
                     animes.push(customAnime)
                     currentPage.push(customAnime)
                 }
-                await insertMultipleAnime(currentPage)
-                console.log('added page ' + pageIndex)
+
+                if (currentPage.length > 0) {
+                    await insertMultipleAnime(currentPage)
+                    console.log('added page ' + pageIndex + ' with ' + currentPage.length + ' unique anime')
+                }
+
                 ++pageIndex
                 if (!data.pagination.has_next_page)
                     break;
@@ -74,32 +88,46 @@ function dataDownloader(): Promise<any> {
             }
         }
 
-        const genres: any = []
-        animes.map((anime) => {
-            anime.anime_genres.map((genre: any) => {
-                if (!genres.includes(genre.name) && genre.name){
-                    genres.push(genre.name)
+        // Use a Map for genres for better handling and to avoid duplicates
+        const genreMap = new Map()
+        animes.forEach((anime) => {
+            anime.anime_genres.forEach((genre: any) => {
+                if (genre.name && !EXCLUDED_GENRES.includes(genre.name)) {
+                    genreMap.set(genre.name, true)
                 }
             })
         })
 
-        const genre_uuids = []
-        for(let i = 0; i < genres.length; i++) {
-            const uid= uuid()
-            genre_uuids.push(uid)
-            await insertGenres(uid, genres[i])
+        const genres = Array.from(genreMap.keys())
+        console.log(`Found ${genres.length} unique genres`)
+
+        // Create UUIDs for each unique genre
+        const genreUUIDs = new Map()
+        for (const genreName of genres) {
+            const uid = uuid()
+            genreUUIDs.set(genreName, uid)
+            await insertGenres(uid, genreName)
         }
 
-        for(let i = 0; i < animes.length; i++) {
-            const anime = animes[i]
-            for(let j = 0; j < anime.anime_genres.length; j++) {
-                const genre = anime.anime_genres[j]
+        // Track unique anime-genre combinations to avoid duplicates
+        const animeGenrePairs = new Set()
+
+        for (const anime of animes) {
+            for (const genre of anime.anime_genres) {
                 if (EXCLUDED_GENRES.includes(genre.name)) continue;
-                const genre_id = genre_uuids[genres.indexOf(genre.name)]
-                await insertMultipleAnimeGenres(anime.anime_id, genre_id)
+
+                const genreId = genreUUIDs.get(genre.name)
+                const pairKey = `${anime.anime_id}-${genreId}`
+
+                // Skip if we've already processed this anime-genre pair
+                if (animeGenrePairs.has(pairKey)) continue
+
+                animeGenrePairs.add(pairKey)
+                await insertMultipleAnimeGenres(anime.anime_id, genreId)
             }
         }
-        console.log('finished')
+
+        console.log('finished - processed ' + animes.length + ' unique anime with ' + animeGenrePairs.size + ' genre connections')
     }
 }
 

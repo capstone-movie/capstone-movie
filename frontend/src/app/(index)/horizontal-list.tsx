@@ -38,11 +38,6 @@ export function HorizontalList(prop: Props) {
                     !hiddenAnimeIds.has(anime.animeJikanId)
                 );
 
-                //filter out duplicate anime basedd on animeJikanId
-                const evenMoreFilteredResult = filteredResult.filter((anime: any) => {
-                    const duplicate = filteredResult.find((a: any) => a.animeJikanId === anime.animeJikanId);
-                    return duplicate === anime;
-                });
 
                 setData(evenMoreFilteredResult);
                 setHiddenAnimeData(hidden);
