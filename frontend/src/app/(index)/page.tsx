@@ -34,6 +34,24 @@ export default function () {
                     title={'Recommended Anime'}
                     queryType={'recommended'}
                 />
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Action'}
+                    title={'Recommended Anime'}
+                    queryType={'recommended'}
+                />
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Action'}
+                    title={'Recommended Anime'}
+                    queryType={'recommended'}
+                />
+                {/* HorizontalList for recommended anime based on the Action genre */}
+                <HorizontalList
+                    url={'genres/Action'}
+                    title={'Recommended Anime'}
+                    queryType={'recommended'}
+                />
             </div>
         </>
     );
