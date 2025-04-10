@@ -7,11 +7,14 @@ import {useSessionContext} from "@/app/(index)/ContextWrapper";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {reviewFormSchema, ReviewFormSchema } from "@/app/review-page/review.validator";
+import { useRouter } from 'next/navigation';
+
 
 const ReviewPage = () => {
     const searchParams = useSearchParams();
     const mal_id: string = searchParams.has('id') ? searchParams.get('id') as string : '1';
     const {session} = useSessionContext()
+    const router = useRouter();
 
     const typedSession = session as { user?: { id: string } } | null;
 
@@ -45,8 +48,8 @@ const ReviewPage = () => {
                 reviewStatus: "active"
             });
             console.log("Review submitted successfully");
-            alert("Review added successfully.");
-            reset();
+            router.push('/anime?id=' + mal_id);
+
         } catch (err) {
             console.error("Error submitting review:", err);
             alert("Failed to submit review");
@@ -142,12 +145,14 @@ const ReviewPage = () => {
                             </ul>
                         </div>
                         {/* Submit */}
-                        <button
-                            type="submit"
-                            className="border px-4 py-2 font-semibold rounded-sm hover:text-black"
-                        >
-                            Submit Review
-                        </button>
+                        <a href="/anime?id=${mal_id}">
+                            <button
+                                type="submit"
+                                className="border px-4 py-2 font-semibold rounded-sm hover:text-black"
+                            >
+                                Submit Review
+                            </button>
+                        </a>
                     </form>
                 </main>
             </div>
