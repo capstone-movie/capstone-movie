@@ -116,6 +116,10 @@ export function Navbar({ clearSessionAction }: NavbarProps) {
         setSearchQuery("");
         setSearchResults([]);
         setIsSearchOpen(false);
+        // Delay reload by 300 milliseconds (adjust as needed)
+        setTimeout(() => {
+            window.location.reload();
+        }, 300);
     };
 
     return (
