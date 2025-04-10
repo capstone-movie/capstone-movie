@@ -368,7 +368,6 @@ function ReviewList({ data }: { data: any }) {
 
             if (res.ok) {
                 console.log(`Review deleted: ${reviewId}`);
-                alert("Review deleted.");
                 setReviews((prev: any[]) => prev.filter((r) => r.reviewId !== reviewId));
             } else {
                 console.error(`Failed to delete:`, json);
