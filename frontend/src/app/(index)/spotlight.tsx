@@ -4,6 +4,7 @@ import Link from "next/link";
 import { fetchHorizontalList } from "@/app/(index)/horizontal-list.action";
 import { motion, AnimatePresence } from "framer-motion";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import {getWatchListServerAction} from "@/app/personal-dashboard/watch-list.actions";
 
 type Props = {
     url: string;
@@ -46,7 +47,11 @@ export function Spotlight(prop: Props) {
             setIsLoading(true);
 
             try {
-                const result = await fetchHorizontalList(prop.url);
+
+                const [result, hidden] = await Promise.all([
+                    fetchHorizontalList(prop.url),
+                    getWatchListServerAction("hidden")
+                ]);
 
                 // First filter out items with null thumbnail URLs
                 let filteredResult = result.filter((item: any) =>
@@ -63,8 +68,20 @@ export function Spotlight(prop: Props) {
 
                 const validatedItems = await Promise.all(validationPromises);
 
+
+                // Create a Set of hidden anime IDs for efficient lookup
+                const hiddenAnimeIds = new Set(
+                    hidden?.data?.map((anime: any) => anime.animeJikanId) || []
+                );
+
+                // Filter out hidden anime from the main list
+                const filteredResult2 = validatedItems.filter((anime: any) =>
+                    !hiddenAnimeIds.has(anime.animeJikanId)
+                );
+
+
                 // Only keep items with valid thumbnails, descriptions of at least 100 characters, and limit to 10
-                const finalItems = validatedItems
+                const finalItems = filteredResult2
                     .filter(item =>
                         item.hasValidThumbnail &&
                         item.animeDescription &&
